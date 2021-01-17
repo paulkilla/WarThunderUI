@@ -69,7 +69,10 @@ export class AppComponent implements OnInit {
         const uploadObject = {...this.state, ...this.indicators};
         const newTeamInstruments: TeamInstrument[] = this.teamInstruments;
         let found = false;
-        this.wtService.uploadData('paulkilla', uploadObject);
+        const playerName = localStorage.getItem('playerName');
+        if (playerName !== null) {
+          this.wtService.uploadData(playerName, uploadObject);
+        }
         this.teamPlayers.forEach((player: any) => {
           this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
             newTeamInstruments.forEach((instrument, index, theArray) => {
@@ -86,12 +89,17 @@ export class AppComponent implements OnInit {
         this.teamInstruments = newTeamInstruments;
       }
     });
-    // Get Player lists every 15 seconds
-    interval(10000).subscribe(x => {
+    // Get Player lists every 15 seconds (Gets all users if none have been specified)
+    interval(15000).subscribe(x => {
       if (this.inGame) {
-        this.wtService.getAllPlayers().subscribe(players => {
-          this.teamPlayers = players;
-        });
+        const squadMembers = localStorage.getItem('squadMembers');
+        if (squadMembers !== null) {
+          this.teamPlayers = squadMembers.split(',');
+        } else {
+          this.wtService.getAllPlayers().subscribe(players => {
+            this.teamPlayers = players;
+          });
+        }
       }
     });
   }

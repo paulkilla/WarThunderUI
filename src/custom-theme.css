@@ -731,6 +731,16 @@ mat-grid-list {
   margin-bottom: 15px;
 }
 
+input.text {
+  width: 100%;
+}
+
+.settings-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

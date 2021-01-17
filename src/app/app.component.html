@@ -3,12 +3,12 @@
     <mat-grid-tile-header>Map</mat-grid-tile-header>
     <div id="map-root">
       <canvas id="map-canvas" width="640" height="640">Please use a browser with canvas support</canvas>
-      <!--<img id="map" src="http://localhost:8111/map.img" />-->
     </div>
   </mat-grid-tile>
   <mat-grid-tile [colspan]="8" [rowspan]="1" class="instruments">
     <mat-grid-tile-header>Instruments</mat-grid-tile-header>
-      <div *ngIf="state || indicators">
+    <mat-icon class="settings-icon" aria-hidden="false" aria-label="Settings">settings</mat-icon>
+    <div *ngIf="state || indicators">
         <mat-card class="ias-card">
           <mat-card-header>
             <mat-card-title>IAS</mat-card-title>
@@ -157,20 +157,5 @@
         <td class="mat-cell">{{ instruments.manifold_pressure}}</td>
       </tr>
     </table>
-
-
-
-<!--    <mat-list>-->
-<!--      <mat-list-item *ngFor="let item of teamInstruments; let i = index">-->
-<!--        <mat-icon mat-list-icon>user</mat-icon>-->
-<!--        <h4 mat-line>{{item.name}}</h4>-->
-<!--        <strong>IAS:</strong> {{ item.indicated_air_speed }}km/h | <strong>TAS:</strong>  {{ item.true_air_speed }}km/h-->
-<!--        <strong>Altitude:</strong> {{ item.altitude }}m | <strong>Bearing:</strong>  {{ item.bearing }}°-->
-<!--        <strong>Climb Rate:</strong> {{ item.vertical_speed }}m/sec | <strong>Climb Angle:</strong>  {{ item.climb_angle }}°-->
-<!--        <strong>Throttle:</strong> {{ item.throttle }}% | <strong>Radiator:</strong>  {{ item.radiator }}%-->
-<!--        <strong>Prop Pitch:</strong> {{ item.prop_pitch }}° | <strong>Manifold Pressure:</strong>  {{ item.manifold_pressure }}-->
-<!--      </mat-list-item>-->
-<!--      <mat-divider></mat-divider>-->
-<!--    </mat-list>-->
   </mat-grid-tile>
 </mat-grid-list>

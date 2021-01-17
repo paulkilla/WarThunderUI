@@ -4,6 +4,7 @@ import { HttpHeaders } from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {State, Indicators, Message, TeamInstrument} from './app.component';
+import { EMPTY } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,8 @@ export class WarthunderService {
   }
 
   getState(): Observable<any> {
-    return this.http.get('http://localhost:8111/state').pipe(
+    const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
+    return this.http.get(url + '/state').pipe(
       map((data: any) => {
             const ias = data['IAS, km/h'];
             const tas = data['TAS, km/h'];
@@ -52,7 +54,8 @@ export class WarthunderService {
   }
 
   getIndicators(): Observable<any> {
-    return this.http.get('http://localhost:8111/indicators').pipe(
+    const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
+    return this.http.get(url + '/indicators').pipe(
       map((data: any) => {
           return {
             bearing: data.compass,
@@ -66,7 +69,8 @@ export class WarthunderService {
   }
 
   getGameChat(lastId: number): Observable<any> {
-    return this.http.get('http://localhost:8111/gamechat?lastId=' + lastId).pipe(
+    const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
+    return this.http.get(url + '/gamechat?lastId=' + lastId).pipe(
       map((data: any) => {
         return data.map((message: any) => {
           return {
@@ -88,26 +92,35 @@ export class WarthunderService {
       })
     };
     uploadObject = {telemetry: uploadObject};
-    this.http.post('https://wtserve.herokuapp.com/players/' + encodeURIComponent(playerName),
-      JSON.stringify(uploadObject), httpOptions).subscribe(
-      (val) => {},
-      response => {
-        console.log('POST call in error', response);
-      },
-      () => {});
+    const url = localStorage.getItem('squadMembersEndpoint');
+    if (url !== null) {
+      this.http.post(url + '/players/' + encodeURIComponent(playerName),
+        JSON.stringify(uploadObject), httpOptions).subscribe(
+        (val) => {},
+        response => {
+          console.log('POST call in error', response);
+        },
+        () => {});
+    }
   }
 
   getAllPlayers(): Observable<any> {
-    return this.http.get('https://wtserve.herokuapp.com/players/').pipe(
-      map((player: any) => {
-        return player;
-    })
-    );
+    const url = localStorage.getItem('squadMembersEndpoint');
+    if (url !== null) {
+      return this.http.get(url + '/players/').pipe(
+        map((player: any) => {
+          return player;
+        })
+      );
+    }
+    return EMPTY;
   }
 
   pullPlayerData(playerName: string): Observable<any> {
-    return this.http.get('https://wtserve.herokuapp.com/players/' + playerName).pipe(
-      map((instrument: any) => {
+    const url = localStorage.getItem('squadMembersEndpoint');
+    if (url !== null) {
+      return this.http.get(url + '/players/' + playerName).pipe(
+        map((instrument: any) => {
           return {
             playerName: playerName,
             bearing: instrument.bearing,
@@ -123,7 +136,9 @@ export class WarthunderService {
             radiator: instrument.radiator,
             valid: instrument.valid
           } as TeamInstrument;
-      })
-    );
+        })
+      );
+    }
+    return EMPTY;
   }
 }
