@@ -1,8 +1,9 @@
 <mat-grid-list cols="12" rowHeight="fit">
   <mat-grid-tile colspan="4" rowspan="1">
     <mat-grid-tile-header>Map</mat-grid-tile-header>
-    <div class="map-container">
-      <img id="map" src="http://localhost:8111/map.img" />
+    <div id="map-root">
+      <canvas id="map-canvas" width="640" height="640">Please use a browser with canvas support</canvas>
+      <!--<img id="map" src="http://localhost:8111/map.img" />-->
     </div>
   </mat-grid-tile>
   <mat-grid-tile [colspan]="8" [rowspan]="1" class="instruments">
@@ -110,7 +111,7 @@
         </mat-card>
       </div>
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="8" [rowspan]="1">
+  <mat-grid-tile [colspan]="4" [rowspan]="1">
     <mat-grid-tile-header>Chat</mat-grid-tile-header>
     <ul>
       <li *ngFor="let item of gameChat; let i = index">
@@ -118,12 +119,58 @@
       </li>
     </ul>
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="4" [rowspan]="1">
+  <mat-grid-tile [colspan]="2" [rowspan]="1">
     <mat-grid-tile-header>Opposition Players</mat-grid-tile-header>
     <ul>
       <li *ngFor="let item of enemies; let i = index">
         {{item.name}} {{ item.plane }}
       </li>
     </ul>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="6" [rowspan]="1" class="team-instruments">
+    <mat-grid-tile-header>Team Instruments</mat-grid-tile-header>
+    <table *ngIf="teamInstruments" class="mat-table mat-elevation-z8" width="100%">
+      <tr class="mat-header-row">
+        <th class="mat-header-cell">Player</th>
+        <th class="mat-header-cell">IAS</th>
+        <th class="mat-header-cell">TAS</th>
+        <th class="mat-header-cell">Alt.</th>
+        <th class="mat-header-cell">Bearing</th>
+        <th class="mat-header-cell">Vert. Speed</th>
+        <th class="mat-header-cell">Climb Rate</th>
+        <th class="mat-header-cell">Throttle</th>
+        <th class="mat-header-cell">Radiator</th>
+        <th class="mat-header-cell">Prop Pitch</th>
+        <th class="mat-header-cell">Man. Pressure</th>
+      </tr>
+      <tr class="mat-row" *ngFor="let instruments of teamInstruments">
+        <td class="mat-cell">{{ instruments.playerName}}</td>
+        <td class="mat-cell">{{ instruments.indicated_air_speed}}km/h</td>
+        <td class="mat-cell">{{ instruments.true_air_speed}}km/h</td>
+        <td class="mat-cell">{{ instruments.altitude}}m</td>
+        <td class="mat-cell">{{ instruments.bearing}}°</td>
+        <td class="mat-cell">{{ instruments.vertical_speed }}m/sec</td>
+        <td class="mat-cell">{{ instruments.climb_angle }}°</td>
+        <td class="mat-cell">{{ instruments.throttle }}%</td>
+        <td class="mat-cell">{{ instruments.radiator }}%</td>
+        <td class="mat-cell">{{ instruments.prop_pitch }}°</td>
+        <td class="mat-cell">{{ instruments.manifold_pressure}}</td>
+      </tr>
+    </table>
+
+
+
+<!--    <mat-list>-->
+<!--      <mat-list-item *ngFor="let item of teamInstruments; let i = index">-->
+<!--        <mat-icon mat-list-icon>user</mat-icon>-->
+<!--        <h4 mat-line>{{item.name}}</h4>-->
+<!--        <strong>IAS:</strong> {{ item.indicated_air_speed }}km/h | <strong>TAS:</strong>  {{ item.true_air_speed }}km/h-->
+<!--        <strong>Altitude:</strong> {{ item.altitude }}m | <strong>Bearing:</strong>  {{ item.bearing }}°-->
+<!--        <strong>Climb Rate:</strong> {{ item.vertical_speed }}m/sec | <strong>Climb Angle:</strong>  {{ item.climb_angle }}°-->
+<!--        <strong>Throttle:</strong> {{ item.throttle }}% | <strong>Radiator:</strong>  {{ item.radiator }}%-->
+<!--        <strong>Prop Pitch:</strong> {{ item.prop_pitch }}° | <strong>Manifold Pressure:</strong>  {{ item.manifold_pressure }}-->
+<!--      </mat-list-item>-->
+<!--      <mat-divider></mat-divider>-->
+<!--    </mat-list>-->
   </mat-grid-tile>
 </mat-grid-list>

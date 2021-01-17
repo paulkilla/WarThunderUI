@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {State, Indicators, Message} from './app.component';
+import {State, Indicators, Message, TeamInstrument} from './app.component';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,6 @@ export class WarthunderService {
   }
 
   getState(): Observable<any> {
-    console.log('Fetching State');
     return this.http.get('http://localhost:8111/state').pipe(
       map((data: any) => {
             const ias = data['IAS, km/h'];
@@ -52,7 +52,6 @@ export class WarthunderService {
   }
 
   getIndicators(): Observable<any> {
-    console.log('Fetching Indicators');
     return this.http.get('http://localhost:8111/indicators').pipe(
       map((data: any) => {
           return {
@@ -67,7 +66,6 @@ export class WarthunderService {
   }
 
   getGameChat(lastId: number): Observable<any> {
-    console.log('Fetching GameChat');
     return this.http.get('http://localhost:8111/gamechat?lastId=' + lastId).pipe(
       map((data: any) => {
         return data.map((message: any) => {
@@ -79,6 +77,52 @@ export class WarthunderService {
             mode: message.mode,
           } as Message;
         });
+      })
+    );
+  }
+
+  uploadData(playerName: string, uploadObject: any): void {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    uploadObject = {telemetry: uploadObject};
+    this.http.post('https://wtserve.herokuapp.com/players/' + encodeURIComponent(playerName),
+      JSON.stringify(uploadObject), httpOptions).subscribe(
+      (val) => {},
+      response => {
+        console.log('POST call in error', response);
+      },
+      () => {});
+  }
+
+  getAllPlayers(): Observable<any> {
+    return this.http.get('https://wtserve.herokuapp.com/players/').pipe(
+      map((player: any) => {
+        return player;
+    })
+    );
+  }
+
+  pullPlayerData(playerName: string): Observable<any> {
+    return this.http.get('https://wtserve.herokuapp.com/players/' + playerName).pipe(
+      map((instrument: any) => {
+          return {
+            playerName: playerName,
+            bearing: instrument.bearing,
+            prop_pitch: instrument.prop_pitch,
+            manifold_pressure: instrument.manifold_pressure,
+            altitude: instrument.altitude,
+            indicated_air_speed: instrument.indicated_air_speed,
+            true_air_speed: instrument.true_air_speed,
+            vertical_speed: instrument.vertical_speed,
+            pitch: instrument.pitch,
+            throttle: instrument.throttle,
+            climb_angle: instrument.climb_angle,
+            radiator: instrument.radiator,
+            valid: instrument.valid
+          } as TeamInstrument;
       })
     );
   }

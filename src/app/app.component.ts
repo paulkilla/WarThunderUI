@@ -1,8 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import { WarthunderService } from '../app/warthunder.service';
-import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { interval } from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 
@@ -15,21 +12,22 @@ import {MatDialog} from '@angular/material/dialog';
 
 export class AppComponent implements OnInit {
   title = 'WarThunderUI';
-  declare image: string;
+  declare inGame: boolean;
   declare state: State;
   declare indicators: Indicators;
   declare gameChat: Message[];
   declare enemies: Enemies[];
+  declare teamInstruments: TeamInstrument[];
+  declare teamPlayers: string[];
   constructor(private wtService: WarthunderService, public dialog: MatDialog) {
     this.gameChat = [];
     this.enemies = [];
+    this.teamPlayers = [];
+    this.inGame = false;
+    this.teamInstruments = [];
   }
 
   ngOnInit(): void {
-    // Refresh map every 30 seconds
-    interval(30000).subscribe(x => {
-      this.image = 'http://localhost:8111/map.img?cache=' + new Date().getTime();
-    });
     // Refresh HUD - State every 2 seconds
     interval(2000).subscribe(x => {
       this.wtService.getState().subscribe(state => this.state = state);
@@ -37,25 +35,70 @@ export class AppComponent implements OnInit {
     // Refresh HUD - Indicators every 2 seconds
     interval(2000).subscribe(x => {
       this.wtService.getIndicators().subscribe(indicators => {
-        this.indicators = indicators; if (indicators.bearing == null) { this.gameChat = []; this.enemies = []; }
+        this.indicators = indicators;
+        if (indicators.bearing == null) {
+          this.gameChat = []; this.enemies = []; this.inGame = false; this.teamPlayers = []; this.teamInstruments = [];
+        } else { this.inGame = true; }
       });
     });
-    // Refresh GameChat - Indicators every 2 seconds
+    // Refresh GameChat - GameChat every 2 seconds
     interval(2000).subscribe(x => {
       let latestId = 0;
       this.gameChat.forEach(item => {
         latestId = item.id;
       });
-      console.log(latestId);
       this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
+        this.gameChat.push(item);
         const regexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
         if ( regexResult != null ) {
-          this.enemies.push({name: regexResult[2], plane: regexResult[3]});
+          let exists = false;
+          this.enemies.forEach(existingItem => {
+            if (existingItem.name === regexResult[2]) {
+              exists = true;
+            }
+          });
+          if (!exists) {
+            this.enemies.push({name: regexResult[2], plane: regexResult[3]});
+          }
         }
-        this.gameChat.push(item);
       }));
     });
+    // Upload Data to HerokuApp and pull data down
+    interval(2000).subscribe(x => {
+      if (this.inGame) {
+        const uploadObject = {...this.state, ...this.indicators};
+        const newTeamInstruments: TeamInstrument[] = this.teamInstruments;
+        let found = false;
+        this.wtService.uploadData('paulkilla', uploadObject);
+        this.teamPlayers.forEach((player: any) => {
+          this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
+            newTeamInstruments.forEach((instrument, index, theArray) => {
+              if (instrument.playerName === player) {
+                theArray[index] = playerInstruments;
+                found = true;
+              }
+            });
+            if (!found) {
+              newTeamInstruments.push(playerInstruments);
+            }
+          });
+        });
+        this.teamInstruments = newTeamInstruments;
+      }
+    });
+    // Get Player lists every 15 seconds
+    interval(10000).subscribe(x => {
+      if (this.inGame) {
+        this.wtService.getAllPlayers().subscribe(players => {
+          this.teamPlayers = players;
+        });
+      }
+    });
   }
+}
+
+export interface TeamInstrument extends Indicators, State {
+  playerName: string;
 }
 
 export interface Enemies {
@@ -89,22 +132,3 @@ export interface Message {
   enemy: boolean;
   mode: string;
 }
-
-export interface MapObjects {
-  type: string;
-  color: string;
-  icon: string;
-  x: number;
-  y: number;
-  airfield_x: number;
-  airfield_y: number;
-  heading_x: number; // Maybe?
-  heading_y: number; // Maybe?
-}
-
-export interface MissionObjectives {
-  primary: boolean;
-  status: string;
-  text: string;
-}
-

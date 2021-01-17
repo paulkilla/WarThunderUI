@@ -14,6 +14,9 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
 import { WarthunderService } from '../app/warthunder.service';
 import { MatDialogModule} from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule} from '@angular/material/table';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { MatDialogModule} from '@angular/material/dialog';
     MatDialogModule,
     MatSliderModule,
     LayoutModule,
+    MatDividerModule,
+    MatListModule,
+    MatTableModule,
     HttpClientModule
   ],
   providers: [ WarthunderService ],

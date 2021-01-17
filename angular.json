@@ -31,7 +31,10 @@
               "src/custom-theme.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/cookies.js",
+              "src/sylvester.js"
+            ]
           },
           "configurations": {
             "production": {
