@@ -44,7 +44,7 @@ export class WarthunderService {
               vertical_speed: vs,
               pitch: data['AoA, deg'],
               throttle: data['throttle 1, %'],
-              climb_angle: climbAngle,
+              climb_angle: Math.round(climbAngle),
               radiator: data['radiator 1, %'],
               valid: data.valid
             } as State;
@@ -58,9 +58,9 @@ export class WarthunderService {
     return this.http.get(url + '/indicators').pipe(
       map((data: any) => {
           return {
-            bearing: data.compass,
-            prop_pitch: data.prop_pitch_min,
-            manifold_pressure: data.manifold_pressure,
+            bearing: Math.round(data.compass),
+            prop_pitch: Math.round(data.prop_pitch_min),
+            manifold_pressure: Math.round(data.manifold_pressure),
             valid: data.valid
           } as Indicators;
         }
