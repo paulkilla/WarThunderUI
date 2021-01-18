@@ -29,6 +29,18 @@ export class AppComponent implements OnInit {
     this.teamPlayers = [];
     this.inGame = false;
     this.teamInstruments = [];
+    this.indicators = {bearing: 0, bearing_text: '', manifold_pressure: 0, prop_pitch: 0, valid: false};
+    this.state = {
+      altitude: 0,
+      climb_angle: 0,
+      indicated_air_speed: 0,
+      pitch: 0,
+      radiator: 0,
+      throttle: 0,
+      true_air_speed: 0,
+      valid: false,
+      vertical_speed: 0
+    };
   }
 
   ngOnInit(): void {
