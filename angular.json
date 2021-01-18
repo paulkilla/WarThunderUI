@@ -32,8 +32,9 @@
               "src/styles.css"
             ],
             "scripts": [
-              "src/cookies.js",
-              "src/sylvester.js"
+              "src/assets/js/cookies.js",
+              "src/assets/js/sylvester.js",
+              "src/assets/js/custom.js"
             ]
           },
           "configurations": {

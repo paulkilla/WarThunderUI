@@ -741,6 +741,38 @@ input.text {
   right: 10px;
 }
 
+.custom-indicators {
+  width: 20%;
+  float: left;
+  height: 50%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.indicators-wrapper {
+  width: 100%;
+  height: 100%;
+  margin-top: 100px;
+  padding-left: 20px;
+}
+
+.climb-angle {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(175deg);
+  width: 50%;
+  transform: scale(-1, 1) rotate(0deg);
+}
+
+div.custom-indicators h2 {
+  font-size: 2em;
+  padding-top: 10px;
+}
+
+div.custom-indicators .indicator-value {
+  font-size: 3em;
+  padding-top: 20px;
+  display: inline-block;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

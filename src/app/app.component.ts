@@ -1,8 +1,12 @@
+// @ts-ignore
 import {Component, OnInit} from '@angular/core';
 import { WarthunderService } from '../app/warthunder.service';
-import { interval } from 'rxjs';
+// @ts-ignore
+import {interval} from 'rxjs';
+// @ts-ignore
 import {MatDialog} from '@angular/material/dialog';
 
+// @ts-ignore
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -29,11 +33,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // Refresh HUD - State every 2 seconds
-    interval(2000).subscribe(x => {
+    interval(2000).subscribe((x: any) => {
       this.wtService.getState().subscribe(state => this.state = state);
     });
     // Refresh HUD - Indicators every 2 seconds
-    interval(2000).subscribe(x => {
+    interval(2000).subscribe((x: any) => {
       this.wtService.getIndicators().subscribe(indicators => {
         this.indicators = indicators;
         if (indicators.bearing == null) {
@@ -42,7 +46,7 @@ export class AppComponent implements OnInit {
       });
     });
     // Refresh GameChat - GameChat every 2 seconds
-    interval(2000).subscribe(x => {
+    interval(2000).subscribe((x: any) => {
       let latestId = 0;
       this.gameChat.forEach(item => {
         latestId = item.id;
@@ -64,7 +68,7 @@ export class AppComponent implements OnInit {
       }));
     });
     // Upload Data to HerokuApp and pull data down
-    interval(2000).subscribe(x => {
+    interval(2000).subscribe((x: any) => {
       if (this.inGame) {
         const uploadObject = {...this.state, ...this.indicators};
         const newTeamInstruments: TeamInstrument[] = this.teamInstruments;
@@ -90,7 +94,7 @@ export class AppComponent implements OnInit {
       }
     });
     // Get Player lists every 15 seconds (Gets all users if none have been specified)
-    interval(15000).subscribe(x => {
+    interval(15000).subscribe((x: any) => {
       if (this.inGame) {
         const squadMembers = localStorage.getItem('squadMembers');
         if (squadMembers !== null) {
