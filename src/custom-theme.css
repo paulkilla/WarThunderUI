@@ -773,6 +773,11 @@ div.custom-indicators .indicator-value {
   display: inline-block;
 }
 
+div.custom-indicators .indicator-value-secondary {
+  font-size: 2em;
+  display: inline-block;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

@@ -57,8 +57,10 @@ export class WarthunderService {
     const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
     return this.http.get(url + '/indicators').pipe(
       map((data: any) => {
+          const bearingText = degToCompass(Math.round(data.compass));
           return {
             bearing: Math.round(data.compass),
+            bearing_text: bearingText,
             prop_pitch: Math.round(data.prop_pitch_min),
             manifold_pressure: Math.round(data.manifold_pressure),
             valid: data.valid
@@ -121,9 +123,11 @@ export class WarthunderService {
     if (url !== null) {
       return this.http.get(url + '/players/' + playerName).pipe(
         map((instrument: any) => {
+          const bearingText = degToCompass(instrument.bearing);
           return {
             playerName: playerName,
             bearing: instrument.bearing,
+            bearing_text: bearingText,
             prop_pitch: instrument.prop_pitch,
             manifold_pressure: instrument.manifold_pressure,
             altitude: instrument.altitude,
@@ -141,4 +145,10 @@ export class WarthunderService {
     }
     return EMPTY;
   }
+}
+
+function degToCompass(num: any): any {
+  const val = (num / 22.5) + .5;
+  const arr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  return arr[Math.round((val % 16))];
 }

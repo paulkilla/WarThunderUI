@@ -101,6 +101,11 @@ div.custom-indicators .indicator-value {
   display:inline-block;
 }
 
+div.custom-indicators .indicator-value-secondary {
+  font-size: 2em;
+  display: inline-block;
+}
+
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

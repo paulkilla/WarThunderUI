@@ -23,7 +23,8 @@
       </div>
       <div class="custom-indicators">
         <h2>Bearing</h2>
-        <span class="indicator-value">{{ indicators.bearing }}°</span>
+        <span class="indicator-value bearing-primary">{{ indicators.bearing }}°</span>
+        <span class="indicator-value-secondary bearing-secondary">{{ indicators.bearing_text }}</span>
       </div>
       <div class="custom-indicators">
         <h2>Climb Rate</h2>
@@ -50,106 +51,6 @@
         <span class="indicator-value">{{ indicators.manifold_pressure }}psi</span>
       </div>
     </div>
-<!--        <mat-card class="ias-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>IAS</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.indicated_air_speed }}km/h-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="tas-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>TAS</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.true_air_speed }}km/h-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="altitude-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Altitude</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.altitude }}m-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="bearing-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Bearing</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ indicators.bearing }}°-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="climb-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Climb Rate</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.vertical_speed }}m/sec-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="climb-angle-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Climb Angle</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.climb_angle }}°-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="throttle-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Throttle</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.throttle }}%-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="tradiator-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Radiator</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ state.radiator }}%-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="prop-pitch-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Prop Pitch</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ indicators.prop_pitch }}°-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
-<!--        <mat-card class="manifold-card">-->
-<!--          <mat-card-header>-->
-<!--            <mat-card-title>Manifold Pressure</mat-card-title>-->
-<!--          </mat-card-header>-->
-<!--          <mat-card-content>-->
-<!--            <p>-->
-<!--              {{ indicators.manifold_pressure }}°-->
-<!--            </p>-->
-<!--          </mat-card-content>-->
-<!--        </mat-card>-->
   </mat-grid-tile>
   <mat-grid-tile [colspan]="4" [rowspan]="1">
     <mat-grid-tile-header>Chat</mat-grid-tile-header>
@@ -188,7 +89,7 @@
         <td class="mat-cell">{{ instruments.indicated_air_speed}}km/h</td>
         <td class="mat-cell">{{ instruments.true_air_speed}}km/h</td>
         <td class="mat-cell">{{ instruments.altitude}}m</td>
-        <td class="mat-cell">{{ instruments.bearing}}°</td>
+        <td class="mat-cell">{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
         <td class="mat-cell">{{ instruments.vertical_speed }}m/sec</td>
         <td class="mat-cell">{{ instruments.climb_angle }}°</td>
         <td class="mat-cell">{{ instruments.throttle }}%</td>

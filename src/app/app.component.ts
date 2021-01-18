@@ -132,6 +132,7 @@ export interface State {
 
 export interface Indicators {
   bearing: number;
+  bearing_text: string;
   prop_pitch: number;
   manifold_pressure: number;
   valid: boolean;
