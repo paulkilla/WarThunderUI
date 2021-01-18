@@ -107,6 +107,11 @@ export class AppComponent implements OnInit {
     });
     // Get Player lists every 15 seconds (Gets all users if none have been specified)
     interval(15000).subscribe((x: any) => {
+      console.log('PlayerName: ' + localStorage.getItem('playerName'));
+      console.log('Endpoint: ' + localStorage.getItem('endpoint'));
+      console.log('Squad Members Endpoint: ' + localStorage.getItem('squadMembersEndpoint'));
+      console.log('Squad Members: ' + localStorage.getItem('squadMembers'));
+
       if (this.inGame) {
         const squadMembers = localStorage.getItem('squadMembers');
         if (squadMembers !== null && squadMembers !== '') {
