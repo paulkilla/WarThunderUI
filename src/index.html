@@ -647,13 +647,14 @@
 
         valid = valid && checkLength( playerName, "playerName", 1, 100 );
         valid = valid && checkLength( endpoint, "endpoint", 6, 100 );
-
+        console.log('About to save Settings');
         if ( valid ) {
           localStorage.setItem("playerName", playerName.val());
           localStorage.setItem("endpoint", endpoint.val());
           localStorage.setItem("squadMembers", squadMembers.val());
           localStorage.setItem("squadMembersEndpoint", squadMembersEndpoint.val());
           dialog.dialog( "close" );
+          console.log('Saved');
         }
         return valid;
       }
