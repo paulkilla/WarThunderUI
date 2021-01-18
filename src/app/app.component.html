@@ -70,6 +70,7 @@
   </mat-grid-tile>
   <mat-grid-tile [colspan]="6" [rowspan]="1" class="team-instruments">
     <mat-grid-tile-header>Team Instruments</mat-grid-tile-header>
+    <div class="squads-wrapper">
     <table *ngIf="teamInstruments" class="mat-table mat-elevation-z8" width="100%">
       <tr class="mat-header-row">
         <th class="mat-header-cell">Player</th>
@@ -98,5 +99,6 @@
         <td class="mat-cell">{{ instruments.manifold_pressure}}</td>
       </tr>
     </table>
+    </div>
   </mat-grid-tile>
 </mat-grid-list>

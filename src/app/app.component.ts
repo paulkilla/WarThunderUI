@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
     interval(15000).subscribe((x: any) => {
       if (this.inGame) {
         const squadMembers = localStorage.getItem('squadMembers');
-        if (squadMembers !== null) {
+        if (squadMembers !== null && squadMembers !== '') {
           this.teamPlayers = squadMembers.split(',');
         } else {
           this.wtService.getAllPlayers().subscribe(players => {
