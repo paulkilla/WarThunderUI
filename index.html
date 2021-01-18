@@ -19,7 +19,7 @@
       src: url('assets/icons.ttf');
     }
   </style>
-<link rel="stylesheet" href="styles.78bdc41c109537dcf0e5.css"></head>
+<link rel="stylesheet" href="styles.70df74ebe78ccbe8b6c1.css"></head>
 <body class="mat-typography">
   <app-root></app-root>
   <div id="dialog-form" title="War Thunder UI Settings">
@@ -647,14 +647,27 @@
 
         valid = valid && checkLength( playerName, "playerName", 1, 100 );
         valid = valid && checkLength( endpoint, "endpoint", 6, 100 );
-        console.log('About to save Settings');
         if ( valid ) {
           localStorage.setItem("playerName", playerName.val());
           localStorage.setItem("endpoint", endpoint.val());
           localStorage.setItem("squadMembers", squadMembers.val());
           localStorage.setItem("squadMembersEndpoint", squadMembersEndpoint.val());
           dialog.dialog( "close" );
-          console.log('Saved');
+          if (localStorage.getItem("playerName") !== null) {
+            playerName.val(localStorage.getItem('playerName'));
+          }
+
+          if (localStorage.getItem("endpoint") !== null) {
+            endpoint.val(localStorage.getItem('endpoint'));
+          }
+
+          if (localStorage.getItem("squadMembers") !== null) {
+            squadMembers.val(localStorage.getItem('squadMembers'));
+          }
+
+          if (localStorage.getItem("squadMembersEndpoint") !== null) {
+            squadMembersEndpoint.val(localStorage.getItem('squadMembersEndpoint'));
+          }
         }
         return valid;
       }
@@ -686,5 +699,5 @@
       });
     });
   </script>
-<script src="runtime.0e49e2b53282f40c8925.js" defer=""></script><script src="polyfills.8c151b8375e767ff858f.js" defer=""></script><script src="scripts.9a2c9e2e98b1a1f7aa5a.js" defer=""></script><script src="main.e70be6f96adcccf31e3c.js" defer=""></script></body>
+<script src="runtime.0e49e2b53282f40c8925.js" defer=""></script><script src="polyfills.8c151b8375e767ff858f.js" defer=""></script><script src="scripts.9a2c9e2e98b1a1f7aa5a.js" defer=""></script><script src="main.1733ad5d36f32ed0bd96.js" defer=""></script></body>
 </html>
