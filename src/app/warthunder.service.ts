@@ -4,7 +4,7 @@ import { HttpHeaders } from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {State, Indicators, Message, TeamInstrument} from './app.component';
-import { EMPTY } from 'rxjs'
+import { EMPTY } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
