@@ -784,6 +784,11 @@ div.squads-wrapper {
   margin-top: 100px;
 }
 
+.killed {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

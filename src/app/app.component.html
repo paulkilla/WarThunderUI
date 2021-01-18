@@ -85,7 +85,7 @@
         <th class="mat-header-cell">Prop Pitch</th>
         <th class="mat-header-cell">Man. Pressure</th>
       </tr>
-      <tr class="mat-row" *ngFor="let instruments of teamInstruments">
+      <tr class="mat-row" *ngFor="let instruments of teamInstruments" [ngClass]="{'killed': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
         <td class="mat-cell">{{ instruments.playerName}}</td>
         <td class="mat-cell">{{ instruments.indicated_air_speed}}km/h</td>
         <td class="mat-cell">{{ instruments.true_air_speed}}km/h</td>
