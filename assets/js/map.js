@@ -1,7 +1,6 @@
 map_objects = null;
 map_info = null;
 map_image = new Image();
-//map_image.src = '/map.img'
 
 cookieLifeTime = 60*60*24*1000
 
@@ -27,8 +26,6 @@ hammer_opt = {
   swipe:false, swipeup:false, swipedown:false, swipeleft:false, swiperight:false,
   transform:true, transformstart:true, transformend:true, rotate:false,
   pinch:false, pinchin:false, pinchout:false,
-  /*touch:false, release:false,*/
-
   prevent_default: true,
   no_mouseevents: true
 }
@@ -439,6 +436,24 @@ function updateFast() {
   if (!isDraggingMap && !isTransformingMap)
     redraw_map(dt)
 }
+
+function normalizeText(text) {
+  return text.replace('<', '&lt;').replace('>', '&gt;');
+}
+
+
+function localize_static() {
+  var elems = $('.loc')
+  var len = elems.length
+  for (var i=0; i<len; ++i) {
+    var e = $(elems[i])
+    var key = e.text()
+    if (key in loc_tbl)
+      e.text(loc_tbl[key])
+  }
+}
+
+
 function lerp(a, b, k) {
   return a*(1.0-k) + b*k
 }
@@ -535,6 +550,7 @@ function save_positions() {
 
 
 function init() {
+  localize_static();
   var canvasEl = document.getElementById('map-canvas');
 
   addWheelHandler(canvasEl, mapOnWheel);
@@ -547,6 +563,7 @@ function init() {
   }
 
   load_positions();
+  $('#map-root').draggable({handle:'#draghandle', stop: save_positions})
 
   if (document.location.protocol != 'file:') {
     setInterval(updateSlow, 500);
