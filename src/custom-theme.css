@@ -724,6 +724,7 @@ div#map-root {
   position: relative;
   top: auto !important;
   left: auto !important;
+  overflow: hidden;
 }
 
 canvas {

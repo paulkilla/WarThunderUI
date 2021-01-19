@@ -52,6 +52,7 @@ div#map-root {
   position: relative;
   top: auto!important;
   left: auto!important;
+  overflow:hidden;
 }
 
 canvas {
@@ -63,6 +64,7 @@ canvas {
   width: 450px!important;
   height: 400px!important;
 }
+
 
 
 // Include theme styles for core and each component used in your app.
