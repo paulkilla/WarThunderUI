@@ -1,96 +1,256 @@
-<mat-grid-list cols="12" rowHeight="fit">
-  <mat-grid-tile colspan="4" rowspan="1">
-    <mat-grid-tile-header>Map</mat-grid-tile-header>
-    <div id="map-root">
-      <canvas id="map-canvas" width="640" height="640">Please use a browser with canvas support</canvas>
+<div class="wrapper">
+  <div class="main-panel" style="width:100%;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+      <div class="container-fluid">
+        <div class="navbar-wrapper">
+          <img src="assets/images/logo.png" height="50px" width="50px"/>
+          <a class="navbar-brand" href="javascript:;">Wolf Pack</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="navbar-toggler-icon icon-bar"></span>
+          <span class="navbar-toggler-icon icon-bar"></span>
+          <span class="navbar-toggler-icon icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end">
+          <ul class="navbar-nav">
+            <li class="nav-item settings-icon">
+              <a class="nav-link" href="javascript:;">
+                <i class="material-icons">settings</i> Settings
+              </a>
+            </li>
+            <!-- your navbar here -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card">
+              <div id="map-root">
+                <canvas id="map-canvas" width="500" height="500">Please use a browser with canvas support</canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-8">
+            <div class="container-fluid">
+              <div class="row" *ngIf="instruments">
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                      <div class="card-icon"> IAS</div>
+                      <p class="card-category">IAS</p>
+                      <h3 class="card-title">{{ instruments.indicated_air_speed }} km/h</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                      <div class="card-icon">TAS</div>
+                      <p class="card-category">TAS</p>
+                      <h3 class="card-title">{{ instruments.true_air_speed }} km/h</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                      <div class="card-icon">ALT</div>
+                      <p class="card-category">ALTITUDE</p>
+                      <h3 class="card-title">{{ instruments.altitude }} m</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                      <div class="card-icon">BNG</div>
+                      <p class="card-category">BEARING</p>
+                      <h3 class="card-title">{{ instruments.bearing }}° <small>{{ instruments.bearing_text }}</small></h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-primary card-header-icon">
+                      <div class="card-icon">CLR</div>
+                      <p class="card-category">CLIMB RATE</p>
+                      <h3 class="card-title">{{ instruments.vertical_speed }} m/sec</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-primary card-header-icon">
+                      <div class="card-icon">CLA</div>
+                      <p class="card-category">CLIMB ANGLE</p>
+                      <h3 class="card-title">{{ instruments.climb_angle }}°</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-primary card-header-icon">
+                      <div class="card-icon">THR</div>
+                      <p class="card-category">THROTTLE</p>
+                      <h3 class="card-title">{{ instruments.throttle }}%</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-primary card-header-icon">
+                      <div class="card-icon">MAN</div>
+                      <p class="card-category">MANIFOLD PRESSURE</p>
+                      <h3 class="card-title">{{ instruments.manifold_pressure }} psi</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-grey card-header-icon">
+                      <div class="card-icon">RAD</div>
+                      <p class="card-category">RADIATOR</p>
+                      <h3 class="card-title">{{ instruments.radiator }}%</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-grey card-header-icon">
+                      <div class="card-icon">PRP</div>
+                      <p class="card-category">PROPELLER PITCH</p>
+                      <h3 class="card-title">{{ instruments.prop_pitch }}%</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-grey card-header-icon">
+                      <div class="card-icon">WAT</div>
+                      <p class="card-category">WATER TEMP</p>
+                      <h3 class="card-title">{{ instruments.water_temp }}°</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card card-stats">
+                    <div class="card-header card-header-grey card-header-icon">
+                      <div class="card-icon">OIL</div>
+                      <p class="card-category">OIL TEMP</p>
+                      <h3 class="card-title">{{ instruments.oil_temp }}°</h3>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-sm-5">
+            <div class="card">
+              <div class="card-header card-header-warning">
+                <h4 class="card-title">Chat</h4>
+              </div>
+              <div class="card-body">
+                <p *ngFor="let item of gameChat; let i = index">
+                  [{{ item.sender }}] {{item.msg}}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h4 class="card-title">Team Instruments</h4>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover">
+                  <thead class="text-warning">
+                  <th>Player</th>
+                  <th>IAS</th>
+                  <th>Alt</th>
+                  <th>Bearing</th>
+                  <th>Climb Rate</th>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'killed': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
+                    <td>{{ instruments.playerName}}</td>
+                    <td>{{ instruments.indicated_air_speed}} km/h</td>
+                    <td>{{ instruments.altitude}} m</td>
+                    <td>{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
+                    <td>-{{ instruments.vertical_speed}} m/s</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h4 class="card-title">Opponents</h4>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover">
+                  <thead class="text-warning">
+                  <th>Player</th>
+                  <th>Vehicle</th>
+                  <th>Alt</th>
+                  <th>Last Seen</th>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of enemies; let i = index">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.plane }}</td>
+                    <td><b>{{ item.altitude }} m</b></td>
+                    <td>{{ item.last_seen }} ago</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="8" [rowspan]="1" class="instruments">
-    <mat-grid-tile-header>Instruments</mat-grid-tile-header>
-    <mat-icon class="settings-icon" aria-hidden="false" aria-label="Settings">settings</mat-icon>
-    <div *ngIf="instruments" class="indicators-wrapper">
-      <div class="custom-indicators">
-        <h2>IAS</h2>
-        <span class="indicator-value">{{ instruments.indicated_air_speed }}km/h</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>TAS</h2>
-        <span class="indicator-value">{{ instruments.true_air_speed }}km/h</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Altitude</h2>
-        <span class="indicator-value">{{ instruments.altitude }}m</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Bearing</h2>
-        <span class="indicator-value bearing-primary">{{ instruments.bearing }}°</span>
-        <span class="indicator-value-secondary bearing-secondary">{{ instruments.bearing_text }}</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Climb Rate</h2>
-        <span class="indicator-value">{{ instruments.vertical_speed }}m/sec</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Climb Angle</h2>
-        <span class="indicator-value">{{ instruments.climb_angle }}°</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Throttle</h2>
-        <span class="indicator-value">{{ instruments.throttle }}%</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Radiator</h2>
-        <span class="indicator-value">{{ instruments.radiator }}%</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Prop Pitch</h2>
-        <span class="indicator-value">{{ instruments.prop_pitch }}°</span>
-      </div>
-      <div class="custom-indicators">
-        <h2>Manifold Pressure</h2>
-        <span class="indicator-value">{{ instruments.manifold_pressure }}psi</span>
-      </div>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="4" [rowspan]="1">
-    <mat-grid-tile-header>Chat</mat-grid-tile-header>
-    <ul>
-      <li *ngFor="let item of gameChat; let i = index">
-        [{{ item.sender }}] {{item.msg}}
-      </li>
-    </ul>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="2" [rowspan]="1">
-    <mat-grid-tile-header>Opposition Players</mat-grid-tile-header>
-    <ul>
-      <li *ngFor="let item of enemies; let i = index">
-        {{item.name}} {{ item.plane }}
-      </li>
-    </ul>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="6" [rowspan]="1" class="team-instruments">
-    <mat-grid-tile-header>Team Instruments</mat-grid-tile-header>
-    <div class="squads-wrapper">
-    <table *ngIf="teamInstruments" class="mat-table mat-elevation-z8" width="100%">
-      <tr class="mat-header-row">
-        <th class="mat-header-cell">Player</th>
-        <th class="mat-header-cell">IAS</th>
-        <th class="mat-header-cell">Alt.</th>
-        <th class="mat-header-cell">Bearing</th>
-        <th class="mat-header-cell">Vert. Speed</th>
-        <th class="mat-header-cell">Climb Rate</th>
-        <th class="mat-header-cell">Throttle</th>
-      </tr>
-      <tr class="mat-row" *ngFor="let instruments of teamInstruments" [ngClass]="{'killed': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
-        <td class="mat-cell">{{ instruments.playerName}}</td>
-        <td class="mat-cell">{{ instruments.indicated_air_speed}}km/h</td>
-        <td class="mat-cell">{{ instruments.altitude}}m</td>
-        <td class="mat-cell">{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
-        <td class="mat-cell">{{ instruments.vertical_speed }}m/sec</td>
-        <td class="mat-cell">{{ instruments.climb_angle }}°</td>
-        <td class="mat-cell">{{ instruments.throttle }}%</td>
-      </tr>
-    </table>
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
+  </div>
+</div>

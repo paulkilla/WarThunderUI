@@ -44,6 +44,8 @@ export class WarthunderService {
               throttle: data['throttle 1, %'],
               climb_angle: Math.round(climbAngle),
               radiator: data['radiator 1, %'],
+              oil_temp: data['oil temp 1, C'],
+              water_temp: data['water temp 1, C'],
               valid: data.valid
             } as Instruments;
       }

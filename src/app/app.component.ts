@@ -42,7 +42,9 @@ export class AppComponent implements OnInit {
       throttle: 0,
       true_air_speed: 0,
       valid: false,
-      vertical_speed: 0
+      vertical_speed: 0,
+      water_temp: 0,
+      oil_temp: 0
     };
   }
 
@@ -93,7 +95,7 @@ export class AppComponent implements OnInit {
             }
           });
           if (!exists) {
-            this.enemies.push({name: regexResult[2], plane: regexResult[3], killed: false, location: ''});
+            this.enemies.push({altitude: '', last_seen: '', name: regexResult[2], plane: regexResult[3], killed: false, location: ''});
           }
         }
       }));
@@ -154,12 +156,16 @@ export interface Instruments {
   bearing_text: string;
   prop_pitch: number;
   manifold_pressure: number;
+  oil_temp: number;
+  water_temp: number;
 }
 
 export interface Enemies {
   name: string;
   plane: string;
   location: string;
+  altitude: string;
+  last_seen: string;
   killed: boolean;
 }
 

@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/vendor/material-dashboard/css/material-dashboard.css",
               "src/custom-theme.css",
               "src/styles.css"
             ],
