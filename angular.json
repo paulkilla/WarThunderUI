@@ -34,6 +34,7 @@
             "scripts": [
               "src/assets/js/cookies.js",
               "src/assets/js/sylvester.js",
+              "src/assets/js/map.js",
               "src/assets/js/custom.js"
             ]
           },

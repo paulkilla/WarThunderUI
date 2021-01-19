@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {State, Indicators, Message, TeamInstrument} from './app.component';
-import { EMPTY } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {EMPTY, Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Instruments, Message} from './app.component';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +45,7 @@ export class WarthunderService {
               climb_angle: Math.round(climbAngle),
               radiator: data['radiator 1, %'],
               valid: data.valid
-            } as State;
+            } as Instruments;
       }
     )
     );
@@ -64,7 +62,7 @@ export class WarthunderService {
             prop_pitch: Math.round(data.prop_pitch_min),
             manifold_pressure: Math.round(data.manifold_pressure),
             valid: data.valid
-          } as Indicators;
+          } as Instruments;
         }
       )
     );
@@ -123,23 +121,7 @@ export class WarthunderService {
     if (url !== null) {
       return this.http.get(url + '/players/' + playerName).pipe(
         map((instrument: any) => {
-          const bearingText = degToCompass(instrument.bearing);
-          return {
-            playerName: playerName,
-            bearing: instrument.bearing,
-            bearing_text: bearingText,
-            prop_pitch: instrument.prop_pitch,
-            manifold_pressure: instrument.manifold_pressure,
-            altitude: instrument.altitude,
-            indicated_air_speed: instrument.indicated_air_speed,
-            true_air_speed: instrument.true_air_speed,
-            vertical_speed: instrument.vertical_speed,
-            pitch: instrument.pitch,
-            throttle: instrument.throttle,
-            climb_angle: instrument.climb_angle,
-            radiator: instrument.radiator,
-            valid: instrument.valid
-          } as TeamInstrument;
+          return instrument as Instruments;
         })
       );
     }

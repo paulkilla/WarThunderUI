@@ -8,47 +8,47 @@
   <mat-grid-tile [colspan]="8" [rowspan]="1" class="instruments">
     <mat-grid-tile-header>Instruments</mat-grid-tile-header>
     <mat-icon class="settings-icon" aria-hidden="false" aria-label="Settings">settings</mat-icon>
-    <div *ngIf="state || indicators" class="indicators-wrapper">
+    <div *ngIf="instruments" class="indicators-wrapper">
       <div class="custom-indicators">
         <h2>IAS</h2>
-        <span class="indicator-value">{{ state.indicated_air_speed }}km/h</span>
+        <span class="indicator-value">{{ instruments.indicated_air_speed }}km/h</span>
       </div>
       <div class="custom-indicators">
         <h2>TAS</h2>
-        <span class="indicator-value">{{ state.true_air_speed }}km/h</span>
+        <span class="indicator-value">{{ instruments.true_air_speed }}km/h</span>
       </div>
       <div class="custom-indicators">
         <h2>Altitude</h2>
-        <span class="indicator-value">{{ state.altitude }}m</span>
+        <span class="indicator-value">{{ instruments.altitude }}m</span>
       </div>
       <div class="custom-indicators">
         <h2>Bearing</h2>
-        <span class="indicator-value bearing-primary">{{ indicators.bearing }}°</span>
-        <span class="indicator-value-secondary bearing-secondary">{{ indicators.bearing_text }}</span>
+        <span class="indicator-value bearing-primary">{{ instruments.bearing }}°</span>
+        <span class="indicator-value-secondary bearing-secondary">{{ instruments.bearing_text }}</span>
       </div>
       <div class="custom-indicators">
         <h2>Climb Rate</h2>
-        <span class="indicator-value">{{ state.vertical_speed }}m/sec</span>
+        <span class="indicator-value">{{ instruments.vertical_speed }}m/sec</span>
       </div>
       <div class="custom-indicators">
         <h2>Climb Angle</h2>
-        <span class="indicator-value">{{ state.climb_angle }}°</span>
+        <span class="indicator-value">{{ instruments.climb_angle }}°</span>
       </div>
       <div class="custom-indicators">
         <h2>Throttle</h2>
-        <span class="indicator-value">{{ state.throttle }}%</span>
+        <span class="indicator-value">{{ instruments.throttle }}%</span>
       </div>
       <div class="custom-indicators">
         <h2>Radiator</h2>
-        <span class="indicator-value">{{ state.radiator }}%</span>
+        <span class="indicator-value">{{ instruments.radiator }}%</span>
       </div>
       <div class="custom-indicators">
         <h2>Prop Pitch</h2>
-        <span class="indicator-value">{{ indicators.prop_pitch }}°</span>
+        <span class="indicator-value">{{ instruments.prop_pitch }}°</span>
       </div>
       <div class="custom-indicators">
         <h2>Manifold Pressure</h2>
-        <span class="indicator-value">{{ indicators.manifold_pressure }}psi</span>
+        <span class="indicator-value">{{ instruments.manifold_pressure }}psi</span>
       </div>
     </div>
   </mat-grid-tile>
@@ -75,28 +75,20 @@
       <tr class="mat-header-row">
         <th class="mat-header-cell">Player</th>
         <th class="mat-header-cell">IAS</th>
-        <th class="mat-header-cell">TAS</th>
         <th class="mat-header-cell">Alt.</th>
         <th class="mat-header-cell">Bearing</th>
         <th class="mat-header-cell">Vert. Speed</th>
         <th class="mat-header-cell">Climb Rate</th>
         <th class="mat-header-cell">Throttle</th>
-        <th class="mat-header-cell">Radiator</th>
-        <th class="mat-header-cell">Prop Pitch</th>
-        <th class="mat-header-cell">Man. Pressure</th>
       </tr>
       <tr class="mat-row" *ngFor="let instruments of teamInstruments" [ngClass]="{'killed': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
         <td class="mat-cell">{{ instruments.playerName}}</td>
         <td class="mat-cell">{{ instruments.indicated_air_speed}}km/h</td>
-        <td class="mat-cell">{{ instruments.true_air_speed}}km/h</td>
         <td class="mat-cell">{{ instruments.altitude}}m</td>
         <td class="mat-cell">{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
         <td class="mat-cell">{{ instruments.vertical_speed }}m/sec</td>
         <td class="mat-cell">{{ instruments.climb_angle }}°</td>
         <td class="mat-cell">{{ instruments.throttle }}%</td>
-        <td class="mat-cell">{{ instruments.radiator }}%</td>
-        <td class="mat-cell">{{ instruments.prop_pitch }}°</td>
-        <td class="mat-cell">{{ instruments.manifold_pressure}}</td>
       </tr>
     </table>
     </div>

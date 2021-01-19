@@ -17,11 +17,10 @@ import {MatDialog} from '@angular/material/dialog';
 export class AppComponent implements OnInit {
   title = 'WarThunderUI';
   declare inGame: boolean;
-  declare state: State;
-  declare indicators: Indicators;
+  declare instruments: Instruments;
   declare gameChat: Message[];
   declare enemies: Enemies[];
-  declare teamInstruments: TeamInstrument[];
+  declare teamInstruments: Instruments[];
   declare teamPlayers: string[];
   constructor(private wtService: WarthunderService, public dialog: MatDialog) {
     this.gameChat = [];
@@ -29,12 +28,16 @@ export class AppComponent implements OnInit {
     this.teamPlayers = [];
     this.inGame = false;
     this.teamInstruments = [];
-    this.indicators = {bearing: 0, bearing_text: '', manifold_pressure: 0, prop_pitch: 0, valid: false};
-    this.state = {
+    this.instruments = {
+      playerName: localStorage.getItem('playerName') || '',
       altitude: 0,
+      bearing: 0,
+      bearing_text: '',
       climb_angle: 0,
       indicated_air_speed: 0,
+      manifold_pressure: 0,
       pitch: 0,
+      prop_pitch: 0,
       radiator: 0,
       throttle: 0,
       true_air_speed: 0,
@@ -46,15 +49,31 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // Refresh HUD - State every 2 seconds
     interval(2000).subscribe((x: any) => {
-      this.wtService.getState().subscribe(state => this.state = state);
+      this.wtService.getState().subscribe(state => {
+        // Assign variables in state to this.instruments
+        for (const prop in state) {
+          if (Object.prototype.hasOwnProperty.call(state, prop)) {
+            // @ts-ignore
+            this.instruments[prop] = state[prop];
+          }
+        }
+      });
     });
     // Refresh HUD - Indicators every 2 seconds
     interval(2000).subscribe((x: any) => {
       this.wtService.getIndicators().subscribe(indicators => {
-        this.indicators = indicators;
         if (indicators.bearing_text == null) {
           this.gameChat = []; this.enemies = []; this.inGame = false; this.teamPlayers = []; this.teamInstruments = [];
-        } else { this.inGame = true; }
+        } else {
+          this.inGame = true;
+        }
+        // Assign variables in indicators to this.instruments
+        for (const prop in indicators) {
+          if (Object.prototype.hasOwnProperty.call(indicators, prop)) {
+            // @ts-ignore
+            this.instruments[prop] = indicators[prop];
+          }
+        }
       });
     });
     // Refresh GameChat - GameChat every 2 seconds
@@ -74,7 +93,7 @@ export class AppComponent implements OnInit {
             }
           });
           if (!exists) {
-            this.enemies.push({name: regexResult[2], plane: regexResult[3]});
+            this.enemies.push({name: regexResult[2], plane: regexResult[3], killed: false, location: ''});
           }
         }
       }));
@@ -82,12 +101,11 @@ export class AppComponent implements OnInit {
     // Upload Data to HerokuApp and pull data down
     interval(2000).subscribe((x: any) => {
       if (this.inGame) {
-        const uploadObject = {...this.state, ...this.indicators};
-        const newTeamInstruments: TeamInstrument[] = this.teamInstruments;
+        const newTeamInstruments: Instruments[] = this.teamInstruments;
         let found = false;
         const playerName = localStorage.getItem('playerName');
         if (playerName !== null) {
-          this.wtService.uploadData(playerName, uploadObject);
+          this.wtService.uploadData(playerName, this.instruments);
         }
         this.teamPlayers.forEach((player: any) => {
           this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
@@ -107,11 +125,6 @@ export class AppComponent implements OnInit {
     });
     // Get Player lists every 15 seconds (Gets all users if none have been specified)
     interval(15000).subscribe((x: any) => {
-      console.log('PlayerName: ' + localStorage.getItem('playerName'));
-      console.log('Endpoint: ' + localStorage.getItem('endpoint'));
-      console.log('Squad Members Endpoint: ' + localStorage.getItem('squadMembersEndpoint'));
-      console.log('Squad Members: ' + localStorage.getItem('squadMembers'));
-
       if (this.inGame) {
         const squadMembers = localStorage.getItem('squadMembers');
         if (squadMembers !== null && squadMembers !== '') {
@@ -126,16 +139,8 @@ export class AppComponent implements OnInit {
   }
 }
 
-export interface TeamInstrument extends Indicators, State {
+export interface Instruments {
   playerName: string;
-}
-
-export interface Enemies {
-  name: string;
-  plane: string;
-}
-
-export interface State {
   true_air_speed: number;
   indicated_air_speed: number;
   altitude: number;
@@ -145,14 +150,17 @@ export interface State {
   climb_angle: number;
   radiator: number;
   valid: boolean;
-}
-
-export interface Indicators {
   bearing: number;
   bearing_text: string;
   prop_pitch: number;
   manifold_pressure: number;
-  valid: boolean;
+}
+
+export interface Enemies {
+  name: string;
+  plane: string;
+  location: string;
+  killed: boolean;
 }
 
 export interface Message {
