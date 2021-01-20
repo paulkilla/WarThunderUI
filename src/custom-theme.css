@@ -760,6 +760,10 @@ div.game-chat span.sender {
   color: #8b0000;
 }
 
+.hide-me {
+  display: none;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }
