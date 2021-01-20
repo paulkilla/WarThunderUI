@@ -139,7 +139,7 @@ export class AppComponent implements OnInit {
         } else {
           // Check for other regex.
           // Check for crashes.. hah what a noob!
-          regexResult = item.msg.match('\\s?(.*) (\\(.*\\))(.*)[ has crashed.]$');
+          regexResult = item.msg.match('[\\s?](.*) (\\(.*\\))(.*)[ has crashed.]$');
           if ( regexResult != null ) {
             const targetPlayerName = regexResult[1];
             if (targetPlayerName === this.instruments.playerName) {
