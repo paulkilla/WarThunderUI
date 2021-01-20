@@ -94,16 +94,44 @@ export class AppComponent implements OnInit {
       });
       this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
         this.gameChat.push(item);
-        const regexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
-        if ( regexResult != null ) {
+        const myRegexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
+        const otherRegexResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
+        if ( myRegexResult != null ) {
           let exists = false;
+          let killed = false;
+          let lastLocation = 'Unknown';
+          let lastSeen = new Date().getTime();
           this.enemies.forEach(existingItem => {
-            if (existingItem.name === regexResult[2]) {
+            if (existingItem.name === myRegexResult[2]) {
               exists = true;
+              killed = existingItem.killed;
+              lastLocation = existingItem.location;
+              lastSeen = existingItem.last_seen;
             }
           });
           if (!exists) {
-            this.enemies.push({altitude: '', last_seen: '', name: regexResult[2], plane: regexResult[3], killed: false, location: ''});
+            this.enemies.push(
+              {altitude: '', last_seen: lastSeen, name: myRegexResult[2], plane: myRegexResult[3], killed, location: lastLocation});
+          }
+        }
+        if (otherRegexResult != null) {
+          console.log(otherRegexResult);
+          let exists = false;
+          let killed = false;
+          let lastSeen = new Date().getTime();
+          this.enemies.forEach(existingItem => {
+            console.log(existingItem);
+            if (existingItem.name === otherRegexResult[2]) {
+              exists = true;
+              killed = existingItem.killed;
+              existingItem.location = otherRegexResult[5];
+              lastSeen = new Date().getTime();
+            }
+          });
+          if (!exists) {
+            this.enemies.push(
+              {altitude: '', last_seen: lastSeen,
+                name: otherRegexResult[2], plane: otherRegexResult[3], killed, location: otherRegexResult[5]});
           }
         }
       }));
@@ -118,6 +146,7 @@ export class AppComponent implements OnInit {
       this.wtService.getHudMessages(latestEvtId, latestDmgId).subscribe(hudMessages => hudMessages.forEach((item: any) => {
         this.hudMessages.push(item);
         // Do stuff here with the item and set enemies as dead etc.
+        // Regex for achievements would be \s(.*)\s(\(.*\))\s\bhas achieved\b\s(.*)$ keeping for later. [1] would be name [4] is award
         let regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
         if ( regexResult != null ) {
           // Do stuff here when we match on the regex to pull down 'shot down'
@@ -150,6 +179,20 @@ export class AppComponent implements OnInit {
                 enemy.killed = true;
               }
             });
+          } else {
+            // check for aaa kill
+            regexResult = item.msg.match('\\bAAA shot down\\b\\s(.*)\\s(\\(.*\\))$');
+            if ( regexResult != null ) {
+              const targetPlayerName = regexResult[1];
+              if (targetPlayerName === this.instruments.playerName) {
+                this.instruments.killed = true;
+              }
+              this.enemies.forEach((enemy: any) => {
+                if (enemy.name === targetPlayerName) {
+                  enemy.killed = true;
+                }
+              });
+            }
           }
         }
       }));
@@ -220,7 +263,7 @@ export interface Enemies {
   plane: string;
   location: string;
   altitude: string;
-  last_seen: string;
+  last_seen: number;
   killed: boolean;
 }
 
