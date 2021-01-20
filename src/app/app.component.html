@@ -240,7 +240,7 @@
                   <th colspan="2">Last Seen</th>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let item of enemies; let i = index" [ngClass]="enemies[i].killed ? 'table-danger' : ''">
+                  <tr *ngFor="let item of enemies; let i = index" [ngClass]="enemies[i].killed ? 'cdk-visually-hidden' : ''">
                     <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="item.killed">close</i>{{ item.name }}</td>
                     <td>{{ item.plane }}</td>
                     <td><b>{{ item.location }}</b></td>
