@@ -87,6 +87,20 @@ export class WarthunderService {
     );
   }
 
+  getHudMessages(lastEvtId: number, lastDmgId: number): Observable<any> {
+    const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
+    return this.http.get(url + '/hudmsg?lastEvt=' + lastEvtId + '&lastDmg=' + lastDmgId).pipe(
+      map((data: any) => {
+        return data.damage.map((message: any) => {
+          return {
+            id: message.id,
+            msg: message.msg
+          } as Message;
+        });
+      })
+    );
+  }
+
   uploadData(playerName: string, uploadObject: any): void {
     const httpOptions = {
       headers: new HttpHeaders({

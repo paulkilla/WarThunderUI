@@ -19,11 +19,13 @@ export class AppComponent implements OnInit {
   declare inGame: boolean;
   declare instruments: Instruments;
   declare gameChat: Message[];
+  declare hudMessages: Message[];
   declare enemies: Enemies[];
   declare teamInstruments: Instruments[];
   declare teamPlayers: string[];
   constructor(private wtService: WarthunderService, public dialog: MatDialog) {
     this.gameChat = [];
+    this.hudMessages = [];
     this.enemies = [];
     this.teamPlayers = [];
     this.inGame = false;
@@ -44,7 +46,8 @@ export class AppComponent implements OnInit {
       valid: false,
       vertical_speed: 0,
       water_temp: 0,
-      oil_temp: 0
+      oil_temp: 0,
+      killed: false
     };
   }
 
@@ -65,7 +68,12 @@ export class AppComponent implements OnInit {
     interval(2000).subscribe((x: any) => {
       this.wtService.getIndicators().subscribe(indicators => {
         if (indicators.bearing_text == null) {
-          this.gameChat = []; this.enemies = []; this.inGame = false; this.teamPlayers = []; this.teamInstruments = [];
+          this.gameChat = [];
+          this.enemies = [];
+          this.inGame = false;
+          this.teamPlayers = [];
+          this.teamInstruments = [];
+          this.hudMessages = [];
         } else {
           this.inGame = true;
         }
@@ -96,6 +104,37 @@ export class AppComponent implements OnInit {
           });
           if (!exists) {
             this.enemies.push({altitude: '', last_seen: '', name: regexResult[2], plane: regexResult[3], killed: false, location: ''});
+          }
+        }
+      }));
+    });
+    // Refresh HudMsg - Get information on enemies destroyed and squad mates destroyed
+    interval(2000).subscribe((x: any) => {
+      const latestEvtId = 0;
+      let latestDmgId = 0; // Not sure what this one does atm
+      this.hudMessages.forEach(item => {
+        latestDmgId = item.id;
+      });
+      this.wtService.getHudMessages(latestEvtId, latestDmgId).subscribe(hudMessages => hudMessages.forEach((item: any) => {
+        this.hudMessages.push(item);
+        // Do stuff here with the item and set enemies as dead etc.
+        const regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
+        if ( regexResult != null ) {
+          // Do stuff here when we match on the regex to pull down 'shot down'
+          const action = regexResult[3];
+          if (action != null) {
+            if ( action.startsWith('shot down')) {
+              const targetPlayerName = regexResult[4];
+              // const sourcePlayerName = regexResult[1];
+              if (targetPlayerName === this.instruments.playerName) {
+                this.instruments.killed = true;
+              }
+              this.enemies.forEach((enemy: any) => {
+                if (enemy.name === targetPlayerName) {
+                  enemy.killed = true;
+                }
+              });
+            }
           }
         }
       }));
@@ -158,6 +197,7 @@ export interface Instruments {
   manifold_pressure: number;
   oil_temp: number;
   water_temp: number;
+  killed: boolean;
 }
 
 export interface Enemies {

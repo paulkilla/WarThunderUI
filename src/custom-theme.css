@@ -756,6 +756,10 @@ div.game-chat span.sender {
   font-weight: bold;
 }
 
+.icon-red {
+  color: #8b0000;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

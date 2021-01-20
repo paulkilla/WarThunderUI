@@ -189,7 +189,7 @@
               </div>
               <div class="card-body game-chat">
                 <p *ngFor="let item of gameChat; let i = index" [ngClass]="gameChat[i].enemy ? 'enemy' : gameChat[i].mode">
-                  <span class="sender">[{{ item.sender }}]</span> <span class="message">{{item.msg}}</span>
+                  <span class="sender">[{{ item.sender }}]</span> &nbsp;<span class="message">{{item.msg}}</span>
                 </p>
               </div>
             </div>
@@ -211,12 +211,12 @@
                   <th>Throttle</th>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
-                    <td>{{ instruments.playerName}}</td>
+                  <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
+                    <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="instruments.killed">close</i>{{ instruments.playerName}}</td>
                     <td>{{ instruments.indicated_air_speed}} km/h</td>
                     <td>{{ instruments.altitude}} m</td>
                     <td>{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
-                    <td>-{{ instruments.vertical_speed}} m/s</td>
+                    <td>{{ instruments.vertical_speed}} m/s</td>
                     <td>{{ instruments.throttle }}%</td>
                   </tr>
                   </tbody>
@@ -239,8 +239,8 @@
                   <th>Last Seen</th>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let item of enemies; let i = index">
-                    <td>{{ item.name }}</td>
+                  <tr *ngFor="let item of enemies; let i = index" [ngClass]="enemies[i].killed ? 'table-danger' : ''">
+                    <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="item.killed">close</i>{{ item.name }}</td>
                     <td>{{ item.plane }}</td>
                     <td><b>{{ item.altitude }} m</b></td>
                     <td>{{ item.last_seen }} ago</td>
