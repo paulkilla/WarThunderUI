@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
       this.wtService.getHudMessages(latestEvtId, latestDmgId).subscribe(hudMessages => hudMessages.forEach((item: any) => {
         this.hudMessages.push(item);
         // Do stuff here with the item and set enemies as dead etc.
-        const regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
+        let regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
         if ( regexResult != null ) {
           // Do stuff here when we match on the regex to pull down 'shot down'
           const action = regexResult[3];
@@ -135,6 +135,21 @@ export class AppComponent implements OnInit {
                 }
               });
             }
+          }
+        } else {
+          // Check for other regex.
+          // Check for crashes.. hah what a noob!
+          regexResult = item.msg.match('\\s?(.*) (\\(.*\\))(.*)[ has crashed.]$');
+          if ( regexResult != null ) {
+            const targetPlayerName = regexResult[1];
+            if (targetPlayerName === this.instruments.playerName) {
+              this.instruments.killed = true;
+            }
+            this.enemies.forEach((enemy: any) => {
+              if (enemy.name === targetPlayerName) {
+                enemy.killed = true;
+              }
+            });
           }
         }
       }));
