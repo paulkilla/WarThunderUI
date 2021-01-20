@@ -81,4 +81,17 @@ $(document).ready(function() {
       $("#settingsModal").modal();
     }
 
+  const interval = setInterval(function() {
+    $('.hidden-last-seen').each(function() {
+      var timestamp = $(this).text();
+      $(this).prev('.show-last-seen').text(timeSince(timestamp));
+    });
+  }, 2000);
+
 });
+
+function timeSince(timeStamp) {
+  var now = new Date(),
+  secondsPast = (now.getTime() - timeStamp) / 1000;
+  return parseInt(secondsPast) + 's ago';
+}
