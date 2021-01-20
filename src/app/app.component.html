@@ -187,9 +187,9 @@
               <div class="card-header card-header-warning">
                 <h4 class="card-title">Chat</h4>
               </div>
-              <div class="card-body">
-                <p *ngFor="let item of gameChat; let i = index">
-                  [{{ item.sender }}] {{item.msg}}
+              <div class="card-body game-chat">
+                <p *ngFor="let item of gameChat; let i = index" [ngClass]="gameChat[i].enemy ? 'enemy' : gameChat[i].mode">
+                  <span class="sender">[{{ item.sender }}]</span> <span class="message">{{item.msg}}</span>
                 </p>
               </div>
             </div>
@@ -201,7 +201,7 @@
                 <h4 class="card-title">Team Instruments</h4>
               </div>
               <div class="card-body table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover table-striped">
                   <thead class="text-warning">
                   <th>Player</th>
                   <th>IAS</th>
@@ -211,13 +211,13 @@
                   <th>Throttle</th>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'killed': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
+                  <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.indicated_air_speed < 5 && instruments.throttle == 0}">
                     <td>{{ instruments.playerName}}</td>
                     <td>{{ instruments.indicated_air_speed}} km/h</td>
                     <td>{{ instruments.altitude}} m</td>
                     <td>{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
                     <td>-{{ instruments.vertical_speed}} m/s</td>
-                    <td>{{ instruments.throttle }} km/h</td>
+                    <td>{{ instruments.throttle }}%</td>
                   </tr>
                   </tbody>
                 </table>
@@ -231,7 +231,7 @@
                 <h4 class="card-title">Opponents</h4>
               </div>
               <div class="card-body table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover table-striped">
                   <thead class="text-warning">
                   <th>Player</th>
                   <th>Vehicle</th>

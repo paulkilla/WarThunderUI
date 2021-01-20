@@ -65,6 +65,32 @@ canvas {
   height: 400px!important;
 }
 
+div.game-chat {
+  p {
+    margin-bottom: .25em;
+  }
+
+  p.enemy {
+    color: #cc2127!important;
+  }
+
+  p.Team {
+    color: #0b3251;
+  }
+
+  p.All {
+    color: #5a6268;
+  }
+
+  p.Squad {
+    color: #2e7d32;
+  }
+
+  span.sender {
+    font-weight: bold;
+  }
+}
+
 
 
 // Include theme styles for core and each component used in your app.
