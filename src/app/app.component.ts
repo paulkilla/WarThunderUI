@@ -204,6 +204,10 @@ export class AppComponent implements OnInit {
         let found = false;
         const playerName = localStorage.getItem('playerName');
         if (playerName !== null) {
+          // If user is no killed reset it here
+          if(this.instruments.throttle > 50) {
+            this.instruments.killed = false;
+          }
           this.wtService.uploadData(playerName, this.instruments);
         }
         this.teamPlayers.forEach((player: any) => {
