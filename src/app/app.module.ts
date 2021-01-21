@@ -17,6 +17,7 @@ import { MatDialogModule} from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule} from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
+import { TrendModule } from 'ngx-trend';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { MatListModule } from '@angular/material/list';
     MatDividerModule,
     MatListModule,
     MatTableModule,
+    TrendModule,
     HttpClientModule
   ],
   providers: [ WarthunderService ],

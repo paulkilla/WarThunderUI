@@ -200,7 +200,7 @@ export class AppComponent implements OnInit {
     });
     // Upload Data to HerokuApp and pull data down
     interval(2000).subscribe((x: any) => {
-      if (this.inGame || $('#showAlways').prop('checked')) {
+      if (this.inGame || localStorage.getItem('showAlways')) {
         const newTeamInstruments: Instruments[] = this.teamInstruments;
         let found = false;
         const playerName = localStorage.getItem('playerName');
@@ -213,7 +213,7 @@ export class AppComponent implements OnInit {
             this.wtService.uploadData(playerName, this.instruments);
           }
         }
-        const showMyInstruments = $('#showMyInstruments').prop('checked');
+        const showMyInstruments = localStorage.getItem('showMyInstruments');
         this.teamPlayers.forEach((player: any) => {
           if (player !== playerName || (player === playerName && showMyInstruments)) {
             this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
@@ -238,7 +238,7 @@ export class AppComponent implements OnInit {
     });
     // Get Player lists every 15 seconds (Gets all users if none have been specified)
     interval(15000).subscribe((x: any) => {
-      if (this.inGame || $('#showAlways').prop('checked')) {
+      if (this.inGame || localStorage.getItem('showAlways')) {
         const squadMembers = localStorage.getItem('squadMembers');
         if (squadMembers !== null && squadMembers !== '') {
           this.teamPlayers = squadMembers.split(',');
