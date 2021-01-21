@@ -99,6 +99,22 @@ div.game-chat {
   display: none;
 }
 
+div.header-options {
+  float: right;
+  color: white;
+  margin-top: 5px!important;
+  margin-bottom: 0px;
+
+  .form-check, label {
+    color: white;
+    margin-left: 20px;
+  }
+
+  .check {
+    border-color: white!important;
+  }
+}
+
 
 
 // Include theme styles for core and each component used in your app.

@@ -764,6 +764,20 @@ div.game-chat span.sender {
   display: none;
 }
 
+div.header-options {
+  float: right;
+  color: white;
+  margin-top: 5px !important;
+  margin-bottom: 0px;
+}
+div.header-options .form-check, div.header-options label {
+  color: white;
+  margin-left: 20px;
+}
+div.header-options .check {
+  border-color: white !important;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

@@ -5,6 +5,7 @@ import { WarthunderService } from '../app/warthunder.service';
 import {interval} from 'rxjs';
 // @ts-ignore
 import {MatDialog} from '@angular/material/dialog';
+import { } from 'jquery';
 
 // @ts-ignore
 @Component({
@@ -199,36 +200,45 @@ export class AppComponent implements OnInit {
     });
     // Upload Data to HerokuApp and pull data down
     interval(2000).subscribe((x: any) => {
-      if (this.inGame) {
+      if (this.inGame || $('#showAlways').prop('checked')) {
         const newTeamInstruments: Instruments[] = this.teamInstruments;
         let found = false;
         const playerName = localStorage.getItem('playerName');
         if (playerName !== null) {
-          // If user is no killed reset it here
-          if(this.instruments.throttle > 50) {
+          // If user is not killed reset it here
+          if (this.instruments.throttle > 50 && this.instruments.bearing_text != null) {
             this.instruments.killed = false;
           }
-          this.wtService.uploadData(playerName, this.instruments);
+          if (this.inGame) {
+            this.wtService.uploadData(playerName, this.instruments);
+          }
         }
+        const showMyInstruments = $('#showMyInstruments').prop('checked');
         this.teamPlayers.forEach((player: any) => {
-          this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
-            newTeamInstruments.forEach((instrument, index, theArray) => {
-              if (instrument.playerName === player) {
-                theArray[index] = playerInstruments;
-                found = true;
+          if (player !== playerName || (player === playerName && showMyInstruments)) {
+            this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
+              newTeamInstruments.forEach((instrument, index, theArray) => {
+                if (instrument.playerName === player) {
+                  theArray[index] = playerInstruments;
+                  found = true;
+                }
+              });
+              if (!found) {
+                newTeamInstruments.push(playerInstruments);
               }
             });
-            if (!found) {
-              newTeamInstruments.push(playerInstruments);
-            }
-          });
+          } else {
+            newTeamInstruments.forEach((instrument, index) => {
+              newTeamInstruments.splice(index, 1);
+            });
+          }
         });
         this.teamInstruments = newTeamInstruments;
       }
     });
     // Get Player lists every 15 seconds (Gets all users if none have been specified)
     interval(15000).subscribe((x: any) => {
-      if (this.inGame) {
+      if (this.inGame || $('#showAlways').prop('checked')) {
         const squadMembers = localStorage.getItem('squadMembers');
         if (squadMembers !== null && squadMembers !== '') {
           this.teamPlayers = squadMembers.split(',');
