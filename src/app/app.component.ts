@@ -53,6 +53,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const iasArray: any[] = [];
+    const altitudeArray: any[] = [];
+    const throttleArray: any[] = [];
+    // @ts-ignore
+    $('#ias-trend-line').sparkline(iasArray);
+    // @ts-ignore
+    $('#altitude-trend-line').sparkline(altitudeArray);
+    // @ts-ignore
+    $('#throttle-trend-line').sparkline(throttleArray);
     // Refresh HUD - State every 2 seconds
     interval(2000).subscribe((x: any) => {
       this.wtService.getState().subscribe(state => {
@@ -61,6 +70,19 @@ export class AppComponent implements OnInit {
           if (Object.prototype.hasOwnProperty.call(state, prop)) {
             // @ts-ignore
             this.instruments[prop] = state[prop];
+            if (prop === 'indicated_air_speed') {
+              iasArray.push(state.indicated_air_speed);
+              // @ts-ignore
+              $('#ias-trend-line').sparkline(iasArray);
+            } else if (prop === 'altitude') {
+              altitudeArray.push(state.altitude);
+              // @ts-ignore
+              $('#altitude-trend-line').sparkline(altitudeArray);
+            } else if (prop === 'throttle') {
+              throttleArray.push(state.throttle);
+              // @ts-ignore
+              $('#throttle-trend-line').sparkline(throttleArray);
+            }
           }
         }
       });

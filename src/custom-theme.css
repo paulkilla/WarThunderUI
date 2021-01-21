@@ -727,7 +727,7 @@ div#map-root {
   overflow: hidden;
 }
 
-canvas {
+canvas#map-canvas {
   padding-left: 0;
   padding-right: 0;
   margin-left: auto;
@@ -776,6 +776,12 @@ div.header-options .form-check, div.header-options label {
 }
 div.header-options .check {
   border-color: white !important;
+}
+
+span.trend-line {
+  width: 50%;
+  display: block;
+  float: left;
 }
 
 .mat-ripple-element {
