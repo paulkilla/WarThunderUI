@@ -118,6 +118,9 @@ $(document).ready(function() {
       $(this).prev('.show-last-seen').text(timeSince(timestamp));
     });
   }, 2000);
+  $.fn.sparkline.defaults.common.height = '50px';
+  $.fn.sparkline.defaults.common.width = '150px';
+
 
 });
 
