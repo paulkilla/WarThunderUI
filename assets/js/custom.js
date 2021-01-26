@@ -122,7 +122,17 @@ $(document).ready(function() {
   $.fn.sparkline.defaults.common.width = '150px';
 
 
+  const navBarHeight = $('nav.navbar').height();
+  const instrumentsHeight = $('div#instruments-div').height();
+  const cardHeaderHeight = $('.card-header').height();
+  const totalHeight = navBarHeight + instrumentsHeight + cardHeaderHeight + 25;
+  const windowHeight = $(window).height();
+  const resizableHeight = windowHeight - totalHeight;
+  $('.resizable-div').each(function() {
+    $(this).height(resizableHeight + 'px');
+  });
 });
+
 
 function timeSince(timeStamp) {
   var now = new Date(),
