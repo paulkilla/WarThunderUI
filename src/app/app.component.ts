@@ -70,18 +70,28 @@ export class AppComponent implements OnInit {
           if (Object.prototype.hasOwnProperty.call(state, prop)) {
             // @ts-ignore
             this.instruments[prop] = state[prop];
-            if (prop === 'indicated_air_speed') {
-              iasArray.push(state.indicated_air_speed);
+            // Only update spark line when we are in a game, else reset them to 0
+            if (this.inGame) {
+              if (prop === 'indicated_air_speed') {
+                iasArray.push(state.indicated_air_speed);
+                // @ts-ignore
+                $('#ias-trend-line').sparkline(iasArray);
+              } else if (prop === 'altitude') {
+                altitudeArray.push(state.altitude);
+                // @ts-ignore
+                $('#altitude-trend-line').sparkline(altitudeArray);
+              } else if (prop === 'throttle') {
+                throttleArray.push(state.throttle);
+                // @ts-ignore
+                $('#throttle-trend-line').sparkline(throttleArray);
+              }
+            } else {
               // @ts-ignore
-              $('#ias-trend-line').sparkline(iasArray);
-            } else if (prop === 'altitude') {
-              altitudeArray.push(state.altitude);
+              $('#ias-trend-line').sparkline([0]);
               // @ts-ignore
-              $('#altitude-trend-line').sparkline(altitudeArray);
-            } else if (prop === 'throttle') {
-              throttleArray.push(state.throttle);
+              $('#altitude-trend-line').sparkline([0]);
               // @ts-ignore
-              $('#throttle-trend-line').sparkline(throttleArray);
+              $('#throttle-trend-line').sparkline([0]);
             }
           }
         }
@@ -90,7 +100,7 @@ export class AppComponent implements OnInit {
     // Refresh HUD - Indicators every 2 seconds
     interval(2000).subscribe((x: any) => {
       this.wtService.getIndicators().subscribe(indicators => {
-        if (indicators.bearing_text == null) {
+        if (indicators.valid == null || !indicators.valid) {
           this.gameChat = [];
           this.enemies = [];
           this.inGame = false;
