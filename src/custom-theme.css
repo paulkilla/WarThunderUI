@@ -741,10 +741,10 @@ div.game-chat p {
   margin-bottom: 0.25em;
 }
 div.game-chat p.enemy {
-  color: #cc2127 !important;
+  color: #E20C00 !important;
 }
 div.game-chat p.Team {
-  color: #0b3251;
+  color: #1544D5;
 }
 div.game-chat p.All {
   color: #5a6268;

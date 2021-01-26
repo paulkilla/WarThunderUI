@@ -196,7 +196,7 @@
               </div>
               <div class="card-body game-chat">
                 <p *ngFor="let item of gameChat; let i = index" [ngClass]="gameChat[i].enemy ? 'enemy' : gameChat[i].mode">
-                  <span class="sender">[{{ item.sender }}]</span> &nbsp;<span class="message">{{item.msg}}</span>
+                  <span class="sender">[{{ item.sender }}]</span> &nbsp;<span class="message" [innerHTML]="item.msg"></span>
                 </p>
               </div>
             </div>
