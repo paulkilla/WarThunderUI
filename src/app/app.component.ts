@@ -53,9 +53,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const iasArray: any[] = [];
-    const altitudeArray: any[] = [];
-    const throttleArray: any[] = [];
+    let iasArray: any[] = [];
+    let altitudeArray: any[] = [];
+    let throttleArray: any[] = [];
+    let climbRateArray: any[] = [];
+    let climbAngleArray: any[] = [];
+    let oilArray: any[] = [];
+    let waterArray: any[] = [];
     // @ts-ignore
     $('#ias-trend-line').sparkline(iasArray);
     // @ts-ignore
@@ -84,14 +88,31 @@ export class AppComponent implements OnInit {
                 throttleArray.push(state.throttle);
                 // @ts-ignore
                 $('#throttle-trend-line').sparkline(throttleArray);
+              } else if (prop === 'vertical_speed') {
+                climbRateArray.push(state.vertical_speed);
+                // @ts-ignore
+                $('#climb-rate-trend-line').sparkline(climbRateArray);
+              } else if (prop === 'climb_angle') {
+                climbAngleArray.push(state.climb_angle);
+                // @ts-ignore
+                $('#climb-angle-trend-line').sparkline(climbAngleArray);
+              } else if (prop === 'oil_temp') {
+                oilArray.push(state.oil_temp);
+                // @ts-ignore
+                $('#oil-trend-line').sparkline(oilArray);
+              } else if (prop === 'water_temp') {
+                waterArray.push(state.water_temp);
+                // @ts-ignore
+                $('#water-trend-line').sparkline(waterArray);
               }
             } else {
-              // @ts-ignore
-              $('#ias-trend-line').sparkline([0]);
-              // @ts-ignore
-              $('#altitude-trend-line').sparkline([0]);
-              // @ts-ignore
-              $('#throttle-trend-line').sparkline([0]);
+              iasArray = [0];
+              altitudeArray = [0];
+              throttleArray = [0];
+              climbRateArray = [0];
+              climbAngleArray = [0];
+              oilArray = [0];
+              waterArray = [0];
             }
           }
         }
