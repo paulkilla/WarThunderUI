@@ -133,6 +133,7 @@ export class AppComponent implements OnInit {
       });
       this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
         this.gameChat.push(item);
+        updateScroll();
         const myRegexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
         const otherRegexResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
         if ( myRegexResult != null ) {
@@ -325,4 +326,10 @@ export interface Message {
   sender: string;
   enemy: boolean;
   mode: string;
+}
+
+function updateScroll(): void {
+  const element = $('.game-chat').each(function() {
+    $(this).animate({ scrollTop: $(this).prop('scrollHeight')}, 1000);
+  });
 }

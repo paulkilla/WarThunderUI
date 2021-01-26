@@ -65,6 +65,10 @@ canvas#map-canvas {
   height: 400px!important;
 }
 
+div.resizable-div {
+  overflow-y: scroll;
+}
+
 div.game-chat {
   p {
     margin-bottom: .25em;
@@ -124,7 +128,14 @@ span.trend-line {
   z-index: -1;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
 
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

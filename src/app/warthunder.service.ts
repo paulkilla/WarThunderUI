@@ -31,7 +31,6 @@ export class WarthunderService {
     return this.http.get(url + '/state').pipe(
       map((data: any) => {
             const ias = data['IAS, km/h'];
-            const tas = data['TAS, km/h'];
             const vs = data['Vy, m/s'];
             const vsInKm = vs * (18 / 5);
             const climbAngle = Math.atan(vsInKm / ias) * (180 / Math.PI);
