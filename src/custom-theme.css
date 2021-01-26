@@ -779,9 +779,12 @@ div.header-options .check {
 }
 
 span.trend-line {
-  width: 50%;
-  display: block;
-  float: left;
+  width: 100%;
+  display: inline-flex !important;
+  position: absolute;
+  overflow: hidden;
+  left: 10px;
+  z-index: -1;
 }
 
 .mat-ripple-element {
