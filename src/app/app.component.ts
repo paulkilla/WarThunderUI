@@ -253,6 +253,9 @@ export class AppComponent implements OnInit {
         }
         const showMyInstruments = localStorage.getItem('showMyInstruments');
         this.teamPlayers.forEach((player: any) => {
+          if (player === '' || player == null) {
+            return;
+          }
           if (player !== playerName || (player === playerName && showMyInstruments)) {
             this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
               newTeamInstruments.forEach((instrument, index, theArray) => {
