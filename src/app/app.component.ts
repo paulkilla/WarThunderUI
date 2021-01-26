@@ -1,13 +1,10 @@
-// @ts-ignore
+// @ts-nocheck
 import {Component, OnInit} from '@angular/core';
 import { WarthunderService } from '../app/warthunder.service';
-// @ts-ignore
 import {interval} from 'rxjs';
-// @ts-ignore
 import {MatDialog} from '@angular/material/dialog';
 import { } from 'jquery';
 
-// @ts-ignore
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -60,11 +57,8 @@ export class AppComponent implements OnInit {
     let climbAngleArray: any[] = [];
     let oilArray: any[] = [];
     let waterArray: any[] = [];
-    // @ts-ignore
     $('#ias-trend-line').sparkline(iasArray);
-    // @ts-ignore
     $('#altitude-trend-line').sparkline(altitudeArray);
-    // @ts-ignore
     $('#throttle-trend-line').sparkline(throttleArray);
     // Refresh HUD - State every 2 seconds
     interval(2000).subscribe((x: any) => {
@@ -72,37 +66,29 @@ export class AppComponent implements OnInit {
         // Assign variables in state to this.instruments
         for (const prop in state) {
           if (Object.prototype.hasOwnProperty.call(state, prop)) {
-            // @ts-ignore
             this.instruments[prop] = state[prop];
             // Only update spark line when we are in a game, else reset them to 0
             if (this.inGame) {
               if (prop === 'indicated_air_speed') {
                 iasArray.push(state.indicated_air_speed);
-                // @ts-ignore
                 $('#ias-trend-line').sparkline(iasArray);
               } else if (prop === 'altitude') {
                 altitudeArray.push(state.altitude);
-                // @ts-ignore
                 $('#altitude-trend-line').sparkline(altitudeArray);
               } else if (prop === 'throttle') {
                 throttleArray.push(state.throttle);
-                // @ts-ignore
                 $('#throttle-trend-line').sparkline(throttleArray);
               } else if (prop === 'vertical_speed') {
                 climbRateArray.push(state.vertical_speed);
-                // @ts-ignore
                 $('#climb-rate-trend-line').sparkline(climbRateArray);
               } else if (prop === 'climb_angle') {
                 climbAngleArray.push(state.climb_angle);
-                // @ts-ignore
                 $('#climb-angle-trend-line').sparkline(climbAngleArray);
               } else if (prop === 'oil_temp') {
                 oilArray.push(state.oil_temp);
-                // @ts-ignore
                 $('#oil-trend-line').sparkline(oilArray);
               } else if (prop === 'water_temp') {
                 waterArray.push(state.water_temp);
-                // @ts-ignore
                 $('#water-trend-line').sparkline(waterArray);
               }
             } else {
@@ -134,7 +120,6 @@ export class AppComponent implements OnInit {
         // Assign variables in indicators to this.instruments
         for (const prop in indicators) {
           if (Object.prototype.hasOwnProperty.call(indicators, prop)) {
-            // @ts-ignore
             this.instruments[prop] = indicators[prop];
           }
         }
