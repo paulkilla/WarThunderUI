@@ -112,7 +112,9 @@ export class AppComponent implements OnInit {
           this.enemies = [];
           this.inGame = false;
           this.teamPlayers = [];
-          this.teamInstruments = [];
+          if (!localStorage.getItem('showAlways')) {
+            this.teamInstruments = [];
+          }
           this.hudMessages = [];
         } else {
           this.inGame = true;
