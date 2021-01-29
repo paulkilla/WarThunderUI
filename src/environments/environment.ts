@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  restEndpoint: 'http://localhost:8000/v1',
+  wsSubEndpoint: 'ws://localhost:8000/v1/sub',
+  wsPubEndpoint: 'ws://localhost:8000/v1/pub'
 };
 
 /*

@@ -1,9 +1,15 @@
 // @ts-nocheck
-import {Component, OnInit} from '@angular/core';
-import { WarthunderService } from '../app/warthunder.service';
-import {interval} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {interval, Subscription} from 'rxjs';
 import { } from 'jquery';
+import {WarthunderService} from './warthunder.service';
+import {environment} from '../environments/environment';
+import {Instruments} from './instruments';
+import {Message} from './message';
+import {Enemy} from './enemy';
+import {subscriptionLogsToBeFn} from 'rxjs/internal/testing/TestScheduler';
+export const WS_SUB_ENDPOINT = environment.wsSubEndpoint;
+export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 
 @Component({
   selector: 'app-root',
@@ -12,326 +18,103 @@ import { } from 'jquery';
   providers: [ WarthunderService ]
 })
 
-export class AppComponent implements OnInit {
-  title = 'WarThunderUI';
-  declare inGame: boolean;
-  declare instruments: Instruments;
-  declare gameChat: Message[];
-  declare hudMessages: Message[];
-  declare enemies: Enemies[];
-  declare teamInstruments: Instruments[];
-  declare teamPlayers: string[];
-  constructor(private wtService: WarthunderService, public dialog: MatDialog) {
-    this.gameChat = [];
-    this.hudMessages = [];
-    this.enemies = [];
-    this.teamPlayers = [];
-    this.inGame = false;
-    this.teamInstruments = [];
-    this.instruments = {
-      playerName: localStorage.getItem('playerName') || '',
-      altitude: 0,
-      bearing: 0,
-      bearing_text: '',
-      climb_angle: 0,
-      indicated_air_speed: 0,
-      manifold_pressure: 0,
-      pitch: 0,
-      prop_pitch: 0,
-      radiator: 0,
-      throttle: 0,
-      true_air_speed: 0,
-      valid: false,
-      vertical_speed: 0,
-      water_temp: 0,
-      oil_temp: 0,
-      killed: false
-    };
+export class AppComponent implements OnInit, OnDestroy {
+
+  messageFromServer: string;
+  subService: WarthunderService;
+  pubService: WarthunderService;
+  subSubscription: Subscription;
+  pubSubscription: Subscription;
+  instruments: Instruments;
+  gameChat: Message[];
+  teamInstruments: Instruments[];
+  enemies: Enemy[];
+  pubStatus;
+  subStatus;
+
+  constructor(private subService: WarthunderService, private pubService: WarthunderService, private ngZone: NgZone) {
+    this.subService = subService;
+    this.pubService = pubService;
+    window.restEndpoint = environment.restEndpoint;
   }
 
   ngOnInit(): void {
-    let iasArray: any[] = [];
-    let altitudeArray: any[] = [];
-    let throttleArray: any[] = [];
-    let climbRateArray: any[] = [];
-    let climbAngleArray: any[] = [];
-    let oilArray: any[] = [];
-    let waterArray: any[] = [];
-    $('#ias-trend-line').sparkline(iasArray);
-    $('#altitude-trend-line').sparkline(altitudeArray);
-    $('#throttle-trend-line').sparkline(throttleArray);
-    // Refresh HUD - State every 2 seconds
-    interval(2000).subscribe((x: any) => {
-      this.wtService.getState().subscribe(state => {
-        // Assign variables in state to this.instruments
-        for (const prop in state) {
-          if (Object.prototype.hasOwnProperty.call(state, prop)) {
-            this.instruments[prop] = state[prop];
-            // Only update spark line when we are in a game, else reset them to 0
-            if (this.inGame) {
-              if (prop === 'indicated_air_speed') {
-                iasArray.push(state.indicated_air_speed);
-                $('#ias-trend-line').sparkline(iasArray);
-              } else if (prop === 'altitude') {
-                altitudeArray.push(state.altitude);
-                $('#altitude-trend-line').sparkline(altitudeArray);
-              } else if (prop === 'throttle') {
-                throttleArray.push(state.throttle);
-                $('#throttle-trend-line').sparkline(throttleArray);
-              } else if (prop === 'vertical_speed') {
-                climbRateArray.push(state.vertical_speed);
-                $('#climb-rate-trend-line').sparkline(climbRateArray);
-              } else if (prop === 'climb_angle') {
-                climbAngleArray.push(state.climb_angle);
-                $('#climb-angle-trend-line').sparkline(climbAngleArray);
-              } else if (prop === 'oil_temp') {
-                oilArray.push(state.oil_temp);
-                $('#oil-trend-line').sparkline(oilArray);
-              } else if (prop === 'water_temp') {
-                waterArray.push(state.water_temp);
-                $('#water-trend-line').sparkline(waterArray);
-              }
-            } else {
-              iasArray = [0];
-              altitudeArray = [0];
-              throttleArray = [0];
-              climbRateArray = [0];
-              climbAngleArray = [0];
-              oilArray = [0];
-              waterArray = [0];
-            }
-          }
-        }
-      });
-    });
-    // Refresh HUD - Indicators every 2 seconds
-    interval(2000).subscribe((x: any) => {
-      this.wtService.getIndicators().subscribe(indicators => {
-        if (indicators.valid == null || !indicators.valid) {
-          this.gameChat = [];
-          this.enemies = [];
-          this.inGame = false;
-          this.teamPlayers = [];
-          if (!localStorage.getItem('showAlways')) {
-            this.teamInstruments = [];
-          }
-          this.hudMessages = [];
-        } else {
-          this.inGame = true;
-        }
-        // Assign variables in indicators to this.instruments
-        for (const prop in indicators) {
-          if (Object.prototype.hasOwnProperty.call(indicators, prop)) {
-            this.instruments[prop] = indicators[prop];
-          }
-        }
-      });
-    });
-    // Refresh GameChat - GameChat every 2 seconds
-    interval(2000).subscribe((x: any) => {
-      let latestId = 0;
-      this.gameChat.forEach(item => {
-        latestId = item.id;
-      });
-      this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
-        this.gameChat.push(item);
-        updateScroll();
-        const myRegexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
-        const otherRegexResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
-        if ( myRegexResult != null ) {
-          let exists = false;
-          let killed = false;
-          let lastLocation = 'Unknown';
-          let lastSeen = new Date().getTime();
-          this.enemies.forEach(existingItem => {
-            if (existingItem.name === myRegexResult[2]) {
-              exists = true;
-              killed = existingItem.killed;
-              lastLocation = existingItem.location;
-              lastSeen = existingItem.last_seen;
-            }
-          });
-          if (!exists) {
-            this.enemies.push(
-              {altitude: '', last_seen: lastSeen, name: myRegexResult[2], plane: myRegexResult[3], killed, location: lastLocation});
-          }
-        }
-        if (otherRegexResult != null) {
-          console.log(otherRegexResult);
-          let exists = false;
-          let killed = false;
-          let lastSeen = new Date().getTime();
-          this.enemies.forEach(existingItem => {
-            console.log(existingItem);
-            if (existingItem.name === otherRegexResult[2]) {
-              exists = true;
-              killed = existingItem.killed;
-              existingItem.location = otherRegexResult[5];
-              lastSeen = new Date().getTime();
-            }
-          });
-          if (!exists) {
-            this.enemies.push(
-              {altitude: '', last_seen: lastSeen,
-                name: otherRegexResult[2], plane: otherRegexResult[3], killed, location: otherRegexResult[5]});
-          }
-        }
-      }));
-    });
-    // Refresh HudMsg - Get information on enemies destroyed and squad mates destroyed
-    interval(2000).subscribe((x: any) => {
-      const latestEvtId = 0;
-      let latestDmgId = 0; // Not sure what this one does atm
-      this.hudMessages.forEach(item => {
-        latestDmgId = item.id;
-      });
-      this.wtService.getHudMessages(latestEvtId, latestDmgId).subscribe(hudMessages => hudMessages.forEach((item: any) => {
-        this.hudMessages.push(item);
-        // Do stuff here with the item and set enemies as dead etc.
-        // Regex for achievements would be \s(.*)\s(\(.*\))\s\bhas achieved\b\s(.*)$ keeping for later. [1] would be name [4] is award
-        let regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
-        if ( regexResult != null ) {
-          // Do stuff here when we match on the regex to pull down 'shot down'
-          const action = regexResult[3];
-          if (action != null) {
-            if ( action.startsWith('shot down')) {
-              const targetPlayerName = regexResult[4];
-              // const sourcePlayerName = regexResult[1];
-              if (targetPlayerName === this.instruments.playerName) {
-                this.instruments.killed = true;
-              }
-              this.enemies.forEach((enemy: any) => {
-                if (enemy.name === targetPlayerName) {
-                  enemy.killed = true;
-                }
-              });
-            }
-          }
-        } else {
-          // Check for other regex.
-          // Check for crashes.. hah what a noob!
-          regexResult = item.msg.match('[\\s?](.*) (\\(.*\\))(.*)[ has crashed.]$');
-          if ( regexResult != null ) {
-            const targetPlayerName = regexResult[1];
-            if (targetPlayerName === this.instruments.playerName) {
-              this.instruments.killed = true;
-            }
-            this.enemies.forEach((enemy: any) => {
-              if (enemy.name === targetPlayerName) {
-                enemy.killed = true;
-              }
-            });
-          } else {
-            // check for aaa kill
-            regexResult = item.msg.match('\\bAAA shot down\\b\\s(.*)\\s(\\(.*\\))$');
-            if ( regexResult != null ) {
-              const targetPlayerName = regexResult[1];
-              if (targetPlayerName === this.instruments.playerName) {
-                this.instruments.killed = true;
-              }
-              this.enemies.forEach((enemy: any) => {
-                if (enemy.name === targetPlayerName) {
-                  enemy.killed = true;
-                }
-              });
-            }
-          }
-        }
-      }));
-    });
-    // Upload Data to HerokuApp and pull data down
-    interval(2000).subscribe((x: any) => {
-      if (this.inGame || localStorage.getItem('showAlways')) {
-        const newTeamInstruments: Instruments[] = this.teamInstruments;
-        let found = false;
-        const playerName = localStorage.getItem('playerName');
-        if (playerName !== null) {
-          // If user is not killed reset it here
-          if (this.instruments.throttle > 50 && this.instruments.bearing_text != null) {
-            this.instruments.killed = false;
-          }
-          if (this.inGame) {
-            this.wtService.uploadData(playerName, this.instruments);
-          }
-        }
-        const showMyInstruments = localStorage.getItem('showMyInstruments');
-        this.teamPlayers.forEach((player: any) => {
-          if (player !== playerName || (player === playerName && showMyInstruments)) {
-            this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
-              newTeamInstruments.forEach((instrument, index, theArray) => {
-                if (instrument.playerName === player) {
-                  theArray[index] = playerInstruments;
-                  found = true;
-                }
-              });
-              if (!found) {
-                newTeamInstruments.push(playerInstruments);
-              }
-            });
-          } else {
-            newTeamInstruments.forEach((instrument, index) => {
-              newTeamInstruments.splice(index, 1);
-            });
-          }
-        });
-        this.teamInstruments = newTeamInstruments;
-      }
-    });
-    // Get Player lists every 15 seconds (Gets all users if none have been specified)
-    interval(15000).subscribe((x: any) => {
-      if (this.inGame || localStorage.getItem('showAlways')) {
-        const squadMembers = localStorage.getItem('squadMembers');
-        if (squadMembers !== null && squadMembers !== '') {
-          this.teamPlayers = squadMembers.split(',');
-        } else {
-          this.wtService.getAllPlayers().subscribe(players => {
-            this.teamPlayers = players;
-          });
-        }
-      }
-    });
+    window.initComponentReference = { component: this, zone: this.ngZone, loadAngularFunction: () => this.init(), };
   }
-}
 
-export interface Instruments {
-  playerName: string;
-  true_air_speed: number;
-  indicated_air_speed: number;
-  altitude: number;
-  vertical_speed: number;
-  pitch: number;
-  throttle: number;
-  climb_angle: number;
-  radiator: number;
-  valid: boolean;
-  bearing: number;
-  bearing_text: string;
-  prop_pitch: number;
-  manifold_pressure: number;
-  oil_temp: number;
-  water_temp: number;
-  killed: boolean;
-}
+  init(): void {
+    this.subSubscription =
+      this.subService.createObservableSocket(WS_SUB_ENDPOINT)
+        .subscribe(
+          data => {
+            console.log('Subscription: ' + data);
+            this.messageFromServer = data;
+            // Do stuff here when we receive other teammates data
+           },
+          err => console.log( 'sub err'),
+          () =>  console.log( 'The observable sub stream is complete')
+        );
+    this.pubSubscription =
+      this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
+        .subscribe(
+          data => {
+            console.log('Publishing: ' + data);
+            this.messageFromServer = data;
+          },
+          err => console.log( 'pub err'),
+          () =>  console.log( 'The observable pub stream is complete')
+        );
+    this.registerWithSquad();
+    this.monitorInstruments();
+    this.monitorGameChat();
+    this.monitorGameLog();
+  }
 
-export interface Enemies {
-  name: string;
-  plane: string;
-  location: string;
-  altitude: string;
-  last_seen: number;
-  killed: boolean;
-}
+  registerWithSquad(): void {
+    console.log('Registering Squad');
+    this.pubService.socket.onopen = (): void => {
+      this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+        message_type: 'join',
+        data: {
+          name: localStorage.getItem('squadName'),
+          secret: localStorage.getItem('squadSecret')
+        }
+      }));
+    };
+    this.subService.socket.onopen = (): void => {
+      this.subStatus = this.subService.sendMessage(JSON.stringify({
+        message_type: 'join',
+        data: {
+          name: localStorage.getItem('squadName'),
+          secret: localStorage.getItem('squadSecret')
+        }
+      }));
+    };
+  }
 
-export interface Message {
-  id: number;
-  msg: string;
-  sender: string;
-  enemy: boolean;
-  mode: string;
-}
+  monitorInstruments(): void {
+    console.log('Monitoring our instruments and push to socket endpoint');
 
-function updateScroll(): void {
-  const element = $('.game-chat').each(function() {
-    $(this).animate({ scrollTop: $(this).prop('scrollHeight')}, 1000);
-  });
+  }
+
+  monitorGameChat(): void {
+    console.log('Monitoring GameChat for enemy locations and storing game chat');
+
+  }
+
+  monitorGameLog(): void {
+    console.log('Monitoring GameLog for awards, and deaths etc');
+
+  }
+
+  closeSocket(): void {
+    this.subSubscription.unsubscribe();
+    this.subStatus = 'The socket is closed';
+    this.pubSubscription.unsubscribe();
+    this.pubStatus = 'The socket is closed';
+  }
+
+  ngOnDestroy(): void {
+    this.closeSocket();
+  }
 }

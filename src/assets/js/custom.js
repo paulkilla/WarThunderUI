@@ -1,12 +1,11 @@
 
 $(document).ready(function() {
-  var dialog,
-    autoOpen = true,
+  let autoOpen = true,
     playerName = $( "#playerName" ),
     endpoint = $( "#endpoint" ),
-    squadMembers = $( "#squadMembers" ),
-    squadMembersEndpoint = $( "#squadMembersEndpoint" ),
-    allFields = $( [] ).add( playerName ).add( endpoint ).add( squadMembers ).add( squadMembersEndpoint );
+    squadName = $( "#squadName" ),
+    squadSecret = $( "#squadSecret" ),
+    allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName ).add( squadSecret );
   if (localStorage.getItem("playerName") !== null) {
     playerName.val(localStorage.getItem('playerName'));
   }
@@ -15,40 +14,36 @@ $(document).ready(function() {
     endpoint.val(localStorage.getItem('endpoint'));
   }
 
-  if (localStorage.getItem("squadMembers") !== null) {
-    squadMembers.val(localStorage.getItem('squadMembers'));
+  if (localStorage.getItem("squadName") !== null) {
+    squadName.val(localStorage.getItem('squadName'));
   }
 
-  if (localStorage.getItem("squadMembersEndpoint") !== null) {
-    squadMembersEndpoint.val(localStorage.getItem('squadMembersEndpoint'));
-  }
-
-  if (localStorage.getItem("playerName") !== null && localStorage.getItem("endpoint") !== null) {
-    autoOpen = false;
+  if (localStorage.getItem("squadSecret") !== null) {
+    squadSecret.val(localStorage.getItem('squadSecret'));
   }
 
   function checkLength( o, n, min, max ) {
     if ( o.val().length > max || o.val().length < min ) {
-      o.addClass( "ui-state-error" );
-      updateTips( "Length of " + n + " must be between " +
-        min + " and " + max + "." );
+      o.removeClass("is-valid");
+      o.addClass( "is-invalid" );
       return false;
     } else {
+      o.removeClass("is-invalid");
+      o.addClass("is-valid");
       return true;
     }
   }
 
   function saveData() {
-    var valid = true;
-    allFields.removeClass( "ui-state-error" );
+    let valid = true;
 
     valid = valid && checkLength( playerName, "playerName", 1, 100 );
     valid = valid && checkLength( endpoint, "endpoint", 6, 100 );
-    if ( valid ) {
+    valid = valid && checkLength( squadName, "squadName", 1, 100 );
+    valid = valid && checkLength( squadSecret, "squadSecret", 1, 100 );
+    if(valid) {
       localStorage.setItem("playerName", playerName.val());
       localStorage.setItem("endpoint", endpoint.val());
-      localStorage.setItem("squadMembers", squadMembers.val());
-      localStorage.setItem("squadMembersEndpoint", squadMembersEndpoint.val());
       if (localStorage.getItem("playerName") !== null) {
         playerName.val(localStorage.getItem('playerName'));
       }
@@ -56,14 +51,35 @@ $(document).ready(function() {
       if (localStorage.getItem("endpoint") !== null) {
         endpoint.val(localStorage.getItem('endpoint'));
       }
+      // Need to do rest call to endpoint here
+      $.ajax({async: false, url: window.restEndpoint + '/squads', type: 'POST',
+        data: JSON.stringify({'name': squadName.val(), 'secret': squadSecret.val()}),
+        success: function(data, textStatus, jqXHR) {
+          switch(jqXHR.status) {
+            case 200:
+              showNotification('top','right', 'Joined an existing Squad, enjoy your game!', 'success', 4000, false);
+              break;
+            case 201:
+              showNotification('top','right', 'New Squad setup! Share your Squad Name and Key and get going!', 'success', 4000, false);
+          }
 
-      if (localStorage.getItem("squadMembers") !== null) {
-        squadMembers.val(localStorage.getItem('squadMembers'));
-      }
-
-      if (localStorage.getItem("squadMembersEndpoint") !== null) {
-        squadMembersEndpoint.val(localStorage.getItem('squadMembersEndpoint'));
-      }
+          localStorage.setItem("squadName", $('#squadName').val());
+          localStorage.setItem("squadSecret", $('#squadSecret').val());
+          window.initComponentReference.zone.run(() => { window.initComponentReference.loadAngularFunction(); });
+        }, error: function(jqXHR, textStatus, errorThrown) {
+          switch(jqXHR.status) {
+            case 409:
+              // Squad exists but secret is wrong
+              squadSecret.addClass( "is-invalid" );
+              valid = false;
+              showNotification('top','right', 'Incorrect Secret', 'danger', 4000, false);
+              break;
+            default:
+              // Generally something wrong
+              showNotification('top','right', errorThrown, 'danger', 4000, false);
+              valid = false;
+          }
+        }});
     }
     return valid;
   }
@@ -72,8 +88,6 @@ $(document).ready(function() {
     event.preventDefault();
     if(saveData()) {
       $('#settingsModal').modal('hide');
-    } else {
-      console.log('Invalid Settings');
     }
   });
 
@@ -81,17 +95,10 @@ $(document).ready(function() {
     $("#settingsModal").modal();
   }
   var showAlways = localStorage.getItem('showAlways');
-  var showMyInstruments = localStorage.getItem('showMyInstruments');
   if(showAlways != null && showAlways === 'true') {
     $('#showAlways').prop('checked', true);
   } else {
     $('#showAlways').prop('checked', false);
-  }
-
-  if(showMyInstruments != null && showMyInstruments === 'true') {
-    $('#showMyInstruments').prop('checked', true);
-  } else {
-    $('#showMyInstruments').prop('checked', false);
   }
 
   $('#showAlways').on('change', function() {
@@ -100,15 +107,6 @@ $(document).ready(function() {
       localStorage.setItem('showAlways', true);
     } else {
       localStorage.setItem('showAlways', false);
-    }
-  });
-
-  $('#showMyInstruments').on('change', function() {
-    var checked = $(this).is(":checked");
-    if (checked) {
-      localStorage.setItem('showMyInstruments', true);
-    } else {
-      localStorage.setItem('showMyInstruments', false);
     }
   });
 
@@ -138,4 +136,18 @@ function timeSince(timeStamp) {
   var now = new Date(),
   secondsPast = (now.getTime() - timeStamp) / 1000;
   return parseInt(secondsPast) + 's ago';
+}
+
+function showNotification(from, align, message, type, timer, allow_dismiss){
+  $.notify({
+    message: message
+  },{
+    type: type,
+    timer: timer,
+    placement: {
+      from: from,
+      align: align
+    },
+    allow_dismiss: allow_dismiss
+  });
 }
