@@ -67,6 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
         .subscribe(
           data => {
+            console.log('pub: ' + data);
             this.messageFromServer = data;
           },
           err => console.log( 'pub err'),
