@@ -344,7 +344,7 @@ export class AppComponent implements OnInit, OnDestroy {
             const award = regexResult[3];
             if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
               console.log('Player: ' + player + ' got award ' + award);
-              showNotification('top', 'middle', player + ' got the award ' + award, 'warning', 3000, false);
+              showNotification('top', 'left', player + ' got the award ' + award, 'warning', 3000, false);
             }
           }
         }
