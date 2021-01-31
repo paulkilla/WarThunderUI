@@ -134,7 +134,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   handleEnemyMessage(data): void {
-    console.log('Enemy Message: ' + JSON.stringify(data));
     if (existsInArray(this.enemies, 'name', data.player)) {
       this.enemies.forEach((enemy, index) => {
         if (enemy.name === data.player) {
