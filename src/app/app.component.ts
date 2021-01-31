@@ -138,7 +138,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (existsInArray(this.enemies, 'name', data.player)) {
       this.enemies.forEach((enemy, index) => {
         if (enemy.name === playerName) {
-          if (enemy.location === 'Unknown') {
+          if (enemy.location !== 'Unknown') {
             this.enemies[index] = data.data;
           }
         }
