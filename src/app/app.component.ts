@@ -121,7 +121,9 @@ export class AppComponent implements OnInit, OnDestroy {
         });
       } else {
         this.teamInstruments.push(data.data);
-        showNotification('top', 'right', data.player + ' joined your squad!', 'success', 3000, false);
+        if (data.player !== localStorage.getItem('playerName')) {
+          showNotification('top', 'right', data.player + ' joined your squad!', 'success', 3000, false);
+        }
       }
     } else if (existsInArray(this.teamInstruments, 'playerName', data.player)) {
       this.teamInstruments.forEach((instrument, index) => {
