@@ -53,7 +53,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   init(): void {
-    console.log('Creating Subscription');
     this.subSubscription =
       this.subService.createObservableSocket(WS_SUB_ENDPOINT)
         .subscribe(
@@ -74,7 +73,6 @@ export class AppComponent implements OnInit, OnDestroy {
           err => console.log( 'sub err'),
           () =>  console.log( 'The observable sub stream is complete')
         );
-    console.log('Creating Publishing');
     this.pubSubscription =
       this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
         .subscribe(
@@ -133,26 +131,21 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleEnemyMessage(data): void {
-    console.log(JSON.stringify(data));
+  handleEnemyMessage(data): void {c
     if (existsInArray(this.enemies, 'name', data.player)) {
       this.enemies.forEach((enemy, index) => {
         if (enemy.name === data.player) {
-          console.log('In Array');
           if (data.data.location !== 'Unknown') {
-            console.log('Not Unknown');
             this.enemies[index] = data.data;
           }
         }
       });
     } else {
-      console.log('Not in array');
       this.enemies.push(data.data);
     }
   }
 
   monitorInstruments(): void {
-    console.log('Monitoring our instruments and push to socket endpoint');
     // Reset all the variables
     let iasSLArray: any[] = [];
     let altitudeSLArray: any[] = [];
@@ -244,7 +237,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   monitorGameChat(): void {
-    console.log('Monitoring GameChat for enemy locations and storing game chat');
     interval(2000).subscribe((x: any) => {
       let latestId = 0;
       this.gameChat.forEach(item => {
@@ -281,7 +273,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   monitorGameLog(): void {
-    console.log('Monitoring GameLog for awards, and deaths etc');
     interval(2000).subscribe((x: any) => {
       const latestEvtId = 0;
       let latestDmgId = 0; // Not sure what this one does atm
@@ -343,7 +334,6 @@ export class AppComponent implements OnInit, OnDestroy {
             const player = regexResult[1];
             const award = regexResult[3];
             if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
-              console.log('Player: ' + player + ' got award ' + award);
               showNotification('top', 'left', player + ' got the award ' + award, 'warning', 3000, false);
             }
           }
