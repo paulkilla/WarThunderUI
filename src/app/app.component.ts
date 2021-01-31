@@ -134,15 +134,19 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   handleEnemyMessage(data): void {
+    console.log(JSON.stringify(data));
     if (existsInArray(this.enemies, 'name', data.player)) {
       this.enemies.forEach((enemy, index) => {
         if (enemy.name === data.player) {
-          if (data.location !== 'Unknown') {
+          console.log('In Array');
+          if (data.data.location !== 'Unknown') {
+            console.log('Not Unknown');
             this.enemies[index] = data.data;
           }
         }
       });
     } else {
+      console.log('Not in array');
       this.enemies.push(data.data);
     }
   }
