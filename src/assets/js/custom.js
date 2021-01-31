@@ -95,10 +95,17 @@ $(document).ready(function() {
     $("#settingsModal").modal();
   }
   var showAlways = localStorage.getItem('showAlways');
+  var showMyInstruments = localStorage.getItem('showMyInstruments');
   if(showAlways != null && showAlways === 'true') {
     $('#showAlways').prop('checked', true);
   } else {
     $('#showAlways').prop('checked', false);
+  }
+
+  if(showMyInstruments != null && showMyInstruments === 'true') {
+    $('#showMyInstruments').prop('checked', true);
+  } else {
+    $('#showMyInstruments').prop('checked', false);
   }
 
   $('#showAlways').on('change', function() {
@@ -107,6 +114,15 @@ $(document).ready(function() {
       localStorage.setItem('showAlways', true);
     } else {
       localStorage.setItem('showAlways', false);
+    }
+  });
+
+  $('#showMyInstruments').on('change', function() {
+    var checked = $(this).is(":checked");
+    if (checked) {
+      localStorage.setItem('showMyInstruments', true);
+    } else {
+      localStorage.setItem('showMyInstruments', false);
     }
   });
 

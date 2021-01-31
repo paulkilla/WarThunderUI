@@ -45,6 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.hudMessages = [];
     this.instruments = new Instruments();
     this.enemies = [];
+    this.teamInstruments = [];
   }
 
   ngOnInit(): void {
@@ -56,10 +57,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subSubscription =
       this.subService.createObservableSocket(WS_SUB_ENDPOINT)
         .subscribe(
-          data => {
-            console.log('Subscription: ' + data);
-            this.messageFromServer = data;
-            // Do stuff here when we receive other teammates data
+        rawData => {
+            const data = JSON.parse(rawData);
+            const message_type = data.message_type;
+            if (message_type == null) {
+              console.log('Data has no message type: ' + JSON.stringify(data));
+            } else {
+              if (message_type === 'squadmate') {
+                this.handleSquadMateMessage(data);
+              } else if (message_type === 'enemy') {
+                this.handleEnemyMessage(data);
+              }
+            }
            },
           err => console.log( 'sub err'),
           () =>  console.log( 'The observable sub stream is complete')
@@ -69,7 +78,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
         .subscribe(
           data => {
-            console.log('Publisher: ' + data);
             this.messageFromServer = data;
           },
           err => console.log( 'pub err'),
@@ -82,7 +90,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   registerWithSquad(): void {
-    console.log('Registering Squad with Pub Service');
     this.pubService.socket.onopen = (): void => {
       this.pubStatus = this.pubService.sendMessage(JSON.stringify({
         message_type: 'join',
@@ -92,7 +99,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }));
     };
-    console.log('Registering Squad with Sub Service');
     this.subService.socket.onopen = (): void => {
       this.subStatus = this.subService.sendMessage(JSON.stringify({
         message_type: 'join',
@@ -102,6 +108,40 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }));
     };
+  }
+
+  handleSquadMateMessage(data): void {
+    if (data.player !== localStorage.getItem('playerName') ||
+      (localStorage.getItem('showMyInstruments') === 'true' && data.player === localStorage.getItem('playerName'))) {
+      if (existsInArray(this.teamInstruments, 'playerName', data.player)) {
+        this.teamInstruments.forEach((instrument, index) => {
+          if (instrument.playerName === data.player) {
+            this.teamInstruments[index] = data.data;
+          }
+        });
+      } else {
+        this.teamInstruments.push(data.data);
+      }
+    } else if (existsInArray(this.teamInstruments, 'playerName', data.player)) {
+      this.teamInstruments.forEach((instrument, index) => {
+        this.teamInstruments.splice(index, 1);
+      });
+    }
+  }
+
+  handleEnemyMessage(data): void {
+    console.log('Enemy Message: ' + JSON.stringify(data));
+    if (existsInArray(this.enemies, 'name', data.player)) {
+      this.enemies.forEach((enemy, index) => {
+        if (enemy.name === playerName) {
+          if (enemy.location === 'Unknown') {
+            this.enemies[index] = data.data;
+          }
+        }
+      });
+    } else {
+      this.enemies.push(data.data);
+    }
   }
 
   monitorInstruments(): void {
@@ -182,6 +222,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
 
         if (this.inGame) {
+          this.instruments.playerName = localStorage.getItem('playerName');
           this.pubStatus = this.pubService.sendMessage(JSON.stringify({
             message_type: 'squadmate',
             player: localStorage.getItem('playerName'),
@@ -204,43 +245,26 @@ export class AppComponent implements OnInit, OnDestroy {
         updateScroll();
         const myRegexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
         const otherRegexResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
-        if ( myRegexResult != null ) {
-          let exists = false;
-          let killed = false;
+        if ( myRegexResult != null || otherRegexResult != null ) {
           let lastLocation = 'Unknown';
-          let lastSeen = new Date().getTime();
-          this.enemies.forEach(existingItem => {
-            if (existingItem.name === myRegexResult[2]) {
-              exists = true;
-              killed = existingItem.killed;
-              lastLocation = existingItem.location;
-              lastSeen = existingItem.last_seen;
-            }
-          });
-          if (!exists) {
-            this.enemies.push(
-              {altitude: '', last_seen: lastSeen, name: myRegexResult[2], plane: myRegexResult[3], killed, location: lastLocation});
+          const lastSeen = new Date().getTime();
+          let playerName = '';
+          let playerPlane = '';
+          if (myRegexResult != null) {
+            playerName = myRegexResult[2];
+            playerPlane = myRegexResult[3];
           }
-        }
-        if (otherRegexResult != null) {
-          console.log(otherRegexResult);
-          let exists = false;
-          let killed = false;
-          let lastSeen = new Date().getTime();
-          this.enemies.forEach(existingItem => {
-            console.log(existingItem);
-            if (existingItem.name === otherRegexResult[2]) {
-              exists = true;
-              killed = existingItem.killed;
-              existingItem.location = otherRegexResult[5];
-              lastSeen = new Date().getTime();
-            }
-          });
-          if (!exists) {
-            this.enemies.push(
-              {altitude: '', last_seen: lastSeen,
-                name: otherRegexResult[2], plane: otherRegexResult[3], killed, location: otherRegexResult[5]});
+          if (otherRegexResult != null) {
+            playerName = otherRegexResult[2];
+            playerPlane = otherRegexResult[3];
+            lastLocation = otherRegexResult[5];
           }
+          this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+            message_type: 'enemy',
+            player: playerName,
+            data: {altitude: '', lastSeen, name: playerName, plane: playerPlane, killed: false,
+              location: lastLocation}
+          }));
         }
       }));
     });
@@ -320,6 +344,17 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.closeSocket();
   }
+}
+
+function existsInArray(array, field, value): boolean {
+  let found = false;
+  for (const item of array) {
+    if (item[field] === value) {
+      found = true;
+      break;
+    }
+  }
+  return found;
 }
 
 function updateScroll(): void {

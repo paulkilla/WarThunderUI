@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  restEndpoint: 'http://localhost:8000/v1',
-  wsSubEndpoint: 'ws://localhost:8000/v1/sub',
-  wsPubEndpoint: 'ws://localhost:8000/v1/pub'
+  restEndpoint: 'http://squad.wolfpack.ws/v1',
+  wsSubEndpoint: 'ws://squad.wolfpack.ws/v1/sub',
+  wsPubEndpoint: 'ws://squad.wolfpack.ws/v1/pub'
 };
 
 /*
