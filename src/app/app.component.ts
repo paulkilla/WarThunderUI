@@ -21,7 +21,7 @@ export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 
 export class AppComponent implements OnInit, OnDestroy {
   inGame: true;
-  messageFromServer: string;
+  publishResponse: string;
   subService: SubscriptionService;
   pubService: PublisherService;
   wtService: WarthunderService;
@@ -37,10 +37,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private subService: SubscriptionService, private pubService: PublisherService, private wtService: WarthunderService,
               private ngZone: NgZone) {
+    window.restEndpoint = environment.restEndpoint;
     this.subService = subService;
     this.pubService = pubService;
     this.wtService = wtService;
-    window.restEndpoint = environment.restEndpoint;
     this.gameChat = [];
     this.hudMessages = [];
     this.instruments = new Instruments();
@@ -68,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
               } else if (message_type === 'enemy') {
                 this.handleEnemyMessage(data);
               }
+              // When we get new message types, add handlers here
             }
            },
           err => console.log( 'sub err'),
@@ -78,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
         .subscribe(
           data => {
-            this.messageFromServer = data;
+            this.publishResponse = data;
           },
           err => console.log( 'pub err'),
           () =>  console.log( 'The observable pub stream is complete')
@@ -292,7 +293,6 @@ export class AppComponent implements OnInit, OnDestroy {
           if (action != null) {
             if ( action.startsWith('shot down')) {
               const targetPlayerName = regexResult[4];
-              // const sourcePlayerName = regexResult[1];
               if (targetPlayerName === this.instruments.playerName) {
                 this.instruments.killed = true;
               }
@@ -330,6 +330,16 @@ export class AppComponent implements OnInit, OnDestroy {
                   enemy.killed = true;
                 }
               });
+            }
+          }
+          // Match for Awards
+          regexResult = item.msg.match('(.*)\\s(\\(.*\\))\\s\\bhas achieved\\b\\s(.*)$');
+          if ( regexResult != null ) {
+            const player = regexResult[1];
+            const award = regexResult[3];
+            if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
+              console.log('Player: ' + player + ' got award ' + award);
+              showNotification('top', 'middle', player + ' got the award ' + award, 'warning', 3000, false);
             }
           }
         }
