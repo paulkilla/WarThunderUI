@@ -7,8 +7,8 @@ import {environment} from '../environments/environment';
 import {Instruments} from './instruments';
 import {Message} from './message';
 import {Enemy} from './enemy';
-import {subscriptionLogsToBeFn} from 'rxjs/internal/testing/TestScheduler';
-import {stringify} from 'querystring';
+import {SubscriptionService} from './subscription.service';
+import {PublisherService} from './publisher.service';
 export const WS_SUB_ENDPOINT = environment.wsSubEndpoint;
 export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 
@@ -22,8 +22,8 @@ export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 export class AppComponent implements OnInit, OnDestroy {
   inGame: true;
   messageFromServer: string;
-  subService: WarthunderService;
-  pubService: WarthunderService;
+  subService: SubscriptionService;
+  pubService: PublisherService;
   wtService: WarthunderService;
   subSubscription: Subscription;
   pubSubscription: Subscription;
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
   pubStatus;
   subStatus;
 
-  constructor(private subService: WarthunderService, private pubService: WarthunderService, private wtService: WarthunderService,
+  constructor(private subService: SubscriptionService, private pubService: PublisherService, private wtService: WarthunderService,
               private ngZone: NgZone) {
     this.subService = subService;
     this.pubService = pubService;
@@ -52,6 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   init(): void {
+    console.log('Creating Subscription');
     this.subSubscription =
       this.subService.createObservableSocket(WS_SUB_ENDPOINT)
         .subscribe(
@@ -63,11 +64,12 @@ export class AppComponent implements OnInit, OnDestroy {
           err => console.log( 'sub err'),
           () =>  console.log( 'The observable sub stream is complete')
         );
+    console.log('Creating Publishing');
     this.pubSubscription =
       this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
         .subscribe(
           data => {
-            console.log('pub: ' + data);
+            console.log('Publisher: ' + data);
             this.messageFromServer = data;
           },
           err => console.log( 'pub err'),
@@ -80,7 +82,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   registerWithSquad(): void {
-    console.log('Registering Squad');
+    console.log('Registering Squad with Pub Service');
     this.pubService.socket.onopen = (): void => {
       this.pubStatus = this.pubService.sendMessage(JSON.stringify({
         message_type: 'join',
@@ -90,6 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }));
     };
+    console.log('Registering Squad with Sub Service');
     this.subService.socket.onopen = (): void => {
       this.subStatus = this.subService.sendMessage(JSON.stringify({
         message_type: 'join',
