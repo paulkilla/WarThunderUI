@@ -291,7 +291,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.wtService.getHudMessages(latestEvtId, latestDmgId).subscribe(hudMessages => hudMessages.forEach((item: any) => {
         this.hudMessages.push(item);
         // Do stuff here with the item and set enemies as dead etc.
-        // Regex for achievements would be \s(.*)\s(\(.*\))\s\bhas achieved\b\s(.*)$ keeping for later. [1] would be name [4] is award
         let regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
         if ( regexResult != null ) {
           // Do stuff here when we match on the regex to pull down 'shot down'
