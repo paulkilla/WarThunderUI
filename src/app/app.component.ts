@@ -121,6 +121,7 @@ export class AppComponent implements OnInit, OnDestroy {
         });
       } else {
         this.teamInstruments.push(data.data);
+        showNotification('top', 'right', data.player + ' joined your squad!', 'success', 3000, false);
       }
     } else if (existsInArray(this.teamInstruments, 'playerName', data.player)) {
       this.teamInstruments.forEach((instrument, index) => {
@@ -358,7 +359,7 @@ function existsInArray(array, field, value): boolean {
 }
 
 function updateScroll(): void {
-  const element = $('.game-chat').each(function() {
+  const element = $('.game-chat').each(function(): void {
     $(this).animate({ scrollTop: $(this).prop('scrollHeight')}, 1000);
   });
 }
