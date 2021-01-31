@@ -22,7 +22,8 @@
     }
   </style>
   <script language="javascript" type="text/javascript">
-    loc_tbl = {}
+    loc_tbl = {};
+    let globalEndPoint = 'http://localhost:8000/v1';
   </script>
 </head>
 <body>
@@ -40,26 +41,26 @@
           <form id="settingsForm">
             <div class="form-group">
               <label for="playerName">Player Name</label>
-              <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" />
+              <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" required />
             </div>
             <div class="form-group">
               <label for="endpoint">Endpoint</label>
-              <input type="text" class="form-control" name="endpoint" id="endpoint" value="http://localhost:8111" />
+              <input type="text" class="form-control" name="endpoint" id="endpoint" value="http://localhost:8111" required />
             </div>
             <div class="form-group">
-              <label for="squadMembersEndpoint">Squad Function Endpoint</label>
-              <input type="text" class="form-control" name="squadMembersEndpoint" id="squadMembersEndpoint" value="http://squad.wolfpack.ws" />
+              <label for="squadName">Squad Name</label>
+              <input type="text" class="form-control" name="squadName" id="squadName" placeholder="Squad Name" required />
             </div>
             <div class="form-group">
-              <label for="squadMembers">Squad Members (comma seperated)</label>
-              <input type="text" class="form-control" name="squadMembers" id="squadMembers" />
+              <label for="squadSecret">Squad Secret</label>
+              <input type="text" class="form-control" name="squadSecret" id="squadSecret" placeholder="Squad Secret" required />
             </div>
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="settingsSave">Save changes</button>
+          <button type="submit" class="btn btn-primary" id="settingsSave">Save changes</button>
         </div>
       </div>
     </div>

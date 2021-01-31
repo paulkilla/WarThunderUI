@@ -37,6 +37,7 @@
               "src/assets/js/sylvester.js",
               "src/assets/js/map.js",
               "src/assets/js/hammer.min.js",
+              "src/assets/js/bootstrap-notify.min.js",
               "src/assets/js/custom.js"
             ]
           },

@@ -47,7 +47,7 @@
                       <div class="card-icon"> IAS</div>
                       <p class="card-category">INDICATED AIR SPEED</p>
                       <span class="trend-line" id="ias-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.indicated_air_speed }} km/h</h3>
+                      <h3 class="card-title">{{ instruments.ias }} km/h</h3>
                       <br>
                     </div>
                   </div>
@@ -58,7 +58,7 @@
                     <div class="card-header card-header-info card-header-icon">
                       <div class="card-icon">TAS</div>
                       <p class="card-category">TRUE AIR SPEED</p>
-                      <h3 class="card-title">{{ instruments.true_air_speed }} km/h</h3>
+                      <h3 class="card-title">{{ instruments.tas }} km/h</h3>
                       <br>
                     </div>
                   </div>
@@ -81,7 +81,7 @@
                     <div class="card-header card-header-info card-header-icon">
                       <div class="card-icon">BNG</div>
                       <p class="card-category">BEARING</p>
-                      <h3 class="card-title">{{ instruments.bearing }}° <small>{{ instruments.bearing_text }}</small></h3>
+                      <h3 class="card-title">{{ instruments.bearing }}° <small>{{ instruments.bearingReading }}</small></h3>
                       <br>
                     </div>
                   </div>
@@ -93,7 +93,7 @@
                       <div class="card-icon">CLR</div>
                       <p class="card-category">CLIMB RATE</p>
                       <span class="trend-line" id="climb-rate-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.vertical_speed }} m/sec</h3>
+                      <h3 class="card-title">{{ instruments.verticleSpeed }} m/sec</h3>
                       <br>
                     </div>
                   </div>
@@ -105,7 +105,7 @@
                       <div class="card-icon">CLA</div>
                       <p class="card-category">CLIMB ANGLE</p>
                       <span class="trend-line" id="climb-angle-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.climb_angle }}°</h3>
+                      <h3 class="card-title">{{ instruments.climbAngle }}°</h3>
                       <br>
                     </div>
                   </div>
@@ -128,7 +128,7 @@
                     <div class="card-header card-header-primary card-header-icon">
                       <div class="card-icon">MAN</div>
                       <p class="card-category">MANIFOLD PRESSURE</p>
-                      <h3 class="card-title">{{ instruments.manifold_pressure }} psi</h3>
+                      <h3 class="card-title">{{ instruments.manifoldPressure }} psi</h3>
                       <br>
                     </div>
                   </div>
@@ -150,7 +150,7 @@
                     <div class="card-header card-header-grey card-header-icon">
                       <div class="card-icon">PRP</div>
                       <p class="card-category">PROPELLER PITCH</p>
-                      <h3 class="card-title">{{ instruments.prop_pitch }}%</h3>
+                      <h3 class="card-title">{{ instruments.propPitch }}%</h3>
                       <br>
                     </div>
                   </div>
@@ -162,7 +162,7 @@
                       <div class="card-icon">WAT</div>
                       <p class="card-category">WATER TEMP</p>
                       <span class="trend-line" id="water-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.water_temp }}°</h3>
+                      <h3 class="card-title">{{ instruments.waterTemp }}°</h3>
                       <br>
                     </div>
                   </div>
@@ -174,7 +174,7 @@
                       <div class="card-icon">OIL</div>
                       <p class="card-category">OIL TEMP</p>
                       <span class="trend-line" id="oil-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.oil_temp }}°</h3>
+                      <h3 class="card-title">{{ instruments.oilTemp }}°</h3>
                       <br>
                     </div>
                   </div>
@@ -195,7 +195,7 @@
                 <h4 class="card-title">Chat</h4>
               </div>
               <div class="card-body game-chat resizable-div">
-                <p *ngFor="let item of gameChat; let i = index" [ngClass]="gameChat[i].enemy ? 'enemy' : gameChat[i].mode">
+                <p *ngFor="let item of gameChat; let i = index">
                   <span class="sender">[{{ item.sender }}]</span> &nbsp;<span class="message" [innerHTML]="item.msg"></span>
                 </p>
               </div>
@@ -231,10 +231,10 @@
                   <tbody>
                   <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
                     <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="instruments.killed">close</i>{{ instruments.playerName}}</td>
-                    <td>{{ instruments.indicated_air_speed}} km/h</td>
+                    <td>{{ instruments.ias}} km/h</td>
                     <td>{{ instruments.altitude}} m</td>
-                    <td>{{ instruments.bearing}}° {{ instruments.bearing_text}}</td>
-                    <td>{{ instruments.vertical_speed}} m/s</td>
+                    <td>{{ instruments.bearing}}° {{ instruments.bearingReading}}</td>
+                    <td>{{ instruments.verticleSpeed}} m/s</td>
                     <td>{{ instruments.throttle }}%</td>
                     <td></td>
                   </tr>
@@ -262,7 +262,7 @@
                     <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="item.killed">close</i>{{ item.name }}</td>
                     <td>{{ item.plane }}</td>
                     <td><b>{{ item.location }}</b></td>
-                    <td><span class="show-last-seen"></span><span class="cdk-visually-hidden hidden-last-seen">{{ item.last_seen }}</span></td>
+                    <td><span class="show-last-seen"></span><span class="cdk-visually-hidden hidden-last-seen">{{ item.lastSeen }}</span></td>
                   </tr>
                   </tbody>
                 </table>

@@ -13,7 +13,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
 import { WarthunderService } from '../app/warthunder.service';
-import { MatDialogModule} from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule} from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
@@ -32,7 +31,6 @@ import { MatListModule } from '@angular/material/list';
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule,
     MatSliderModule,
     LayoutModule,
     MatDividerModule,

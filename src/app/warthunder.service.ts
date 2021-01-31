@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {EMPTY, Observable, of} from 'rxjs';
+import {Observable } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Message} from './message';
 import {map} from 'rxjs/operators';
-import {Instruments, Message} from './app.component';
+import {Instruments} from './instruments';
 
 @Injectable({
   providedIn: 'root'
@@ -10,44 +11,28 @@ import {Instruments, Message} from './app.component';
 export class WarthunderService {
   constructor(private http: HttpClient) { }
 
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T>(operation = 'operation', result?: T): (error: any) => Observable<T> {
-    return (error: any): Observable<T> => {
-
-      console.error(error); // log to console instead
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
   getState(): Observable<any> {
     const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
     return this.http.get(url + '/state').pipe(
       map((data: any) => {
-            const ias = data['IAS, km/h'];
-            const vs = data['Vy, m/s'];
-            const vsInKm = vs * (18 / 5);
-            const climbAngle = Math.atan(vsInKm / ias) * (180 / Math.PI);
-            return {
-              altitude: data['H, m'],
-              indicated_air_speed: ias,
-              true_air_speed: data['TAS, km/h'],
-              vertical_speed: vs,
-              pitch: data['AoA, deg'],
-              throttle: data['throttle 1, %'],
-              climb_angle: Math.round(climbAngle),
-              radiator: data['radiator 1, %'],
-              oil_temp: data['oil temp 1, C'],
-              water_temp: data['water temp 1, C']
-            } as Instruments;
-      }
-    )
+          const ias = data['IAS, km/h'];
+          const vs = data['Vy, m/s'];
+          const vsInKm = vs * (18 / 5);
+          const climbAngle = Math.atan(vsInKm / ias) * (180 / Math.PI);
+          return {
+            altitude: data['H, m'],
+            ias,
+            tas: data['TAS, km/h'],
+            verticleSpeed: vs,
+            pitch: data['AoA, deg'],
+            throttle: data['throttle 1, %'],
+            climbAngle: Math.round(climbAngle),
+            radiator: data['radiator 1, %'],
+            oilTemp: data['oil temp 1, C'],
+            waterTemp: data['water temp 1, C']
+          } as Instruments;
+        }
+      )
     );
   }
 
@@ -55,12 +40,12 @@ export class WarthunderService {
     const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
     return this.http.get(url + '/indicators').pipe(
       map((data: any) => {
-          const bearingText = degToCompass(Math.round(data.compass));
+          const bearingText = this.degToCompass(Math.round(data.compass));
           return {
             bearing: Math.round(data.compass),
-            bearing_text: bearingText,
-            prop_pitch: Math.round(data.prop_pitch_min),
-            manifold_pressure: Math.round(data.manifold_pressure),
+            bearingReading: bearingText,
+            propPitch: Math.round(data.prop_pitch_min),
+            manifoldPressure: Math.round(data.manifold_pressure),
             valid: data.valid
           } as Instruments;
         }
@@ -99,52 +84,9 @@ export class WarthunderService {
     );
   }
 
-  uploadData(playerName: string, uploadObject: any): void {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json'
-      })
-    };
-    uploadObject = {telemetry: uploadObject};
-    const url = localStorage.getItem('squadMembersEndpoint');
-    if (url !== null) {
-      this.http.post(url + '/players/' + encodeURIComponent(playerName),
-        JSON.stringify(uploadObject), httpOptions).subscribe(
-        (val) => {},
-        response => {
-          console.log('POST call in error', response);
-        },
-        () => {});
-    }
+  degToCompass(num: any): any {
+    const val = (num / 22.5) + .5;
+    const arr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    return arr[Math.round((val % 16))];
   }
-
-  getAllPlayers(): Observable<any> {
-    const url = localStorage.getItem('squadMembersEndpoint');
-    if (url !== null) {
-      return this.http.get(url + '/players/').pipe(
-        map((player: any) => {
-          return player;
-        })
-      );
-    }
-    return EMPTY;
-  }
-
-  pullPlayerData(playerName: string): Observable<any> {
-    const url = localStorage.getItem('squadMembersEndpoint');
-    if (url !== null) {
-      return this.http.get(url + '/players/' + playerName).pipe(
-        map((instrument: any) => {
-          return instrument as Instruments;
-        })
-      );
-    }
-    return EMPTY;
-  }
-}
-
-function degToCompass(num: any): any {
-  const val = (num / 22.5) + .5;
-  const arr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-  return arr[Math.round((val % 16))];
 }

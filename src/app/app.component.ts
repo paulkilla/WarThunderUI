@@ -1,9 +1,16 @@
 // @ts-nocheck
-import {Component, OnInit} from '@angular/core';
-import { WarthunderService } from '../app/warthunder.service';
-import {interval} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {interval, Subscription} from 'rxjs';
 import { } from 'jquery';
+import {WarthunderService} from './warthunder.service';
+import {environment} from '../environments/environment';
+import {Instruments} from './instruments';
+import {Message} from './message';
+import {Enemy} from './enemy';
+import {SubscriptionService} from './subscription.service';
+import {PublisherService} from './publisher.service';
+export const WS_SUB_ENDPOINT = environment.wsSubEndpoint;
+export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 
 @Component({
   selector: 'app-root',
@@ -12,55 +19,149 @@ import { } from 'jquery';
   providers: [ WarthunderService ]
 })
 
-export class AppComponent implements OnInit {
-  title = 'WarThunderUI';
-  declare inGame: boolean;
-  declare instruments: Instruments;
-  declare gameChat: Message[];
-  declare hudMessages: Message[];
-  declare enemies: Enemies[];
-  declare teamInstruments: Instruments[];
-  declare teamPlayers: string[];
-  constructor(private wtService: WarthunderService, public dialog: MatDialog) {
+export class AppComponent implements OnInit, OnDestroy {
+  inGame: true;
+  messageFromServer: string;
+  subService: SubscriptionService;
+  pubService: PublisherService;
+  wtService: WarthunderService;
+  subSubscription: Subscription;
+  pubSubscription: Subscription;
+  instruments: Instruments;
+  gameChat: Message[];
+  hudMessages: Message[];
+  teamInstruments: Instruments[];
+  enemies: Enemy[];
+  pubStatus;
+  subStatus;
+
+  constructor(private subService: SubscriptionService, private pubService: PublisherService, private wtService: WarthunderService,
+              private ngZone: NgZone) {
+    this.subService = subService;
+    this.pubService = pubService;
+    this.wtService = wtService;
+    window.restEndpoint = environment.restEndpoint;
     this.gameChat = [];
     this.hudMessages = [];
+    this.instruments = new Instruments();
     this.enemies = [];
-    this.teamPlayers = [];
-    this.inGame = false;
     this.teamInstruments = [];
-    this.instruments = {
-      playerName: localStorage.getItem('playerName') || '',
-      altitude: 0,
-      bearing: 0,
-      bearing_text: '',
-      climb_angle: 0,
-      indicated_air_speed: 0,
-      manifold_pressure: 0,
-      pitch: 0,
-      prop_pitch: 0,
-      radiator: 0,
-      throttle: 0,
-      true_air_speed: 0,
-      valid: false,
-      vertical_speed: 0,
-      water_temp: 0,
-      oil_temp: 0,
-      killed: false
-    };
   }
 
   ngOnInit(): void {
-    let iasArray: any[] = [];
-    let altitudeArray: any[] = [];
-    let throttleArray: any[] = [];
-    let climbRateArray: any[] = [];
-    let climbAngleArray: any[] = [];
-    let oilArray: any[] = [];
-    let waterArray: any[] = [];
-    $('#ias-trend-line').sparkline(iasArray);
-    $('#altitude-trend-line').sparkline(altitudeArray);
-    $('#throttle-trend-line').sparkline(throttleArray);
-    // Refresh HUD - State every 2 seconds
+    window.initComponentReference = { component: this, zone: this.ngZone, loadAngularFunction: () => this.init(), };
+  }
+
+  init(): void {
+    console.log('Creating Subscription');
+    this.subSubscription =
+      this.subService.createObservableSocket(WS_SUB_ENDPOINT)
+        .subscribe(
+        rawData => {
+            const data = JSON.parse(rawData);
+            const message_type = data.message_type;
+            if (message_type == null) {
+              console.log('Data has no message type: ' + JSON.stringify(data));
+            } else {
+              if (message_type === 'squadmate') {
+                this.handleSquadMateMessage(data);
+              } else if (message_type === 'enemy') {
+                this.handleEnemyMessage(data);
+              }
+            }
+           },
+          err => console.log( 'sub err'),
+          () =>  console.log( 'The observable sub stream is complete')
+        );
+    console.log('Creating Publishing');
+    this.pubSubscription =
+      this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
+        .subscribe(
+          data => {
+            this.messageFromServer = data;
+          },
+          err => console.log( 'pub err'),
+          () =>  console.log( 'The observable pub stream is complete')
+        );
+    this.registerWithSquad();
+    this.monitorInstruments();
+    this.monitorGameChat();
+    this.monitorGameLog();
+  }
+
+  registerWithSquad(): void {
+    this.pubService.socket.onopen = (): void => {
+      this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+        message_type: 'join',
+        data: {
+          name: localStorage.getItem('squadName'),
+          secret: localStorage.getItem('squadSecret')
+        }
+      }));
+    };
+    this.subService.socket.onopen = (): void => {
+      this.subStatus = this.subService.sendMessage(JSON.stringify({
+        message_type: 'join',
+        data: {
+          name: localStorage.getItem('squadName'),
+          secret: localStorage.getItem('squadSecret')
+        }
+      }));
+    };
+  }
+
+  handleSquadMateMessage(data): void {
+    if (data.player !== localStorage.getItem('playerName') ||
+      (localStorage.getItem('showMyInstruments') === 'true' && data.player === localStorage.getItem('playerName'))) {
+      if (existsInArray(this.teamInstruments, 'playerName', data.player)) {
+        this.teamInstruments.forEach((instrument, index) => {
+          if (instrument.playerName === data.player) {
+            this.teamInstruments[index] = data.data;
+          }
+        });
+      } else {
+        this.teamInstruments.push(data.data);
+      }
+    } else if (existsInArray(this.teamInstruments, 'playerName', data.player)) {
+      this.teamInstruments.forEach((instrument, index) => {
+        this.teamInstruments.splice(index, 1);
+      });
+    }
+  }
+
+  handleEnemyMessage(data): void {
+    console.log('Enemy Message: ' + JSON.stringify(data));
+    if (existsInArray(this.enemies, 'name', data.player)) {
+      this.enemies.forEach((enemy, index) => {
+        if (enemy.name === playerName) {
+          if (enemy.location === 'Unknown') {
+            this.enemies[index] = data.data;
+          }
+        }
+      });
+    } else {
+      this.enemies.push(data.data);
+    }
+  }
+
+  monitorInstruments(): void {
+    console.log('Monitoring our instruments and push to socket endpoint');
+    // Reset all the variables
+    let iasSLArray: any[] = [];
+    let altitudeSLArray: any[] = [];
+    let throttleSLArray: any[] = [];
+    let climbRateSLArray: any[] = [];
+    let climbAngleSLArray: any[] = [];
+    let oilSLArray: any[] = [];
+    let waterSLArray: any[] = [];
+    $('#ias-trend-line').sparkline(iasSLArray);
+    $('#altitude-trend-line').sparkline(altitudeSLArray);
+    $('#throttle-trend-line').sparkline(throttleSLArray);
+    $('#climb-rate-trend-line').sparkline(climbRateSLArray);
+    $('#climb-angle-trend-line').sparkline(climbAngleSLArray);
+    $('#oil-trend-line').sparkline(oilSLArray);
+    $('#water-trend-line').sparkline(waterSLArray);
+
     interval(2000).subscribe((x: any) => {
       this.wtService.getState().subscribe(state => {
         // Assign variables in state to this.instruments
@@ -69,53 +170,47 @@ export class AppComponent implements OnInit {
             this.instruments[prop] = state[prop];
             // Only update spark line when we are in a game, else reset them to 0
             if (this.inGame) {
-              if (prop === 'indicated_air_speed') {
-                iasArray.push(state.indicated_air_speed);
-                $('#ias-trend-line').sparkline(iasArray);
+              if (prop === 'ias') {
+                iasSLArray.push(state.ias);
+                $('#ias-trend-line').sparkline(iasSLArray);
               } else if (prop === 'altitude') {
-                altitudeArray.push(state.altitude);
-                $('#altitude-trend-line').sparkline(altitudeArray);
+                altitudeSLArray.push(state.altitude);
+                $('#altitude-trend-line').sparkline(altitudeSLArray);
               } else if (prop === 'throttle') {
-                throttleArray.push(state.throttle);
-                $('#throttle-trend-line').sparkline(throttleArray);
-              } else if (prop === 'vertical_speed') {
-                climbRateArray.push(state.vertical_speed);
-                $('#climb-rate-trend-line').sparkline(climbRateArray);
-              } else if (prop === 'climb_angle') {
-                climbAngleArray.push(state.climb_angle);
-                $('#climb-angle-trend-line').sparkline(climbAngleArray);
-              } else if (prop === 'oil_temp') {
-                oilArray.push(state.oil_temp);
-                $('#oil-trend-line').sparkline(oilArray);
-              } else if (prop === 'water_temp') {
-                waterArray.push(state.water_temp);
-                $('#water-trend-line').sparkline(waterArray);
+                throttleSLArray.push(state.throttle);
+                $('#throttle-trend-line').sparkline(throttleSLArray);
+              } else if (prop === 'verticalSpeed') {
+                climbRateSLArray.push(state.verticleSpeed);
+                $('#climb-rate-trend-line').sparkline(climbRateSLArray);
+              } else if (prop === 'climbAngle') {
+                climbAngleSLArray.push(state.climbAngle);
+                $('#climb-angle-trend-line').sparkline(climbAngleSLArray);
+              } else if (prop === 'oilTemp') {
+                oilSLArray.push(state.oilTemp);
+                $('#oil-trend-line').sparkline(oilSLArray);
+              } else if (prop === 'waterTemp') {
+                waterSLArray.push(state.waterTemp);
+                $('#water-trend-line').sparkline(waterSLArray);
               }
             } else {
-              iasArray = [0];
-              altitudeArray = [0];
-              throttleArray = [0];
-              climbRateArray = [0];
-              climbAngleArray = [0];
-              oilArray = [0];
-              waterArray = [0];
+              iasSLArray = [0];
+              altitudeSLArray = [0];
+              throttleSLArray = [0];
+              climbRateSLArray = [0];
+              climbAngleSLArray = [0];
+              oilSLArray = [0];
+              waterSLArray = [0];
             }
           }
         }
       });
     });
-    // Refresh HUD - Indicators every 2 seconds
     interval(2000).subscribe((x: any) => {
       this.wtService.getIndicators().subscribe(indicators => {
-        if (indicators.valid == null || !indicators.valid) {
+        if (indicators == null || indicators.valid == null || !indicators.valid) {
           this.gameChat = [];
           this.enemies = [];
           this.inGame = false;
-          this.teamPlayers = [];
-          if (!localStorage.getItem('showAlways')) {
-            this.teamInstruments = [];
-          }
-          this.hudMessages = [];
         } else {
           this.inGame = true;
         }
@@ -125,9 +220,21 @@ export class AppComponent implements OnInit {
             this.instruments[prop] = indicators[prop];
           }
         }
+
+        if (this.inGame) {
+          this.instruments.playerName = localStorage.getItem('playerName');
+          this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+            message_type: 'squadmate',
+            player: localStorage.getItem('playerName'),
+            data: this.instruments
+          }));
+        }
       });
     });
-    // Refresh GameChat - GameChat every 2 seconds
+  }
+
+  monitorGameChat(): void {
+    console.log('Monitoring GameChat for enemy locations and storing game chat');
     interval(2000).subscribe((x: any) => {
       let latestId = 0;
       this.gameChat.forEach(item => {
@@ -138,47 +245,33 @@ export class AppComponent implements OnInit {
         updateScroll();
         const myRegexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
         const otherRegexResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
-        if ( myRegexResult != null ) {
-          let exists = false;
-          let killed = false;
+        if ( myRegexResult != null || otherRegexResult != null ) {
           let lastLocation = 'Unknown';
-          let lastSeen = new Date().getTime();
-          this.enemies.forEach(existingItem => {
-            if (existingItem.name === myRegexResult[2]) {
-              exists = true;
-              killed = existingItem.killed;
-              lastLocation = existingItem.location;
-              lastSeen = existingItem.last_seen;
-            }
-          });
-          if (!exists) {
-            this.enemies.push(
-              {altitude: '', last_seen: lastSeen, name: myRegexResult[2], plane: myRegexResult[3], killed, location: lastLocation});
+          const lastSeen = new Date().getTime();
+          let playerName = '';
+          let playerPlane = '';
+          if (myRegexResult != null) {
+            playerName = myRegexResult[2];
+            playerPlane = myRegexResult[3];
           }
-        }
-        if (otherRegexResult != null) {
-          console.log(otherRegexResult);
-          let exists = false;
-          let killed = false;
-          let lastSeen = new Date().getTime();
-          this.enemies.forEach(existingItem => {
-            console.log(existingItem);
-            if (existingItem.name === otherRegexResult[2]) {
-              exists = true;
-              killed = existingItem.killed;
-              existingItem.location = otherRegexResult[5];
-              lastSeen = new Date().getTime();
-            }
-          });
-          if (!exists) {
-            this.enemies.push(
-              {altitude: '', last_seen: lastSeen,
-                name: otherRegexResult[2], plane: otherRegexResult[3], killed, location: otherRegexResult[5]});
+          if (otherRegexResult != null) {
+            playerName = otherRegexResult[2];
+            playerPlane = otherRegexResult[3];
+            lastLocation = otherRegexResult[5];
           }
+          this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+            message_type: 'enemy',
+            player: playerName,
+            data: {altitude: '', lastSeen, name: playerName, plane: playerPlane, killed: false,
+              location: lastLocation}
+          }));
         }
       }));
     });
-    // Refresh HudMsg - Get information on enemies destroyed and squad mates destroyed
+  }
+
+  monitorGameLog(): void {
+    console.log('Monitoring GameLog for awards, and deaths etc');
     interval(2000).subscribe((x: any) => {
       const latestEvtId = 0;
       let latestDmgId = 0; // Not sure what this one does atm
@@ -239,95 +332,29 @@ export class AppComponent implements OnInit {
         }
       }));
     });
-    // Upload Data to HerokuApp and pull data down
-    interval(2000).subscribe((x: any) => {
-      if (this.inGame || localStorage.getItem('showAlways')) {
-        const newTeamInstruments: Instruments[] = this.teamInstruments;
-        let found = false;
-        const playerName = localStorage.getItem('playerName');
-        if (playerName !== null) {
-          // If user is not killed reset it here
-          if (this.instruments.throttle > 50 && this.instruments.bearing_text != null) {
-            this.instruments.killed = false;
-          }
-          if (this.inGame) {
-            this.wtService.uploadData(playerName, this.instruments);
-          }
-        }
-        const showMyInstruments = localStorage.getItem('showMyInstruments');
-        this.teamPlayers.forEach((player: any) => {
-          if (player !== playerName || (player === playerName && showMyInstruments)) {
-            this.wtService.pullPlayerData(player).subscribe(playerInstruments => {
-              newTeamInstruments.forEach((instrument, index, theArray) => {
-                if (instrument.playerName === player) {
-                  theArray[index] = playerInstruments;
-                  found = true;
-                }
-              });
-              if (!found) {
-                newTeamInstruments.push(playerInstruments);
-              }
-            });
-          } else {
-            newTeamInstruments.forEach((instrument, index) => {
-              newTeamInstruments.splice(index, 1);
-            });
-          }
-        });
-        this.teamInstruments = newTeamInstruments;
-      }
-    });
-    // Get Player lists every 15 seconds (Gets all users if none have been specified)
-    interval(15000).subscribe((x: any) => {
-      if (this.inGame || localStorage.getItem('showAlways')) {
-        const squadMembers = localStorage.getItem('squadMembers');
-        if (squadMembers !== null && squadMembers !== '') {
-          this.teamPlayers = squadMembers.split(',');
-        } else {
-          this.wtService.getAllPlayers().subscribe(players => {
-            this.teamPlayers = players;
-          });
-        }
-      }
-    });
+  }
+
+  closeSocket(): void {
+    this.subSubscription.unsubscribe();
+    this.subStatus = 'The socket is closed';
+    this.pubSubscription.unsubscribe();
+    this.pubStatus = 'The socket is closed';
+  }
+
+  ngOnDestroy(): void {
+    this.closeSocket();
   }
 }
 
-export interface Instruments {
-  playerName: string;
-  true_air_speed: number;
-  indicated_air_speed: number;
-  altitude: number;
-  vertical_speed: number;
-  pitch: number;
-  throttle: number;
-  climb_angle: number;
-  radiator: number;
-  valid: boolean;
-  bearing: number;
-  bearing_text: string;
-  prop_pitch: number;
-  manifold_pressure: number;
-  oil_temp: number;
-  water_temp: number;
-  killed: boolean;
-}
-
-export interface Enemies {
-  name: string;
-  plane: string;
-  location: string;
-  altitude: string;
-  last_seen: number;
-  killed: boolean;
-}
-
-export interface Message {
-  id: number;
-  msg: string;
-  sender: string;
-  enemy: boolean;
-  mode: string;
+function existsInArray(array, field, value): boolean {
+  let found = false;
+  for (const item of array) {
+    if (item[field] === value) {
+      found = true;
+      break;
+    }
+  }
+  return found;
 }
 
 function updateScroll(): void {
