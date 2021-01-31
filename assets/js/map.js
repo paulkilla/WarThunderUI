@@ -20,8 +20,6 @@ lastPlayerPos = null
 isDraggingMap = false
 isTransformingMap = false
 
-isSiteActive = false
-
 hammer_opt = {
   hold: false, tap:false, doubletap:false,
   drag:true, dragstart:true, dragend:true, dragup:false, dragdown:false, dragleft:false, dragright:false,
@@ -429,7 +427,7 @@ function update_map_info(info) {
 
 function updateSlow() {
   const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
-  if(isSiteActive) {
+  if(window.isSiteActive) {
     $.ajax({type: 'GET', url: url + '/map_obj.json', success: update_object_positions});
     $.ajax({type: 'GET', url: url + '/map_info.json', success: update_map_info});
   }
@@ -552,39 +550,6 @@ function save_positions() {
   }
 }
 
-function isSiteOnline(callback) {
-  const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
-  // try to load favicon
-  var timer = setTimeout(function(){
-    // timeout after 5 seconds
-    callback(false);
-  },5000)
-
-  var img = document.createElement("img");
-  img.onload = function() {
-    clearTimeout(timer);
-    callback(true);
-  }
-
-  img.onerror = function() {
-    clearTimeout(timer);
-    callback(false);
-  }
-
-  img.src = url+'/map.img?gen=' + Math.random();
-}
-
-function checkSiteUp() {
-  isSiteOnline(function(found){
-    if(found) {
-      isSiteActive = true;
-    }
-    else {
-      isSiteActive = false;
-    }
-  })
-}
-
 
 function init() {
   localize_static();
@@ -605,7 +570,6 @@ function init() {
   if (document.location.protocol != 'file:') {
     setInterval(updateSlow, 500);
     setInterval(updateFast, 25);
-    setInterval(checkSiteUp, 30000);
   }
 }
 
