@@ -167,25 +167,3 @@ function showNotification(from, align, message, type, timer, allow_dismiss){
     allow_dismiss: allow_dismiss
   });
 }
-
-function isSiteOnline(callback) {
-  const url = localStorage.getItem('endpoint') || 'http://localhost:8111';
-  // try to load favicon
-  var timer = setTimeout(function(){
-    // timeout after 5 seconds
-    callback(false);
-  },5000)
-
-  var img = document.createElement("img");
-  img.onload = function() {
-    clearTimeout(timer);
-    callback(true);
-  }
-
-  img.onerror = function() {
-    clearTimeout(timer);
-    callback(false);
-  }
-
-  img.src = url+'/map.img?gen=' + Math.random();
-}

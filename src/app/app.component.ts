@@ -85,26 +85,11 @@ export class AppComponent implements OnInit, OnDestroy {
           err => console.log( 'pub err'),
           () =>  console.log( 'The observable pub stream is complete')
         );
-    this.monitorEndPointHealth();
     this.registerWithSquad();
+    this.isSiteActive = true;
     this.monitorInstruments();
     this.monitorGameChat();
     this.monitorGameLog();
-  }
-
-  monitorEndPointHealth(): void {
-    interval(3000).subscribe((x: any) => {
-      isSiteOnline(found => {
-        if (found) {
-          window.isSiteActive = true;
-          this.isSiteActive = true;
-        }
-        else {
-          window.isSiteActive = false;
-          this.isSiteActive = false;
-        }
-      });
-    });
   }
 
   registerWithSquad(): void {
@@ -262,7 +247,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   monitorGameChat(): void {
-    interval(2000).subscribe((x: any) => {
+    interval(1900).subscribe((x: any) => {
       if (this.isSiteActive) {
         let latestId = 0;
         this.gameChat.forEach(item => {
@@ -300,10 +285,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   monitorGameLog(): void {
-    interval(2000).subscribe((x: any) => {
+    interval(10000).subscribe((x: any) => {
       if (this.isSiteActive) {
-        const latestEvtId = 0;
-        let latestDmgId = 0; // Not sure what this one does atm
+        const latestEvtId = 0; // Not sure what this one does atm
+        let latestDmgId = 0;
         this.hudMessages.forEach(item => {
           latestDmgId = item.id;
         });
