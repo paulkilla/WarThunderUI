@@ -787,8 +787,12 @@ span.trend-line {
   display: inline-flex !important;
   position: absolute;
   overflow: hidden;
-  left: 10px;
+  left: 0px;
   z-index: -1;
+}
+span.trend-line > canvas {
+  width: 100% !important;
+  opacity: 0.25;
 }
 
 ::-webkit-scrollbar {
