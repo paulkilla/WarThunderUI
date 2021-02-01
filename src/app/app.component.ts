@@ -86,7 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
           () =>  console.log( 'The observable pub stream is complete')
         );
     this.registerWithSquad();
-    this.preloadHudMessages();
+    this.preloadMessages();
     this.isSiteActive = true;
     window.isSiteActive = true;
     this.monitorInstruments();
@@ -114,10 +114,15 @@ export class AppComponent implements OnInit, OnDestroy {
     };
   }
 
-  preloadHudMessages(): void {
+  preloadMessages(): void {
+    // Preload the Hud and Gamechat, so that we don't get stuff spamming on a reload
     this.wtService.getHudMessages(0, 0).subscribe(hudMessages => hudMessages.forEach((item: any) => {
       this.hudMessages.push(item);
     }));
+    this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
+      this.gameChat.push(item);
+    }));
+    updateScroll();
   }
 
   handleSquadMateMessage(data): void {
