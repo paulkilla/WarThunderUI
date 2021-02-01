@@ -87,6 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
         );
     this.registerWithSquad();
     this.isSiteActive = true;
+    window.isSiteActive = true;
     this.monitorInstruments();
     this.monitorGameLog();
   }
