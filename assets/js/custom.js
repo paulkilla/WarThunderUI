@@ -134,7 +134,8 @@ $(document).ready(function() {
   }, 2000);
   $.fn.sparkline.defaults.common.height = '50px';
   $.fn.sparkline.defaults.common.width = '150px';
-  //$.fn.sparkline.defaults.common.fillColor = '#dae0ed';
+  $.fn.sparkline.defaults.common.fillColor = '#4b75cf';
+  $.fn.sparkline.defaults.common.lineColor = '#4b75cf';
 
 
   const navBarHeight = $('nav.navbar').height();
