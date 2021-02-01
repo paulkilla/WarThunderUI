@@ -86,6 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
           () =>  console.log( 'The observable pub stream is complete')
         );
     this.registerWithSquad();
+    this.preloadHudMessages();
     this.isSiteActive = true;
     window.isSiteActive = true;
     this.monitorInstruments();
@@ -111,6 +112,12 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }));
     };
+  }
+
+  preloadHudMessages(): void {
+    this.wtService.getHudMessages(0, 0).subscribe(hudMessages => hudMessages.forEach((item: any) => {
+      this.hudMessages.push(item);
+    }));
   }
 
   handleSquadMateMessage(data): void {
