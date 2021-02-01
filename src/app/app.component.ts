@@ -216,6 +216,7 @@ export class AppComponent implements OnInit, OnDestroy {
               this.gameChat = [];
               this.enemies = [];
               this.inGame = false;
+              this.instruments.killed = false;
               this.teamInstruments.forEach(instrument => {
                 instrument.killed = false;
               });
