@@ -137,6 +137,10 @@ span.trend-line {
   scrollbar-width: none;  /* Firefox */
 }
 
+td.cell-killed {
+  text-decoration: line-through;
+}
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.

@@ -802,6 +802,10 @@ span.trend-line {
   /* Firefox */
 }
 
+td.cell-killed {
+  text-decoration: line-through;
+}
+
 .mat-ripple-element {
   background-color: rgba(0, 0, 0, 0.1);
 }

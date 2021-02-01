@@ -202,7 +202,7 @@
             </div>
           </div>
 
-          <div class="col-sm-5">
+          <div class="col-sm-4">
             <div class="card">
               <div class="card-header card-header-success">
                 <h4 class="card-title">
@@ -229,7 +229,7 @@
                   </thead>
                   <tbody>
                   <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
-                    <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="instruments.killed">close</i>{{ instruments.playerName}}</td>
+                    <td [ngClass]="{'cell-killed': instruments.killed}">{{ instruments.playerName}}</td>
                     <td>{{ instruments.ias}} km/h</td>
                     <td>{{ instruments.altitude}} m</td>
                     <td>{{ instruments.bearing}}° {{ instruments.bearingReading}}</td>
@@ -243,7 +243,7 @@
             </div>
           </div>
 
-          <div class="col-sm-3">
+          <div class="col-sm-4">
             <div class="card">
               <div class="card-header card-header-danger">
                 <h4 class="card-title">Opponents</h4>

@@ -168,8 +168,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     interval(2100).subscribe((x: any) => {
       if (this.isSiteActive) {
+        // Get State
         this.wtService.getState().subscribe(state => {
-          // Assign variables in state to this.instruments
           for (const prop in state) {
             if (Object.prototype.hasOwnProperty.call(state, prop)) {
               this.instruments[prop] = state[prop];
@@ -209,10 +209,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }
           }
         });
-      }
-    });
-    interval(2000).subscribe((x: any) => {
-      if (this.isSiteActive) {
+        // Get Indicators
         this.wtService.getIndicators().subscribe(indicators => {
           if (this.isSiteActive) {
             if (indicators == null || indicators.valid == null || !indicators.valid) {
@@ -242,13 +239,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }
           }
         });
-      }
-    });
-  }
-
-  monitorGameChat(): void {
-    interval(1900).subscribe((x: any) => {
-      if (this.isSiteActive) {
+        // Monitor Game chat
         let latestId = 0;
         this.gameChat.forEach(item => {
           latestId = item.id;
@@ -285,7 +276,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   monitorGameLog(): void {
-    interval(10000).subscribe((x: any) => {
+    interval(5000).subscribe((x: any) => {
       if (this.isSiteActive) {
         const latestEvtId = 0; // Not sure what this one does atm
         let latestDmgId = 0;
