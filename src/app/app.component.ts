@@ -166,7 +166,7 @@ export class AppComponent implements OnInit, OnDestroy {
     $('#oil-trend-line').sparkline(oilSLArray);
     $('#water-trend-line').sparkline(waterSLArray);
 
-    interval(2000).subscribe((x: any) => {
+    interval(2100).subscribe((x: any) => {
       if (this.isSiteActive) {
         this.wtService.getState().subscribe(state => {
           // Assign variables in state to this.instruments
