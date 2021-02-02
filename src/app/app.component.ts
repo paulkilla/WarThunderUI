@@ -119,7 +119,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.wtService.getHudMessages(0, 0).subscribe(hudMessages => hudMessages.forEach((item: any) => {
       this.hudMessages.push(item);
     }));
-    this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
+    this.wtService.getGameChat(0).subscribe(gameChat => gameChat.forEach((item: any) => {
       this.gameChat.push(item);
     }));
     updateScroll();
