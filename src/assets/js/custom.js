@@ -137,7 +137,11 @@ $(document).ready(function() {
   $.fn.sparkline.defaults.common.fillColor = '#4b75cf';
   $.fn.sparkline.defaults.common.lineColor = '#4b75cf';
 
+  resizeResizables();
+  $(window).on('resize', function() {resizeResizables();});
+});
 
+function resizeResizables() {
   const navBarHeight = $('nav.navbar').height();
   const instrumentsHeight = $('div#instruments-div').height();
   const cardHeaderHeight = $('.card-header').height();
@@ -147,8 +151,7 @@ $(document).ready(function() {
   $('.resizable-div').each(function() {
     $(this).height(resizableHeight + 'px');
   });
-});
-
+}
 
 function timeSince(timeStamp) {
   var now = new Date(),
