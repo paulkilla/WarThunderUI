@@ -23,16 +23,16 @@
   </style>
   <script language="javascript" type="text/javascript">
     loc_tbl = {};
-    let globalEndPoint = 'http://localhost:8000/v1';
   </script>
 </head>
 <body>
   <app-root></app-root>
+  <!-- Settings Modal -->
   <div class="modal" tabindex="-1" role="dialog" id="settingsModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Wolf Pack Settings</h5>
+          <h5 class="modal-title" id="settingsModalLabel">Wolf Pack Settings</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -61,6 +61,29 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary" id="settingsSave">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- About Modal -->
+  <div class="modal" tabindex="-1" role="dialog" id="aboutModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="aboutModalLabel">About Wolf Pack</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Wolf Pack is a War Thunder assistant, built for those that play together in a squad.</p>
+          <p>More text</p>
+          <p>More text</p>
+          <p>More text</p>
+        </div>
+        <div class="modal-footer">
+          <a type="button" class="btn btn-secondary" href="https://donate-link.com.au/donate-to-us" target="_blank">Donate</a>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
