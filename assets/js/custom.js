@@ -5,6 +5,7 @@ $(document).ready(function() {
     endpoint = $( "#endpoint" ),
     squadName = $( "#squadName" ),
     squadSecret = $( "#squadSecret" ),
+    metricSettings = $("#metricSettings")
     allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName ).add( squadSecret );
   if (localStorage.getItem("playerName") !== null) {
     playerName.val(localStorage.getItem('playerName'));
@@ -12,6 +13,11 @@ $(document).ready(function() {
 
   if (localStorage.getItem("endpoint") !== null) {
     endpoint.val(localStorage.getItem('endpoint'));
+  }
+
+  console.log(localStorage.getItem("useMetric"));
+  if (localStorage.getItem("useMetric") !== null && localStorage.getItem("useMetric") === 'false') {
+    metricSettings.prop('checked', true);
   }
 
   if (localStorage.getItem("squadName") !== null) {
@@ -51,6 +57,9 @@ $(document).ready(function() {
       if (localStorage.getItem("endpoint") !== null) {
         endpoint.val(localStorage.getItem('endpoint'));
       }
+      localStorage.setItem("useMetric", !metricSettings.prop('checked'));
+
+      console.log(localStorage.getItem("useMetric"));
       // Need to do rest call to endpoint here
       $.ajax({async: false, url: window.restEndpoint + '/squads', type: 'POST',
         data: JSON.stringify({'name': squadName.val(), 'secret': squadSecret.val()}),
