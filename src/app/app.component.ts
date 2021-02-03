@@ -209,14 +209,6 @@ export class AppComponent implements OnInit, OnDestroy {
                   waterSLArray.push(state.waterTemp);
                   $('#water-trend-line').sparkline(waterSLArray);
                 }
-              } else {
-                iasSLArray = [0];
-                altitudeSLArray = [0];
-                throttleSLArray = [0];
-                climbRateSLArray = [0];
-                climbAngleSLArray = [0];
-                oilSLArray = [0];
-                waterSLArray = [0];
               }
             }
           }
@@ -233,6 +225,16 @@ export class AppComponent implements OnInit, OnDestroy {
                 instrument.killed = false;
               });
             } else {
+              if (!this.inGame) {
+                // Start of a new game, reset some things in here. e.g. spark line graphs.
+                iasSLArray = [0];
+                altitudeSLArray = [0];
+                throttleSLArray = [0];
+                climbRateSLArray = [0];
+                climbAngleSLArray = [0];
+                oilSLArray = [0];
+                waterSLArray = [0];
+              }
               this.inGame = true;
             }
             // Assign variables in indicators to this.instruments
