@@ -20,6 +20,7 @@ export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 })
 
 export class AppComponent implements OnInit, OnDestroy {
+  totalAwards: number;
   inGame: true;
   publishResponse: string;
   subService: SubscriptionService;
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.enemies = [];
     this.teamInstruments = [];
     this.isSiteActive = false;
+    this.totalAwards = 0;
   }
 
   ngOnInit(): void {
@@ -87,8 +89,8 @@ export class AppComponent implements OnInit, OnDestroy {
         );
     this.registerWithSquad();
     this.preloadMessages();
-    this.isSiteActive = true;
-    window.isSiteActive = true;
+    this.isSiteActive = true; // Wanted to use these to stop unneeded calls, but hardcode till we can fix it
+    window.isSiteActive = true; // Wanted to use these to stop unneeded calls, but hardcode till we can fix it
     this.monitorInstruments();
     this.monitorGameLog();
   }
@@ -162,7 +164,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   monitorInstruments(): void {
-    // Reset all the variables
+    // Reset all the variables at the beginning of monitoring
     let iasSLArray: any[] = [];
     let altitudeSLArray: any[] = [];
     let throttleSLArray: any[] = [];
@@ -217,16 +219,11 @@ export class AppComponent implements OnInit, OnDestroy {
         this.wtService.getIndicators().subscribe(indicators => {
           if (this.isSiteActive) {
             if (indicators == null || indicators.valid == null || !indicators.valid) {
-              this.gameChat = [];
-              this.enemies = [];
               this.inGame = false;
-              this.instruments.killed = false;
-              this.teamInstruments.forEach(instrument => {
-                instrument.killed = false;
-              });
+              // Append here if you want it to reset immediately when a game ends.
             } else {
               if (!this.inGame) {
-                // Start of a new game, reset some things in here. e.g. spark line graphs.
+                // Append here if you want it to reset when you start a new game.
                 iasSLArray = [0];
                 altitudeSLArray = [0];
                 throttleSLArray = [0];
@@ -234,6 +231,10 @@ export class AppComponent implements OnInit, OnDestroy {
                 climbAngleSLArray = [0];
                 oilSLArray = [0];
                 waterSLArray = [0];
+                this.totalAwards = 0;
+                this.gameChat = [];
+                this.enemies = [];
+                this.instruments.killed = false;
               }
               this.inGame = true;
             }
@@ -354,6 +355,7 @@ export class AppComponent implements OnInit, OnDestroy {
               const award = regexResult[3];
               if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
                 showNotification('top', 'left', player + ' got the award ' + award, 'warning', 3000, false);
+                this.totalAwards = this.totalAwards + 1;
               }
             }
           }
@@ -386,7 +388,7 @@ function existsInArray(array, field, value): boolean {
 }
 
 function updateScroll(): void {
-  const element = $('.game-chat').each(function(): void {
+  $('.game-chat').each(function(): void {
     $(this).animate({ scrollTop: $(this).prop('scrollHeight')}, 1000);
   });
 }
