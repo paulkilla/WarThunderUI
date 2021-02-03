@@ -126,6 +126,8 @@ $(document).ready(function() {
     }
   });
 
+  resizeResizables();
+
   const interval = setInterval(function() {
     $('.hidden-last-seen').each(function() {
       var timestamp = $(this).text();
@@ -137,7 +139,6 @@ $(document).ready(function() {
   $.fn.sparkline.defaults.common.fillColor = '#4b75cf';
   $.fn.sparkline.defaults.common.lineColor = '#4b75cf';
 
-  resizeResizables();
   $(window).on('resize', function() {resizeResizables();});
 });
 
