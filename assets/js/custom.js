@@ -5,26 +5,55 @@ $(document).ready(function() {
     endpoint = $( "#endpoint" ),
     squadName = $( "#squadName" ),
     squadSecret = $( "#squadSecret" ),
-    metricSettings = $("#metricSettings")
+    speedSettings = $("#speedSettings"),
+    altitudeSettings = $("#altitudeSettings"),
+    distanceSettings = $("#distanceSettings"),
+    climbSpeedSettings = $("#climbSpeedSettings"),
+    temperatureSettings = $("#temperatureSettings"),
     allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName ).add( squadSecret );
-  if (localStorage.getItem("playerName") !== null) {
+  if (localStorage.getItem("playerName") !== "") {
     playerName.val(localStorage.getItem('playerName'));
   }
 
-  if (localStorage.getItem("endpoint") !== null) {
+  if (localStorage.getItem("endpoint") !== "") {
     endpoint.val(localStorage.getItem('endpoint'));
   }
 
-  console.log(localStorage.getItem("useMetric"));
-  if (localStorage.getItem("useMetric") !== null && localStorage.getItem("useMetric") === 'false') {
-    metricSettings.prop('checked', true);
+  if (localStorage.getItem("speedSetting") !== "") {
+    speedSettings.val(localStorage.getItem("speedSetting"));
+  } else {
+    speedSettings.val('km/h');
   }
 
-  if (localStorage.getItem("squadName") !== null) {
+  if (localStorage.getItem("altitudeSetting") !== "") {
+    altitudeSettings.val(localStorage.getItem("altitudeSetting"));
+  } else {
+    altitudeSettings.val('m');
+  }
+
+  if (localStorage.getItem("distanceSetting") !== "") {
+    distanceSettings.val(localStorage.getItem("distanceSetting"));
+  } else {
+    distanceSettings.val('km');
+  }
+
+  if (localStorage.getItem("climbSpeedSetting") !== "") {
+    climbSpeedSettings.val(localStorage.getItem("climbSpeedSetting"));
+  } else {
+    climbSpeedSettings.val('m/sec');
+  }
+
+  if (localStorage.getItem("temperatureSetting") !== "") {
+    temperatureSettings.val(localStorage.getItem("temperatureSetting"));
+  } else {
+    temperatureSettings.val('C');
+  }
+
+  if (localStorage.getItem("squadName") !== "") {
     squadName.val(localStorage.getItem('squadName'));
   }
 
-  if (localStorage.getItem("squadSecret") !== null) {
+  if (localStorage.getItem("squadSecret") !== "") {
     squadSecret.val(localStorage.getItem('squadSecret'));
   }
 
@@ -57,9 +86,12 @@ $(document).ready(function() {
       if (localStorage.getItem("endpoint") !== null) {
         endpoint.val(localStorage.getItem('endpoint'));
       }
-      localStorage.setItem("useMetric", !metricSettings.prop('checked'));
+      localStorage.setItem("speedSetting", speedSettings.val());
+      localStorage.setItem("altitudeSetting", altitudeSettings.val());
+      localStorage.setItem("distanceSetting", distanceSettings.val());
+      localStorage.setItem("climbSpeedSetting", climbSpeedSettings.val());
+      localStorage.setItem("temperatureSetting", temperatureSettings.val());
 
-      console.log(localStorage.getItem("useMetric"));
       // Need to do rest call to endpoint here
       $.ajax({async: false, url: window.restEndpoint + '/squads', type: 'POST',
         data: JSON.stringify({'name': squadName.val(), 'secret': squadSecret.val()}),

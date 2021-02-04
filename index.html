@@ -43,11 +43,6 @@
               <label for="playerName">Player Name</label>
               <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" required=""/>
             </div>
-            <div class="form-group form-inline">
-              <label for="metricSettings">Imperial Measurements?</label>
-              <input type="checkbox" class="form-control metricSettings" id="metricSettings" name="metricSettings"/>
-              <small id="metricHelp" class="form-text text-muted"> &nbsp; Tick this if you want MPH, ft/sec etc</small>
-            </div>
             <div class="form-group">
               <label for="endpoint">Endpoint</label>
               <input type="text" class="form-control" name="endpoint" id="endpoint" value="http://localhost:8111" required=""/>
@@ -59,6 +54,44 @@
             <div class="form-group">
               <label for="squadSecret">Squad Secret</label>
               <input type="text" class="form-control" name="squadSecret" id="squadSecret" placeholder="Squad Secret" required=""/>
+            </div>
+            <div class="form-group form-inline">
+              <label for="speedSettings">Speed Controls</label>
+              <select class="form-control" id="speedSettings" name="speedSettings">
+                <option value="km/h">km/h</option>
+                <option value="mph">mph</option>
+                <option value="kt">kt</option>
+              </select>
+            </div>
+            <div class="form-group form-inline">
+              <label for="altitudeSettings">Altitude Controls</label>
+              <select class="form-control" id="altitudeSettings" name="altitudeSettings">
+                <option value="m">m</option>
+                <option value="ft">ft</option>
+              </select>
+            </div>
+            <div class="form-group form-inline">
+              <label for="distanceSettings">Distance Controls</label>
+              <select class="form-control" id="distanceSettings" name="distanceSettings">
+                <option value="km">km</option>
+                <option value="ft">ft</option>
+                <option value="mi">mi</option>
+                <option value="yd">yd</option>
+              </select>
+            </div>
+            <div class="form-group form-inline">
+              <label for="climbSpeedSettings">Climb Speed Controls</label>
+              <select class="form-control" id="climbSpeedSettings" name="climbSpeedSettings">
+                <option value="m/sec">m/sec</option>
+                <option value="ft/min">ft/min</option>
+              </select>
+            </div>
+            <div class="form-group form-inline">
+              <label for="temperatureSettings">Temperature Controls</label>
+              <select class="form-control" id="temperatureSettings" name="temperatureSettings">
+                <option value="C">°C</option>
+                <option value="F">°F</option>
+              </select>
             </div>
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
           </form>
@@ -93,5 +126,5 @@
       </div>
     </div>
   </div>
-<script src="runtime.0e49e2b53282f40c8925.js" defer=""></script><script src="polyfills.8c151b8375e767ff858f.js" defer=""></script><script src="scripts.e2b443c0e85dbcf04c95.js" defer=""></script><script src="main.766e2fd1632c73e96646.js" defer=""></script></body>
+<script src="runtime.0e49e2b53282f40c8925.js" defer=""></script><script src="polyfills.8c151b8375e767ff858f.js" defer=""></script><script src="scripts.950e9c03acdb5cd4ac15.js" defer=""></script><script src="main.9bb01e528f53f97a20d7.js" defer=""></script></body>
 </html>
