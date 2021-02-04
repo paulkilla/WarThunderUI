@@ -242,10 +242,10 @@
                   <tbody>
                   <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
                     <td [ngClass]="{'cell-killed': instruments.killed}">{{ instruments.playerName}}</td>
-                    <td>{{ instruments.ias}} km/h</td>
-                    <td>{{ instruments.altitude}} m</td>
-                    <td>{{ instruments.bearing}}° {{ instruments.bearingReading}}</td>
-                    <td>{{ instruments.verticleSpeed}} m/s</td>
+                    <td>{{ instruments.ias! * speedSettingMulti | number: '1.0-0' }} {{ speedSetting }}</td>
+                    <td>{{ instruments.altitude! * altitudeSettingMulti | number: '1.0-0' }} {{ altitudeSetting }}</td>
+                    <td>{{ instruments.bearing }}° {{ instruments.bearingReading}}</td>
+                    <td>{{ instruments.verticleSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</td>
                     <td>{{ instruments.throttle }}%</td>
                     <td></td>
                   </tr>
