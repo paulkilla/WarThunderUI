@@ -361,11 +361,27 @@ export class AppComponent implements OnInit, OnDestroy {
               playerPlane = otherRegexResult[3];
               lastLocation = otherRegexResult[5];
             }
+            let data: {};
+            if (lastLocation === 'Unknown') {
+              data = {altitude: 0, lastSeen, name: playerName, plane: playerPlane, killed: false,
+                location: lastLocation};
+            } else {
+              // Get last Location and altitude out of lastLocation field and store separately as m (even if using ft)
+              const locationRegexResult = lastLocation.match('(.*)\\b, alt\\b\\.\\s(.*)\\s(.*)');
+              const gridRef = locationRegexResult[1];
+              let altitude = locationRegexResult[2];
+              const altitudeType = locationRegexResult[3];
+              if (altitudeType === 'ft') {
+                // tslint:disable-next-line:radix
+                altitude = (parseInt(altitude) / 3.2808);
+              }
+              data = {altitude, lastSeen, name: playerName, plane: playerPlane, killed: false,
+                location: gridRef};
+            }
             this.pubStatus = this.pubService.sendMessage(JSON.stringify({
               message_type: 'enemy',
               player: playerName,
-              data: {altitude: '', lastSeen, name: playerName, plane: playerPlane, killed: false,
-                location: lastLocation}
+              data
             }));
           }
         }));

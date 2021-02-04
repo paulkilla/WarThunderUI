@@ -272,7 +272,7 @@
                   <tr *ngFor="let item of enemies; let i = index" [ngClass]="enemies[i].killed ? 'hide-me' : ''">
                     <td><i class="material-icons icon-red" style="position:relative;top:6px;" *ngIf="item.killed">close</i>{{ item.name }}</td>
                     <td>{{ item.plane }}</td>
-                    <td><b>{{ item.location }}</b></td>
+                    <td>{{ item.location }} <b *ngIf="item.location !== 'Unknown'">{{ (item.altitude! * altitudeSettingMulti) | number: '1.0-0' }}{{ altitudeSetting }}</b></td>
                     <td><span class="show-last-seen"></span><span class="cdk-visually-hidden hidden-last-seen">{{ item.lastSeen }}</span></td>
                   </tr>
                   </tbody>
