@@ -46,6 +46,7 @@ export class WarthunderService {
             bearingReading: bearingText,
             propPitch: Math.round(data.prop_pitch_min),
             manifoldPressure: Math.round(data.manifold_pressure),
+            engineTemp: data.water_temperature,
             valid: data.valid
           } as Instruments;
         }

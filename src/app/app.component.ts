@@ -254,6 +254,7 @@ export class AppComponent implements OnInit, OnDestroy {
     let climbRateSLArray: any[] = [];
     let oilSLArray: any[] = [];
     let waterSLArray: any[] = [];
+    let engineTempSLArray: any[] = [];
     $('#ias-trend-line').sparkline(iasSLArray);
     $('#tas-trend-line').sparkline(tasSLArray);
     $('#altitude-trend-line').sparkline(altitudeSLArray);
@@ -261,6 +262,7 @@ export class AppComponent implements OnInit, OnDestroy {
     $('#climb-rate-trend-line').sparkline(climbRateSLArray);
     $('#oil-trend-line').sparkline(oilSLArray);
     $('#water-trend-line').sparkline(waterSLArray);
+    $('#engine-temp-trend-line').sparkline(engineTempSLArray);
 
     interval(2100).subscribe((x: any) => {
       if (this.isSiteActive) {
@@ -292,6 +294,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 } else if (prop === 'waterTemp') {
                   waterSLArray.push(state.waterTemp);
                   $('#water-trend-line').sparkline(waterSLArray);
+                } else if (prop === 'engineTemp') {
+                  engineTempSLArray.push(state.engineTemp);
+                  $('#engine-temp-trend-line').sparkline(engineTempSLArray);
                 }
               }
             }
@@ -313,6 +318,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 climbRateSLArray = [0];
                 oilSLArray = [0];
                 waterSLArray = [0];
+                engineTempSLArray = [0];
                 this.totalAwards = 0;
                 this.gameChat = [];
                 this.enemies = [];
@@ -326,7 +332,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.instruments[prop] = indicators[prop];
               }
             }
-
+            console.log(this.instruments);
             if (this.inGame) {
               this.instruments.playerName = localStorage.getItem('playerName');
               this.pubStatus = this.pubService.sendMessage(JSON.stringify({

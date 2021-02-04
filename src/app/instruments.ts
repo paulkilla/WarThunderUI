@@ -15,5 +15,6 @@ export class Instruments {
   manifoldPressure: number | undefined;
   oilTemp: number | undefined;
   waterTemp: number | undefined;
+  engineTemp: number | undefined;
   killed: boolean | undefined;
 }

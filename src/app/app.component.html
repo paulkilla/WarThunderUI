@@ -154,15 +154,28 @@
                   </div>
                 </div>
               </div>
-
-              <div class="col-sm-3">
+              <!-- water temp or engine temp -->
+              <div class="col-sm-3" *ngIf="instruments.waterTemp !== undefined">
                 <div class="card card-stats">
                   <div class="card-header card-header-grey card-header-icon">
                     <div class="card-icon">WAT</div>
                     <p class="card-category">WATER TEMP</p>
                     <span class="trend-line" id="water-trend-line"></span>
                     <h3 class="card-title" *ngIf="temperatureSetting === 'F'">{{ (instruments.waterTemp! * temperatureSettingMulti) + 32 | number: '1.0-0' }}° {{ temperatureSetting }}</h3>
-                    <h3 class="card-title" *ngIf="temperatureSetting !== 'F'">{{ instruments.waterTemp }}° {{ temperatureSetting }}</h3>
+                    <h3 class="card-title" *ngIf="temperatureSetting !== 'F'">{{ instruments.waterTemp | number: '1.0-0' }}° {{ temperatureSetting }}</h3>
+                    <br>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-3" *ngIf="instruments.waterTemp === undefined">
+                <div class="card card-stats">
+                  <div class="card-header card-header-grey card-header-icon">
+                    <div class="card-icon">ENG</div>
+                    <p class="card-category">ENGINE TEMP</p>
+                    <span class="trend-line" id="engine-temp-trend-line"></span>
+                    <h3 class="card-title" *ngIf="temperatureSetting === 'F'">{{ (instruments.engineTemp! * temperatureSettingMulti) + 32 | number: '1.0-0' }}° {{ temperatureSetting }}</h3>
+                    <h3 class="card-title" *ngIf="temperatureSetting !== 'F'">{{ instruments.engineTemp | number: '1.0-0' }}° {{ temperatureSetting }}</h3>
                     <br>
                   </div>
                 </div>
