@@ -251,14 +251,12 @@ export class AppComponent implements OnInit, OnDestroy {
     let altitudeSLArray: any[] = [];
     let throttleSLArray: any[] = [];
     let climbRateSLArray: any[] = [];
-    let climbAngleSLArray: any[] = [];
     let oilSLArray: any[] = [];
     let waterSLArray: any[] = [];
     $('#ias-trend-line').sparkline(iasSLArray);
     $('#altitude-trend-line').sparkline(altitudeSLArray);
     $('#throttle-trend-line').sparkline(throttleSLArray);
     $('#climb-rate-trend-line').sparkline(climbRateSLArray);
-    $('#climb-angle-trend-line').sparkline(climbAngleSLArray);
     $('#oil-trend-line').sparkline(oilSLArray);
     $('#water-trend-line').sparkline(waterSLArray);
 
@@ -283,9 +281,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 } else if (prop === 'verticalSpeed') {
                   climbRateSLArray.push(state.verticleSpeed);
                   $('#climb-rate-trend-line').sparkline(climbRateSLArray);
-                } else if (prop === 'climbAngle') {
-                  climbAngleSLArray.push(state.climbAngle);
-                  $('#climb-angle-trend-line').sparkline(climbAngleSLArray);
                 } else if (prop === 'oilTemp') {
                   oilSLArray.push(state.oilTemp);
                   $('#oil-trend-line').sparkline(oilSLArray);
@@ -310,7 +305,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 altitudeSLArray = [0];
                 throttleSLArray = [0];
                 climbRateSLArray = [0];
-                climbAngleSLArray = [0];
                 oilSLArray = [0];
                 waterSLArray = [0];
                 this.totalAwards = 0;

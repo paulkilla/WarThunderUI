@@ -16,7 +16,6 @@ $(document).ready(function() {
     climbSpeedSettings = $("#climbSpeedSettings"),
     temperatureSettings = $("#temperatureSettings"),
     allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName ).add( squadSecret );
-  console.log(localStorage.getItem("speedSetting"));
   if (localStorage.getItem("playerName") !== null) {
     playerName.val(localStorage.getItem('playerName'));
   }
@@ -175,8 +174,6 @@ $(document).ready(function() {
     }
   });
 
-  resizeResizables();
-
   const interval = setInterval(function() {
     $('.hidden-last-seen').each(function() {
       var timestamp = $(this).text();
@@ -187,17 +184,19 @@ $(document).ready(function() {
   $.fn.sparkline.defaults.common.width = '150px';
   $.fn.sparkline.defaults.common.fillColor = '#4b75cf';
   $.fn.sparkline.defaults.common.lineColor = '#4b75cf';
-
+  resizeResizables();
   $(window).on('resize', function() {resizeResizables();});
 });
 
 function resizeResizables() {
   const navBarHeight = $('nav.navbar').height();
-  const instrumentsHeight = $('div#instruments-div').height();
+  const instrumentsHeight = $('div#instrument-div').height();
   const cardHeaderHeight = $('.card-header').height();
-  const totalHeight = navBarHeight + instrumentsHeight + cardHeaderHeight + 25;
+  const totalHeight = navBarHeight + instrumentsHeight + cardHeaderHeight + 100;
   const windowHeight = $(window).height();
   const resizableHeight = windowHeight - totalHeight;
+  console.log(instrumentsHeight);
+  console.log(windowHeight);
   $('.resizable-div').each(function() {
     $(this).height(resizableHeight + 'px');
   });
