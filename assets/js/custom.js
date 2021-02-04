@@ -195,8 +195,6 @@ function resizeResizables() {
   const totalHeight = navBarHeight + instrumentsHeight + cardHeaderHeight + 100;
   const windowHeight = $(window).height();
   const resizableHeight = windowHeight - totalHeight;
-  console.log(instrumentsHeight);
-  console.log(windowHeight);
   $('.resizable-div').each(function() {
     $(this).height(resizableHeight + 'px');
   });
