@@ -57,7 +57,7 @@
                       <div class="card-icon"> IAS</div>
                       <p class="card-category">INDICATED AIR SPEED</p>
                       <span class="trend-line" id="ias-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.ias }} km/h</h3>
+                      <h3 class="card-title">{{ instruments.ias! * speedSettingMulti | number: '1.0-0' }} {{ speedSetting }}</h3>
                       <br>
                     </div>
                   </div>
@@ -68,7 +68,7 @@
                     <div class="card-header card-header-info card-header-icon">
                       <div class="card-icon">TAS</div>
                       <p class="card-category">TRUE AIR SPEED</p>
-                      <h3 class="card-title">{{ instruments.tas }} km/h</h3>
+                      <h3 class="card-title">{{ instruments.tas! * speedSettingMulti | number: '1.0-0' }} {{ speedSetting }}</h3>
                       <br>
                     </div>
                   </div>
@@ -80,7 +80,7 @@
                       <div class="card-icon">ALT</div>
                       <p class="card-category">ALTITUDE</p>
                       <span class="trend-line" id="altitude-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.altitude }} m</h3>
+                      <h3 class="card-title">{{ instruments.altitude! * altitudeSettingMulti | number: '1.0-0' }} {{ altitudeSetting }}</h3>
                       <br>
                     </div>
                   </div>
@@ -103,7 +103,7 @@
                       <div class="card-icon">CLR</div>
                       <p class="card-category">CLIMB RATE</p>
                       <span class="trend-line" id="climb-rate-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.verticleSpeed }} m/sec</h3>
+                      <h3 class="card-title">{{ instruments.verticleSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</h3>
                       <br>
                     </div>
                   </div>
@@ -172,7 +172,8 @@
                       <div class="card-icon">WAT</div>
                       <p class="card-category">WATER TEMP</p>
                       <span class="trend-line" id="water-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.waterTemp }}°</h3>
+                      <h3 class="card-title" *ngIf="temperatureSetting === 'F'">{{ (instruments.waterTemp! * temperatureSettingMulti) + 32 | number: '1.0-0' }}° {{ temperatureSetting }}</h3>
+                      <h3 class="card-title" *ngIf="temperatureSetting !== 'F'">{{ instruments.waterTemp }}° {{ temperatureSetting }}</h3>
                       <br>
                     </div>
                   </div>
@@ -184,7 +185,8 @@
                       <div class="card-icon">OIL</div>
                       <p class="card-category">OIL TEMP</p>
                       <span class="trend-line" id="oil-trend-line"></span>
-                      <h3 class="card-title">{{ instruments.oilTemp }}°</h3>
+                      <h3 class="card-title" *ngIf="temperatureSetting === 'F'">{{ (instruments.oilTemp! * temperatureSettingMulti) + 32 | number: '1.0-0' }} °{{ temperatureSetting }}</h3>
+                      <h3 class="card-title" *ngIf="temperatureSetting !== 'F'">{{ instruments.oilTemp }} °{{ temperatureSetting }}</h3>
                       <br>
                     </div>
                   </div>

@@ -36,6 +36,16 @@ export class AppComponent implements OnInit, OnDestroy {
   pubStatus;
   subStatus;
   isSiteActive;
+  speedSetting;
+  speedSettingMulti;
+  altitudeSetting;
+  altitudeSettingMulti;
+  distanceSetting;
+  distanceSettingMulti;
+  climbSpeedSetting;
+  climbSpeedSettingMulti;
+  temperatureSetting;
+  temperatureSettingMulti;
 
   constructor(private subService: SubscriptionService, private pubService: PublisherService, private wtService: WarthunderService,
               private ngZone: NgZone) {
@@ -51,6 +61,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.teamInstruments = [];
     this.isSiteActive = false;
     this.totalAwards = 0;
+    this.speedSetting = 'km/h';
+    this.speedSettingMulti = 1;
+    this.altitudeSetting = 'm';
+    this.altitudeSettingMulti = 1;
+    this.distanceSetting = 'km';
+    this.distanceSettingMulti = 1;
+    this.climbSpeedSetting = 'm/sec';
+    this.climbSpeedSettingMulti = 1;
+    this.temperatureSetting = 'C';
+    this.temperatureSettingMulti = 1;
   }
 
   ngOnInit(): void {
@@ -88,6 +108,7 @@ export class AppComponent implements OnInit, OnDestroy {
           () =>  console.log( 'The observable pub stream is complete')
         );
     this.registerWithSquad();
+    this.configureSettingOptions();
     this.preloadMessages();
     this.isSiteActive = true; // Wanted to use these to stop unneeded calls, but hardcode till we can fix it
     window.isSiteActive = true; // Wanted to use these to stop unneeded calls, but hardcode till we can fix it
@@ -114,6 +135,67 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }));
     };
+  }
+
+  configureSettingOptions(): void {
+    this.speedSetting = localStorage.getItem('speedSetting');
+    switch (this.speedSetting) {
+      case 'mph':
+        this.speedSettingMulti = 0.62137119223733;
+        break;
+      case 'kt':
+        this.speedSettingMulti = 0.53995680346;
+        break;
+      default:
+        this.speedSettingMulti = 1;
+        break;
+    }
+
+    this.altitudeSetting = localStorage.getItem('altitudeSetting');
+    switch (this.altitudeSetting) {
+      case 'ft':
+        this.altitudeSettingMulti = 3.28084;
+        break;
+      default:
+        this.altitudeSettingMulti = 1;
+        break;
+    }
+
+    this.distanceSetting = localStorage.getItem('distanceSetting');
+    switch (this.distanceSetting) {
+      case 'ft':
+        this.distanceSettingMulti = 32.8084;
+        break;
+      case 'mi':
+        this.distanceSettingMulti = 0.62137119223733;
+        break;
+      case 'yd':
+        this.distanceSettingMulti = 1093.6132983;
+        break;
+      default:
+        this.distanceSettingMulti = 1;
+        break;
+    }
+
+    this.climbSpeedSetting = localStorage.getItem('climbSpeedSetting');
+    switch (this.climbSpeedSetting) {
+      case 'ft/min':
+        this.climbSpeedSettingMulti = 3.2808399;
+        break;
+      default:
+        this.climbSpeedSettingMulti = 1;
+        break;
+    }
+
+    this.temperatureSetting = localStorage.getItem('temperatureSetting');
+    switch (this.temperatureSetting) {
+      case 'F':
+        this.temperatureSettingMulti = 1.8;
+        break;
+      default:
+        this.temperatureSettingMulti = 1;
+        break;
+    }
   }
 
   preloadMessages(): void {
