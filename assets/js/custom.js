@@ -105,10 +105,10 @@ $(document).ready(function() {
         success: function(data, textStatus, jqXHR) {
           switch(jqXHR.status) {
             case 200:
-              showNotification('top','right', 'Joined an existing Squad, enjoy your game!', 'success', 4000, false);
+              showNotification('top','right', 'Joined an existing Squad, enjoy your game!', 'success', 2000, false);
               break;
             case 201:
-              showNotification('top','right', 'New Squad setup! Share your Squad Name and Key and get going!', 'success', 4000, false);
+              showNotification('top','right', 'New Squad setup! Share your Squad Name and Key and get going!', 'success', 3000, false);
           }
 
           localStorage.setItem("squadName", $('#squadName').val());
@@ -120,7 +120,7 @@ $(document).ready(function() {
               // Squad exists but secret is wrong
               squadSecret.addClass( "is-invalid" );
               valid = false;
-              showNotification('top','right', 'Incorrect Secret', 'danger', 4000, false);
+              showNotification('top','right', 'Incorrect Secret', 'danger', 2500, false);
               break;
             default:
               // Generally something wrong
