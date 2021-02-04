@@ -37,63 +37,73 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="settingsFormLinks">
+          <ul class="nav nav-pills nav-fill justify-content-center">
+            <li class="nav-item"><a class="nav-link active" href="#configuration">Configuration</a></li>
+            <li class="nav-item"><a class="nav-link" href="#settings">Game Settings</a></li>
+          </ul>
           <form id="settingsForm">
-            <div class="form-group">
-              <label for="playerName">Player Name</label>
-              <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" required />
+            <div class="tab-content">
+              <div class="tab-pane active show fade" id="configuration">
+                <div class="form-group">
+                  <label for="playerName">Player Name</label>
+                  <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" required />
+                </div>
+                <div class="form-group">
+                  <label for="endpoint">Endpoint</label>
+                  <input type="text" class="form-control" name="endpoint" id="endpoint" value="http://localhost:8111" required />
+                </div>
+                <div class="form-group">
+                  <label for="squadName">Squad Name</label>
+                  <input type="text" class="form-control" name="squadName" id="squadName" placeholder="Squad Name" required />
+                </div>
+                <div class="form-group">
+                  <label for="squadSecret">Squad Secret</label>
+                  <input type="text" class="form-control" name="squadSecret" id="squadSecret" placeholder="Squad Secret" required />
+                </div>
+              </div>
+              <div class="tab-pane fade" id="settings">
+                <div class="form-group form-inline">
+                  <label for="speedSettings">Speed Controls</label>
+                  <select class="form-control" id="speedSettings" name="speedSettings">
+                    <option value="km/h">km/h</option>
+                    <option value="mph">mph</option>
+                    <option value="kt">kt</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="altitudeSettings">Altitude Controls</label>
+                  <select class="form-control" id="altitudeSettings" name="altitudeSettings">
+                    <option value="m">m</option>
+                    <option value="ft">ft</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="distanceSettings">Distance Controls</label>
+                  <select class="form-control" id="distanceSettings" name="distanceSettings">
+                    <option value="km">km</option>
+                    <option value="ft">ft</option>
+                    <option value="mi">mi</option>
+                    <option value="yd">yd</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="climbSpeedSettings">Climb Speed Controls</label>
+                  <select class="form-control" id="climbSpeedSettings" name="climbSpeedSettings">
+                    <option value="m/sec">m/sec</option>
+                    <option value="ft/min">ft/min</option>
+                  </select>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="temperatureSettings">Temperature Controls</label>
+                  <select class="form-control" id="temperatureSettings" name="temperatureSettings">
+                    <option value="C">°C</option>
+                    <option value="F">°F</option>
+                  </select>
+                </div>
+              </div>
+              <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </div>
-            <div class="form-group">
-              <label for="endpoint">Endpoint</label>
-              <input type="text" class="form-control" name="endpoint" id="endpoint" value="http://localhost:8111" required />
-            </div>
-            <div class="form-group">
-              <label for="squadName">Squad Name</label>
-              <input type="text" class="form-control" name="squadName" id="squadName" placeholder="Squad Name" required />
-            </div>
-            <div class="form-group">
-              <label for="squadSecret">Squad Secret</label>
-              <input type="text" class="form-control" name="squadSecret" id="squadSecret" placeholder="Squad Secret" required />
-            </div>
-            <div class="form-group form-inline">
-              <label for="speedSettings">Speed Controls</label>
-              <select class="form-control" id="speedSettings" name="speedSettings">
-                <option value="km/h">km/h</option>
-                <option value="mph">mph</option>
-                <option value="kt">kt</option>
-              </select>
-            </div>
-            <div class="form-group form-inline">
-              <label for="altitudeSettings">Altitude Controls</label>
-              <select class="form-control" id="altitudeSettings" name="altitudeSettings">
-                <option value="m">m</option>
-                <option value="ft">ft</option>
-              </select>
-            </div>
-            <div class="form-group form-inline">
-              <label for="distanceSettings">Distance Controls</label>
-              <select class="form-control" id="distanceSettings" name="distanceSettings">
-                <option value="km">km</option>
-                <option value="ft">ft</option>
-                <option value="mi">mi</option>
-                <option value="yd">yd</option>
-              </select>
-            </div>
-            <div class="form-group form-inline">
-              <label for="climbSpeedSettings">Climb Speed Controls</label>
-              <select class="form-control" id="climbSpeedSettings" name="climbSpeedSettings">
-                <option value="m/sec">m/sec</option>
-                <option value="ft/min">ft/min</option>
-              </select>
-            </div>
-            <div class="form-group form-inline">
-              <label for="temperatureSettings">Temperature Controls</label>
-              <select class="form-control" id="temperatureSettings" name="temperatureSettings">
-                <option value="C">°C</option>
-                <option value="F">°F</option>
-              </select>
-            </div>
-            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
           </form>
         </div>
         <div class="modal-footer">

@@ -1,5 +1,10 @@
 
 $(document).ready(function() {
+  $('#settingsFormLinks a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  })
+
   let autoOpen = true,
     playerName = $( "#playerName" ),
     endpoint = $( "#endpoint" ),
