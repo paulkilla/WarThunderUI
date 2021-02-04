@@ -248,12 +248,14 @@ export class AppComponent implements OnInit, OnDestroy {
   monitorInstruments(): void {
     // Reset all the variables at the beginning of monitoring
     let iasSLArray: any[] = [];
+    let tasSLArray: any[] = [];
     let altitudeSLArray: any[] = [];
     let throttleSLArray: any[] = [];
     let climbRateSLArray: any[] = [];
     let oilSLArray: any[] = [];
     let waterSLArray: any[] = [];
     $('#ias-trend-line').sparkline(iasSLArray);
+    $('#tas-trend-line').sparkline(tasSLArray);
     $('#altitude-trend-line').sparkline(altitudeSLArray);
     $('#throttle-trend-line').sparkline(throttleSLArray);
     $('#climb-rate-trend-line').sparkline(climbRateSLArray);
@@ -272,13 +274,16 @@ export class AppComponent implements OnInit, OnDestroy {
                 if (prop === 'ias') {
                   iasSLArray.push(state.ias);
                   $('#ias-trend-line').sparkline(iasSLArray);
+                } else if (prop === 'tas') {
+                  tasSLArray.push(state.tas);
+                  $('#tas-trend-line').sparkline(tasSLArray);
                 } else if (prop === 'altitude') {
                   altitudeSLArray.push(state.altitude);
                   $('#altitude-trend-line').sparkline(altitudeSLArray);
                 } else if (prop === 'throttle') {
                   throttleSLArray.push(state.throttle);
                   $('#throttle-trend-line').sparkline(throttleSLArray);
-                } else if (prop === 'verticalSpeed') {
+                } else if (prop === 'verticleSpeed') {
                   climbRateSLArray.push(state.verticleSpeed);
                   $('#climb-rate-trend-line').sparkline(climbRateSLArray);
                 } else if (prop === 'oilTemp') {
@@ -302,6 +307,7 @@ export class AppComponent implements OnInit, OnDestroy {
               if (!this.inGame) {
                 // Append here if you want it to reset when you start a new game.
                 iasSLArray = [0];
+                tasSLArray = [0];
                 altitudeSLArray = [0];
                 throttleSLArray = [0];
                 climbRateSLArray = [0];
