@@ -16,49 +16,52 @@ $(document).ready(function() {
     climbSpeedSettings = $("#climbSpeedSettings"),
     temperatureSettings = $("#temperatureSettings"),
     allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName ).add( squadSecret );
-  if (localStorage.getItem("playerName") !== "") {
+  console.log(localStorage.getItem("speedSetting"));
+  if (localStorage.getItem("playerName") !== null) {
     playerName.val(localStorage.getItem('playerName'));
   }
 
-  if (localStorage.getItem("endpoint") !== "") {
+  if (localStorage.getItem("endpoint") !== null) {
     endpoint.val(localStorage.getItem('endpoint'));
+  } else {
+    endpoint.val("http://localhost:8111");
   }
 
-  if (localStorage.getItem("speedSetting") !== "") {
+  if (localStorage.getItem("speedSetting") !== null) {
     speedSettings.val(localStorage.getItem("speedSetting"));
   } else {
     speedSettings.val('km/h');
   }
 
-  if (localStorage.getItem("altitudeSetting") !== "") {
+  if (localStorage.getItem("altitudeSetting") !== null) {
     altitudeSettings.val(localStorage.getItem("altitudeSetting"));
   } else {
     altitudeSettings.val('m');
   }
 
-  if (localStorage.getItem("distanceSetting") !== "") {
+  if (localStorage.getItem("distanceSetting") !== null) {
     distanceSettings.val(localStorage.getItem("distanceSetting"));
   } else {
     distanceSettings.val('km');
   }
 
-  if (localStorage.getItem("climbSpeedSetting") !== "") {
+  if (localStorage.getItem("climbSpeedSetting") !== null) {
     climbSpeedSettings.val(localStorage.getItem("climbSpeedSetting"));
   } else {
     climbSpeedSettings.val('m/sec');
   }
 
-  if (localStorage.getItem("temperatureSetting") !== "") {
+  if (localStorage.getItem("temperatureSetting") !== null) {
     temperatureSettings.val(localStorage.getItem("temperatureSetting"));
   } else {
     temperatureSettings.val('C');
   }
 
-  if (localStorage.getItem("squadName") !== "") {
+  if (localStorage.getItem("squadName") !== null) {
     squadName.val(localStorage.getItem('squadName'));
   }
 
-  if (localStorage.getItem("squadSecret") !== "") {
+  if (localStorage.getItem("squadSecret") !== null) {
     squadSecret.val(localStorage.getItem('squadSecret'));
   }
 

@@ -139,6 +139,19 @@ div#settings label {
   margin-right: 15px;
 }
 
+div#settings label {
+  width: 10em;
+  justify-content: right;
+}
+
+div#settings select {
+  width: 5em;
+}
+
+div#settings div.form-group {
+  justify-content: center;
+}
+
 span.trend-line {
   width: 100%;
   display: inline-flex!important;
