@@ -332,7 +332,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.instruments[prop] = indicators[prop];
               }
             }
-            console.log(this.instruments);
             if (this.inGame) {
               this.instruments.playerName = localStorage.getItem('playerName');
               this.pubStatus = this.pubService.sendMessage(JSON.stringify({
@@ -477,6 +476,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.closeSocket();
+  }
+
+  formatNan(theNumber): number {
+    if (theNumber !== theNumber) {
+      return 0;
+    }
+    return theNumber;
   }
 }
 
