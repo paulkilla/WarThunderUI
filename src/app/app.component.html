@@ -7,13 +7,7 @@
           <img src="assets/images/logo.png" height="50px" width="50px"/>
           <a class="navbar-brand" href="javascript:;">Wolf Pack</a>
         </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="navbar-toggler-icon icon-bar"></span>
-          <span class="navbar-toggler-icon icon-bar"></span>
-          <span class="navbar-toggler-icon icon-bar"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end">
+        <div class="justify-content-end" id="navbar-collapse">
           <ul class="navbar-nav">
             <li class="nav-item about-icon" data-toggle="modal" data-target="#aboutModal">
               <a class="nav-link" href="javascript:;">
@@ -84,7 +78,7 @@
           </div>
           <div class="col-sm-8">
             <div class="row" *ngIf="instruments" id="instrument-div">
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-info card-header-icon">
                     <div class="card-icon"> IAS</div>
@@ -96,7 +90,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-info card-header-icon">
                     <div class="card-icon">TAS</div>
@@ -108,7 +102,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-info card-header-icon">
                     <div class="card-icon">ALT</div>
@@ -120,7 +114,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-info card-header-icon">
                     <div class="card-icon">BNG</div>
@@ -131,7 +125,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-primary card-header-icon">
                     <div class="card-icon">CLR</div>
@@ -143,7 +137,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-primary card-header-icon">
                     <div class="card-icon">THR</div>
@@ -155,7 +149,7 @@
                 </div>
               </div>
               <!-- water temp or engine temp -->
-              <div class="col-sm-3" *ngIf="instruments.waterTemp !== undefined">
+              <div class="col-sm-6 col-md-6 col-lg-3" *ngIf="instruments.waterTemp !== undefined">
                 <div class="card card-stats">
                   <div class="card-header card-header-grey card-header-icon">
                     <div class="card-icon">WAT</div>
@@ -168,7 +162,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3" *ngIf="instruments.waterTemp === undefined">
+              <div class="col-sm-6 col-md-6 col-lg-3" *ngIf="instruments.waterTemp === undefined">
                 <div class="card card-stats">
                   <div class="card-header card-header-grey card-header-icon">
                     <div class="card-icon">ENG</div>
@@ -181,7 +175,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-grey card-header-icon">
                     <div class="card-icon">OIL</div>
@@ -196,7 +190,7 @@
             </div>
 
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-12 col-md-12 col-lg-6">
                 <div class="card">
                   <div class="card-header card-header-danger">
                     <h4 class="card-title">Opponents</h4>
@@ -222,7 +216,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-6">
+              <div class="col-sm-12 col-md-12 col-lg-6">
                 <div class="card">
                   <div class="card-header card-header-warning">
                     <h4 class="card-title">Chat</h4>

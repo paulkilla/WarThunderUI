@@ -731,6 +731,10 @@ input#metricSettings {
   right: 120px;
 }
 
+.navbar-nav > li {
+  position: absolute;
+}
+
 .killed {
   background-color: #ff0000;
   color: #ffffff;
@@ -799,21 +803,26 @@ div.header-options .check {
   border-color: white !important;
 }
 
-div#settings label {
+div#settings label, div#configuration label {
   margin-right: 15px;
 }
 
-div#settings label {
+div#settings label, div#configuration label {
   width: 10em;
   justify-content: right;
 }
 
 div#settings select {
-  width: 5em;
+  width: 13em;
 }
 
-div#settings div.form-group {
+div#settings div.form-group, div#configuration div.form-group {
   justify-content: center;
+}
+
+div#configuration small, div#settings small {
+  font-size: 75%;
+  font-weight: 100;
 }
 
 span.trend-line {
