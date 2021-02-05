@@ -33,7 +33,7 @@
 
     gtag('config', 'G-SQ6HK93YGB');
   </script>
-<link rel="stylesheet" href="styles.e2e0b0d73dd8e748cdca.css"></head>
+<link rel="stylesheet" href="styles.207522b3ffa43110b590.css"></head>
 <body>
   <app-root></app-root>
   <!-- Settings Modal -->
@@ -54,24 +54,34 @@
           <form id="settingsForm">
             <div class="tab-content">
               <div class="tab-pane active show fade" id="configuration">
-                <div class="form-group">
+                <p class="text-justify">
+                  These settings are used to connect to your local game to gather instruments, and connect you to other members of your squad.
+                </p>
+                <div class="form-group form-inline">
                   <label for="playerName">Player Name</label>
                   <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" required=""/>
+                  <small class="text-muted">Your player name; the same as in War Thunder (used to match awards)</small>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-inline">
                   <label for="endpoint">Endpoint</label>
                   <input type="text" class="form-control" name="endpoint" id="endpoint" value="http://localhost:8111" required=""/>
+                  <small class="text-muted">http://localhost:8111 unless viewing on another device, then http://&lt;ip&gt;:8111</small>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-inline">
                   <label for="squadName">Squad Name</label>
                   <input type="text" class="form-control" name="squadName" id="squadName" placeholder="Squad Name" required=""/>
+                  <small class="text-muted">Share this and the Squad Secret to other you want to join.</small>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-inline">
                   <label for="squadSecret">Squad Secret</label>
                   <input type="text" class="form-control" name="squadSecret" id="squadSecret" placeholder="Squad Secret" required=""/>
+                  <small class="text-muted">Share this and the Squad Name to other you want to join.</small>
                 </div>
               </div>
               <div class="tab-pane fade" id="settings">
+                <p class="text-justify">
+                  These settings are used for displaying data in the selected options.
+                </p>
                 <div class="form-group form-inline">
                   <label for="speedSettings">Speed Controls</label>
                   <select class="form-control" id="speedSettings" name="speedSettings">
@@ -79,6 +89,7 @@
                     <option value="mph">mph</option>
                     <option value="kt">kt</option>
                   </select>
+                  <small class="text-muted">Used for Air Speed display.</small>
                 </div>
                 <div class="form-group form-inline">
                   <label for="altitudeSettings">Altitude Controls</label>
@@ -86,6 +97,7 @@
                     <option value="m">m</option>
                     <option value="ft">ft</option>
                   </select>
+                  <small class="text-muted">Used for Altitude and Enemy height spotting.</small>
                 </div>
                 <div class="form-group form-inline">
                   <label for="distanceSettings">Distance Controls</label>
@@ -95,6 +107,7 @@
                     <option value="mi">mi</option>
                     <option value="yd">yd</option>
                   </select>
+                  <small class="text-muted">Not currently used in Wolf Pack</small>
                 </div>
                 <div class="form-group form-inline">
                   <label for="climbSpeedSettings">Climb Speed Controls</label>
@@ -102,6 +115,7 @@
                     <option value="m/sec">m/sec</option>
                     <option value="ft/min">ft/min</option>
                   </select>
+                  <small class="text-muted">Used for Climb Rate display.</small>
                 </div>
                 <div class="form-group form-inline">
                   <label for="temperatureSettings">Temperature Controls</label>
@@ -109,6 +123,7 @@
                     <option value="C">°C</option>
                     <option value="F">°F</option>
                   </select>
+                  <small class="text-muted">Used for temperature sensors, e.g. water.</small>
                 </div>
               </div>
               <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -142,5 +157,5 @@
       </div>
     </div>
   </div>
-<script src="runtime.0e49e2b53282f40c8925.js" defer=""></script><script src="polyfills.8c151b8375e767ff858f.js" defer=""></script><script src="scripts.7d6b1cd47d7fb3827282.js" defer=""></script><script src="main.80092e1dcdc033bc6bed.js" defer=""></script></body>
+<script src="runtime.0e49e2b53282f40c8925.js" defer=""></script><script src="polyfills.8c151b8375e767ff858f.js" defer=""></script><script src="scripts.8be58d312601b8db71f5.js" defer=""></script><script src="main.1ceda582227dd2122a1f.js" defer=""></script></body>
 </html>

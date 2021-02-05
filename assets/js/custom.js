@@ -197,6 +197,7 @@ function resizeResizables() {
   const resizableHeight = windowHeight - totalHeight;
   $('.resizable-div').each(function() {
     $(this).height(resizableHeight + 'px');
+    $(this).css('min-height', '20em');
   });
 }
 
