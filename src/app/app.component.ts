@@ -294,6 +294,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 } else if (prop === 'waterTemp') {
                   waterSLArray.push(state.waterTemp);
                   $('#water-trend-line').sparkline(waterSLArray);
+                } else if (prop === 'engineTemp') {
+                  engineTempSLArray.push(indicators.engineTemp);
+                  $('#engine-temp-trend-line').sparkline(engineTempSLArray);
                 }
               }
             }
