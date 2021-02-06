@@ -65,7 +65,7 @@
                         <td>{{ instruments.ias! * speedSettingMulti | number: '1.0-0' }} {{ speedSetting }}</td>
                         <td>{{ instruments.altitude! * altitudeSettingMulti | number: '1.0-0' }} {{ altitudeSetting }}</td>
                         <td>{{ instruments.bearing }}° {{ instruments.bearingReading}}</td>
-                        <td>{{ instruments.verticleSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</td>
+                        <td>{{ instruments.verticalSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</td>
                         <td>{{ instruments.throttle }}%</td>
                         <td></td>
                       </tr>
@@ -131,7 +131,7 @@
                     <div class="card-icon">CLR</div>
                     <p class="card-category">CLIMB RATE</p>
                     <span class="trend-line" id="climb-rate-trend-line"></span>
-                    <h3 class="card-title">{{ instruments.verticleSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }} <small>{{ formatNan(instruments.climbAngle) }}°</small></h3>
+                    <h3 class="card-title">{{ instruments.verticalSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }} <small>{{ formatNan(instruments.climbAngle) }}°</small></h3>
                     <br>
                   </div>
                 </div>

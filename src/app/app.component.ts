@@ -285,8 +285,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 } else if (prop === 'throttle') {
                   throttleSLArray.push(state.throttle);
                   $('#throttle-trend-line').sparkline(throttleSLArray);
-                } else if (prop === 'verticleSpeed') {
-                  climbRateSLArray.push(state.verticleSpeed);
+                } else if (prop === 'verticalSpeed') {
+                  climbRateSLArray.push(state.verticalSpeed);
                   $('#climb-rate-trend-line').sparkline(climbRateSLArray);
                 } else if (prop === 'oilTemp') {
                   oilSLArray.push(state.oilTemp);

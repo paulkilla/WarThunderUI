@@ -47,16 +47,16 @@
           </button>
         </div>
         <div class="modal-body" id="settingsFormLinks">
-          <ul class="nav nav-pills nav-fill justify-content-center">
+          <ul class="nav nav-tabs justify-content-center">
             <li class="nav-item"><a class="nav-link active" href="#configuration">Configuration</a></li>
             <li class="nav-item"><a class="nav-link" href="#settings">Game Settings</a></li>
           </ul>
           <form id="settingsForm">
             <div class="tab-content">
               <div class="tab-pane active show fade" id="configuration">
-                <p class="text-justify" style="font-size: 90%;">
+                <small class="text-justify">
                   These settings are used to connect to your local game to gather instruments, and connect you to other members of your squad.
-                </p>
+                </small>
                 <div class="form-group form-inline">
                   <label for="playerName">Player Name</label>
                   <input type="text" class="form-control" id="playerName" name="playerName" placeholder="Your Player Name" required />
@@ -79,9 +79,9 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="settings">
-                <p class="text-justify" style="font-size: 90%;">
+                <small class="text-justify">
                   These settings are used for displaying data in the selected options.
-                </p>
+                </small>
                 <div class="form-group form-inline">
                   <label for="speedSettings">Speed Controls</label>
                   <select class="form-control" id="speedSettings" name="speedSettings">

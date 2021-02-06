@@ -1,8 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable } from 'rxjs';
-import {environment} from '../environments/environment';
-export const WS_SUB_ENDPOINT = environment.wsSubEndpoint;
-export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 
 @Injectable({
   providedIn: 'root'

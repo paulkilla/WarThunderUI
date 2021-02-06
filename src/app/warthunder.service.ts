@@ -23,7 +23,7 @@ export class WarthunderService {
             altitude: data['H, m'],
             ias,
             tas: data['TAS, km/h'],
-            verticleSpeed: vs,
+            verticalSpeed: vs,
             pitch: data['AoA, deg'],
             throttle: data['throttle 1, %'],
             climbAngle: Math.round(climbAngle),

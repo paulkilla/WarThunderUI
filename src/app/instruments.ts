@@ -3,7 +3,7 @@ export class Instruments {
   tas: number | undefined;
   ias: number | undefined;
   altitude: number | undefined;
-  verticleSpeed: number | undefined;
+  verticalSpeed: number | undefined;
   pitch: number | undefined;
   throttle: number | undefined;
   climbAngle: number | undefined;
