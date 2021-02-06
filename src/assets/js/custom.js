@@ -150,7 +150,7 @@ $(document).ready(function() {
     $('#showAlways').prop('checked', false);
   }
 
-  if(showMyInstruments != null && showMyInstruments === 'true') {
+  if(showMyInstruments== null || (showMyInstruments != null && showMyInstruments === 'true')) {
     $('#showMyInstruments').prop('checked', true);
   } else {
     $('#showMyInstruments').prop('checked', false);
