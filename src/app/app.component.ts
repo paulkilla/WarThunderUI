@@ -294,9 +294,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 } else if (prop === 'waterTemp') {
                   waterSLArray.push(state.waterTemp);
                   $('#water-trend-line').sparkline(waterSLArray);
-                } else if (prop === 'engineTemp') {
-                  engineTempSLArray.push(state.engineTemp);
-                  $('#engine-temp-trend-line').sparkline(engineTempSLArray);
                 }
               }
             }
@@ -330,6 +327,10 @@ export class AppComponent implements OnInit, OnDestroy {
             for (const prop in indicators) {
               if (Object.prototype.hasOwnProperty.call(indicators, prop)) {
                 this.instruments[prop] = indicators[prop];
+                if (prop === 'engineTemp') {
+                  engineTempSLArray.push(indicators.engineTemp);
+                  $('#engine-temp-trend-line').sparkline(engineTempSLArray);
+                }
               }
             }
             if (this.inGame) {
@@ -350,21 +351,21 @@ export class AppComponent implements OnInit, OnDestroy {
         this.wtService.getGameChat(latestId).subscribe(gameChat => gameChat.forEach((item: any) => {
           this.gameChat.push(item);
           updateScroll();
-          const myRegexResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
-          const otherRegexResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
-          if ( myRegexResult != null || otherRegexResult != null ) {
+          const myLocationResult = item.msg.match('.*( )(.*)(\\(.*\\))!.*$');
+          const teamLocationResult = item.msg.match('(.*)\\s+(.*)(\\(.*\\))![<]\\bcolor(.*)[>]\\s\\[(.*)\\][<][/]\\bcolor\\b[>]$');
+          if ( myLocationResult != null || teamLocationResult != null ) {
             let lastLocation = 'Unknown';
             const lastSeen = new Date().getTime();
             let playerName = '';
             let playerPlane = '';
-            if (myRegexResult != null) {
-              playerName = myRegexResult[2];
-              playerPlane = myRegexResult[3];
+            if (myLocationResult != null) {
+              playerName = myLocationResult[2];
+              playerPlane = myLocationResult[3];
             }
-            if (otherRegexResult != null) {
-              playerName = otherRegexResult[2];
-              playerPlane = otherRegexResult[3];
-              lastLocation = otherRegexResult[5];
+            if (teamLocationResult != null) {
+              playerName = teamLocationResult[2];
+              playerPlane = teamLocationResult[3];
+              lastLocation = teamLocationResult[5];
             }
             let data: {};
             if (lastLocation === 'Unknown') {
@@ -405,61 +406,50 @@ export class AppComponent implements OnInit, OnDestroy {
         this.wtService.getHudMessages(latestEvtId, latestDmgId).subscribe(hudMessages => hudMessages.forEach((item: any) => {
           this.hudMessages.push(item);
           // Do stuff here with the item and set enemies as dead etc.
-          let regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
-          if ( regexResult != null ) {
-            // Do stuff here when we match on the regex to pull down 'shot down'
-            const action = regexResult[3];
-            if (action != null) {
-              if ( action.startsWith('shot down')) {
-                const targetPlayerName = regexResult[4];
-                if (targetPlayerName === this.instruments.playerName) {
-                  this.instruments.killed = true;
-                }
-                this.enemies.forEach((enemy: any) => {
-                  if (enemy.name === targetPlayerName) {
-                    enemy.killed = true;
-                  }
-                });
-              }
+          // Match for awards
+          const awardsResult = item.msg.match('(.*)\\s(\\(.*\\))\\s\\bhas achieved\\b\\s(.*)$');
+          if ( awardsResult != null ) {
+            const player = awardsResult[1];
+            const award = awardsResult[3];
+            if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
+              showNotification('top', 'left', player + ' got the award ' + award, 'warning', 3000, false);
+              this.totalAwards = this.totalAwards + 1;
             }
           } else {
-            // Check for other regex.
-            // Check for crashes.. hah what a noob!
-            regexResult = item.msg.match('[\\s?](.*) (\\(.*\\))(.*)[ has crashed.]$');
-            if ( regexResult != null ) {
-              const targetPlayerName = regexResult[1];
-              if (targetPlayerName === this.instruments.playerName) {
-                this.instruments.killed = true;
+            // TODO: Figure out shot down with the 'using a controller' people, and any other that pop up.
+            const disconnectResult = item.msg.match('(.*)[td!]\\s\\bkd\\?NET_PLAYER_DISCONNECT_FROM_GAME\\b$');
+            let targetPlayerName = null;
+            if (disconnectResult != null) {
+              targetPlayerName = disconnectResult[1];
+            } else {
+              const crashedResult = item.msg.match('\\s?(.*) (\\(.*\\))(.*)[ has crashed.]$');
+              if (crashedResult != null) {
+                targetPlayerName = crashedResult[1];
+              } else {
+                const aaaResult = item.msg.match('\\bAAA shot down\\b\\s(.*)\\s(\\(.*\\))$');
+                if (aaaResult != null) {
+                  targetPlayerName = aaaResult[1];
+                } else {
+                  const regexResult = item.msg.match('(.*)(\\(.*\\))[\\s](.*)[\\s](.*)\\s(\\(.*\\)).*$');
+                  if (regexResult != null) {
+                    const action = regexResult[3];
+                    if (action != null) {
+                      if (action.startsWith('shot down')) {
+                        targetPlayerName = regexResult[4];
+                      }
+                    }
+                  }
+                }
               }
+            }
+            if (targetPlayerName != null && targetPlayerName === this.instruments.playerName) {
+              this.instruments.killed = true;
+            } else if (targetPlayerName != null) {
               this.enemies.forEach((enemy: any) => {
                 if (enemy.name === targetPlayerName) {
                   enemy.killed = true;
                 }
               });
-            } else {
-              // check for aaa kill
-              regexResult = item.msg.match('\\bAAA shot down\\b\\s(.*)\\s(\\(.*\\))$');
-              if ( regexResult != null ) {
-                const targetPlayerName = regexResult[1];
-                if (targetPlayerName === this.instruments.playerName) {
-                  this.instruments.killed = true;
-                }
-                this.enemies.forEach((enemy: any) => {
-                  if (enemy.name === targetPlayerName) {
-                    enemy.killed = true;
-                  }
-                });
-              }
-            }
-            // Match for Awards
-            regexResult = item.msg.match('(.*)\\s(\\(.*\\))\\s\\bhas achieved\\b\\s(.*)$');
-            if ( regexResult != null ) {
-              const player = regexResult[1];
-              const award = regexResult[3];
-              if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
-                showNotification('top', 'left', player + ' got the award ' + award, 'warning', 3000, false);
-                this.totalAwards = this.totalAwards + 1;
-              }
             }
           }
         }));
