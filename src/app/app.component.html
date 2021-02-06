@@ -41,7 +41,7 @@
                 <div class="card">
                   <div class="card-header card-header-success">
                     <h4 class="card-title">
-                      Squad <small>({{ totalAwards }} <span>{{ totalAwards == 1 ? 'award' : 'awards' }}</span>)</small>
+                      Squad <small data-toggle="tooltip" data-html="true" title="{{ printAwards() }}">({{ totalAwards }} <span>{{ totalAwards == 1 ? 'award' : 'awards' }}</span>)</small>
                       <div class="form-check header-options">
                         <label class="form-check-label">
                           <input id="showMyInstruments" name="showMyInstruments" class="form-check-input" type="checkbox"> Show my instruments <span class="form-check-sign"><span class="check"></span></span>

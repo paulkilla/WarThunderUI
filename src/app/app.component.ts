@@ -21,6 +21,7 @@ export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 
 export class AppComponent implements OnInit, OnDestroy {
   totalAwards: number;
+  awards: [];
   inGame: true;
   publishResponse: string;
   subService: SubscriptionService;
@@ -61,6 +62,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.teamInstruments = [];
     this.isSiteActive = false;
     this.totalAwards = 0;
+    this.awards = [];
     this.speedSetting = 'km/h';
     this.speedSettingMulti = 1;
     this.altitudeSetting = 'm';
@@ -322,6 +324,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 waterSLArray = [0];
                 engineTempSLArray = [0];
                 this.totalAwards = 0;
+                this.awards = [];
                 this.gameChat = [];
                 this.enemies = [];
                 this.instruments.killed = false;
@@ -423,6 +426,7 @@ export class AppComponent implements OnInit, OnDestroy {
             if (existsInArray(this.teamInstruments, 'playerName', player) || player === localStorage.getItem('playerName')) {
               showNotification('top', 'left', player + ' got the award ' + award, 'warning', 3000, false);
               this.totalAwards = this.totalAwards + 1;
+              this.awards.push({player, award});
             }
           } else {
             // TODO: Figure out shot down with the 'using a controller' people, and any other that pop up.
@@ -482,6 +486,14 @@ export class AppComponent implements OnInit, OnDestroy {
       return 0;
     }
     return theNumber;
+  }
+
+  printAwards(): string {
+    let html = '';
+    this.awards.forEach(item => {
+      html += item.player + ': ' + item.award + '<br />';
+    });
+    return html;
   }
 }
 

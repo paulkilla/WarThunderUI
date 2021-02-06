@@ -3,7 +3,9 @@ $(document).ready(function() {
   $('#settingsFormLinks a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
-  })
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
 
   let autoOpen = true,
     playerName = $( "#playerName" ),
