@@ -295,8 +295,10 @@ export class AppComponent implements OnInit, OnDestroy {
                   waterSLArray.push(state.waterTemp);
                   $('#water-trend-line').sparkline(waterSLArray);
                 } else if (prop === 'engineTemp') {
-                  engineTempSLArray.push(indicators.engineTemp);
-                  $('#engine-temp-trend-line').sparkline(engineTempSLArray);
+                  if (indicators.engineTemp >= 0) {
+                    engineTempSLArray.push(indicators.engineTemp);
+                    $('#engine-temp-trend-line').sparkline(engineTempSLArray);
+                  }
                 }
               }
             }
@@ -333,6 +335,10 @@ export class AppComponent implements OnInit, OnDestroy {
                 if (prop === 'engineTemp') {
                   engineTempSLArray.push(indicators.engineTemp);
                   $('#engine-temp-trend-line').sparkline(engineTempSLArray);
+                  if (indicators.engineTemp >= 0) {
+                    engineTempSLArray.push(indicators.engineTemp);
+                    $('#engine-temp-trend-line').sparkline(engineTempSLArray);
+                  }
                 }
               }
             }
