@@ -549,12 +549,6 @@ function save_positions() {
   }
 }
 
-function updateSuperSlow() {
-  if(lastPlayerPos != null) {
-    window.initComponentReference.zone.run(() => { window.initComponentReference.updateLastLocation(lastPlayerPos.x, lastPlayerPos.y); });
-  }
-}
-
 
 function init() {
   localize_static();
@@ -575,7 +569,6 @@ function init() {
   if (document.location.protocol != 'file:') {
     setInterval(updateSlow, 500);
     setInterval(updateFast, 25);
-    setInterval(updateSuperSlow, 2000);
   }
 }
 

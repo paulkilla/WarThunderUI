@@ -501,13 +501,6 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     return html;
   }
-
-  generateDistance(x, y): string {
-    console.log(x + ', ' + y);
-    const xDiff = x - this.instruments.lastLocationX;
-    const yDiff = y - this.instruments.lastLocationY;
-    return Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
-  }
 }
 
 function existsInArray(array, field, value): boolean {

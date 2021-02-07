@@ -212,7 +212,6 @@
                       <th>Bearing</th>
                       <th>Climb Rate</th>
                       <th>Throttle</th>
-                      <th>Dist.</th>
                       </thead>
                       <tbody>
                       <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
@@ -222,7 +221,6 @@
                         <td>{{ instruments.bearing }}° {{ instruments.bearingReading}}</td>
                         <td>{{ instruments.verticalSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</td>
                         <td>{{ instruments.throttle }}%</td>
-                        <td>{{ generateDistance(instruments.lastLocationX, instruments.lastLocationY)  | number: '1.0-0' }}m?</td>
                       </tr>
                       </tbody>
                     </table>
