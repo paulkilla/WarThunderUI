@@ -430,9 +430,6 @@ function updateSlow() {
   if(window.isSiteActive) {
     $.ajax({type: 'GET', url: url + '/map_obj.json', success: update_object_positions});
     $.ajax({type: 'GET', url: url + '/map_info.json', success: update_map_info});
-    const div = $('canvas#map-canvas');
-    const width = div.width();
-    div.css('height', width);
   }
 }
 

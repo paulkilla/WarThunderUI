@@ -186,20 +186,30 @@ $(document).ready(function() {
   $.fn.sparkline.defaults.common.width = '150px';
   $.fn.sparkline.defaults.common.fillColor = '#4b75cf';
   $.fn.sparkline.defaults.common.lineColor = '#4b75cf';
-  resizeResizables();
+  setTimeout(function () {
+    resizeResizables();
+  }, 1000);
+
   $(window).on('resize', function() {resizeResizables();});
 });
 
 function resizeResizables() {
   const navBarHeight = $('nav.navbar').height();
   const instrumentsHeight = $('div#instrument-div').height();
+  const mapHeight = $('div#map-div').height();
   const cardHeaderHeight = $('.card-header').height();
-  const totalHeight = navBarHeight + instrumentsHeight + cardHeaderHeight + 100;
+  const totalHeightRight = navBarHeight + instrumentsHeight + cardHeaderHeight + 100;
+  const totalHeightLeft = navBarHeight + mapHeight + cardHeaderHeight + 100;
   const windowHeight = $(window).height();
-  const resizableHeight = windowHeight - totalHeight;
+  const resizableHeightRight = windowHeight - totalHeightRight;
+  const resizableHeightLeft = windowHeight - totalHeightLeft;
   $('.resizable-div').each(function() {
-    $(this).height(resizableHeight + 'px');
+    $(this).height(resizableHeightRight + 'px');
     $(this).css('min-height', '20em');
+  });
+  $('.resizable-div-map').each(function() {
+    $(this).height(resizableHeightLeft + 'px');
+    $(this).css('min-height', '15.2em');
   });
 }
 

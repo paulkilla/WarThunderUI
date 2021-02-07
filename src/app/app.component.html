@@ -29,48 +29,23 @@
         <div class="row">
           <div class="col-sm-4">
             <div class="row">
-              <div class="col-sm-12">
+              <div class="col-sm-12" id="map-div">
                   <div id="map-root">
                     <div class="caption"><div id="draghandle"></div></div>
-                    <canvas id="map-canvas" width="500px" height="500px">Please use a browser with canvas support</canvas>
+                    <canvas id="map-canvas" width="362px" height="362px">Please use a browser with canvas support</canvas>
                   </div>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-12">
                 <div class="card">
-                  <div class="card-header card-header-success">
-                    <h4 class="card-title">
-                      Squad <small data-toggle="tooltip" data-html="true" title="{{ printAwards() }}">({{ totalAwards }} <span>{{ totalAwards == 1 ? 'award' : 'awards' }}</span>)</small>
-                      <div class="form-check header-options">
-                        <label class="form-check-label">
-                          <input id="showMyInstruments" name="showMyInstruments" class="form-check-input" type="checkbox"> Show my instruments <span class="form-check-sign"><span class="check"></span></span>
-                        </label>
-                      </div>
-                    </h4>
+                  <div class="card-header card-header-warning">
+                    <h4 class="card-title">Chat</h4>
                   </div>
-                  <div class="card-body table-responsive">
-                    <table class="table table-hover table-striped">
-                      <thead class="text-warning">
-                      <th>Player</th>
-                      <th>IAS</th>
-                      <th>Alt</th>
-                      <th>Bearing</th>
-                      <th>Climb Rate</th>
-                      <th>Throttle</th>
-                      </thead>
-                      <tbody>
-                      <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
-                        <td [ngClass]="{'cell-killed': instruments.killed}">{{ instruments.playerName}}</td>
-                        <td>{{ instruments.ias! * speedSettingMulti | number: '1.0-0' }} {{ speedSetting }}</td>
-                        <td>{{ instruments.altitude! * altitudeSettingMulti | number: '1.0-0' }} {{ altitudeSetting }}</td>
-                        <td>{{ instruments.bearing }}° {{ instruments.bearingReading}}</td>
-                        <td>{{ instruments.verticalSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</td>
-                        <td>{{ instruments.throttle }}%</td>
-                        <td></td>
-                      </tr>
-                      </tbody>
-                    </table>
+                  <div class="card-body game-chat resizable-div-map">
+                    <p *ngFor="let item of gameChat; let i = index">
+                      <span class="sender">[{{ item.sender }}]</span> &nbsp;<span class="message" [innerHTML]="item.msg"></span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -217,14 +192,39 @@
               </div>
 
               <div class="col-sm-12 col-md-12 col-lg-6">
-                <div class="card">
-                  <div class="card-header card-header-warning">
-                    <h4 class="card-title">Chat</h4>
+                <div class="card" id="squad-table-card">
+                  <div class="card-header card-header-success">
+                    <h4 class="card-title">
+                      Squad <small data-toggle="tooltip" data-html="true" title="{{ printAwards() }}">({{ totalAwards }} <span>{{ totalAwards == 1 ? 'award' : 'awards' }}</span>)</small>
+                      <div class="form-check header-options">
+                        <label class="form-check-label">
+                          <input id="showMyInstruments" name="showMyInstruments" class="form-check-input" type="checkbox"> Show my instruments <span class="form-check-sign"><span class="check"></span></span>
+                        </label>
+                      </div>
+                    </h4>
                   </div>
-                  <div class="card-body game-chat resizable-div">
-                    <p *ngFor="let item of gameChat; let i = index">
-                      <span class="sender">[{{ item.sender }}]</span> &nbsp;<span class="message" [innerHTML]="item.msg"></span>
-                    </p>
+                  <div class="card-body table-responsive">
+                    <table class="table table-hover table-striped">
+                      <thead class="text-warning">
+                      <th>Player</th>
+                      <th>IAS</th>
+                      <th>Alt</th>
+                      <th>Bearing</th>
+                      <th>Climb Rate</th>
+                      <th>Throttle</th>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let instruments of teamInstruments" [ngClass]="{'table-danger': instruments.killed}">
+                        <td [ngClass]="{'cell-killed': instruments.killed}">{{ instruments.playerName}}</td>
+                        <td>{{ instruments.ias! * speedSettingMulti | number: '1.0-0' }} {{ speedSetting }}</td>
+                        <td>{{ instruments.altitude! * altitudeSettingMulti | number: '1.0-0' }} {{ altitudeSetting }}</td>
+                        <td>{{ instruments.bearing }}° {{ instruments.bearingReading}}</td>
+                        <td>{{ instruments.verticalSpeed! * climbSpeedSettingMulti | number: '1.0-0' }} {{ climbSpeedSetting }}</td>
+                        <td>{{ instruments.throttle }}%</td>
+                        <td></td>
+                      </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>

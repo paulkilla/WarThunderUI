@@ -754,11 +754,10 @@ canvas#map-canvas {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  width: 85% !important;
   height: 400px;
 }
 
-div.resizable-div {
+div.resizable-div, div.resizable-div-map {
   overflow-y: scroll;
 }
 
@@ -840,6 +839,10 @@ span.trend-line > canvas {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+#squad-table-card {
+  height: 310px;
 }
 
 * {
