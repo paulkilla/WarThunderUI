@@ -286,7 +286,6 @@ function draw_player(canvas, ctx, item, dt) {
   ctx.closePath()
   ctx.fill()
   ctx.stroke()
-
   return {'x': x, 'y': y, 'dir': dir.elements}
 }
 
@@ -550,6 +549,12 @@ function save_positions() {
   }
 }
 
+function updateSuperSlow() {
+  if(lastPlayerPos != null) {
+    window.initComponentReference.zone.run(() => { window.initComponentReference.updateLastLocation(lastPlayerPos.x, lastPlayerPos.y); });
+  }
+}
+
 
 function init() {
   localize_static();
@@ -570,6 +575,7 @@ function init() {
   if (document.location.protocol != 'file:') {
     setInterval(updateSlow, 500);
     setInterval(updateFast, 25);
+    setInterval(updateSuperSlow, 2000);
   }
 }
 

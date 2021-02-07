@@ -17,4 +17,6 @@ export class Instruments {
   waterTemp: number | undefined;
   engineTemp: number | undefined;
   killed: boolean | undefined;
+  lastLocationX: number | undefined;
+  lastLocationY: number | undefined;
 }

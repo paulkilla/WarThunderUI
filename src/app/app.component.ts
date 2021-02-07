@@ -76,7 +76,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    window.initComponentReference = { component: this, zone: this.ngZone, loadAngularFunction: () => this.init(), };
+    window.initComponentReference = { component: this, zone: this.ngZone, loadAngularFunction: () => this.init(),
+      updateLastLocation: (x, y) => this.updateLastLocation(x, y) };
   }
 
   init(): void {
@@ -116,6 +117,11 @@ export class AppComponent implements OnInit, OnDestroy {
     window.isSiteActive = true; // Wanted to use these to stop unneeded calls, but hardcode till we can fix it
     this.monitorInstruments();
     this.monitorGameLog();
+  }
+
+  updateLastLocation(x, y): void {
+    this.instruments.lastLocationX = x;
+    this.instruments.lastLocationY = y;
   }
 
   registerWithSquad(): void {
@@ -494,6 +500,13 @@ export class AppComponent implements OnInit, OnDestroy {
       html += item.player + ': ' + item.award + '<br />';
     });
     return html;
+  }
+
+  generateDistance(x, y): string {
+    console.log(x + ', ' + y);
+    const xDiff = x - this.instruments.lastLocationX;
+    const yDiff = y - this.instruments.lastLocationY;
+    return Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
   }
 }
 
