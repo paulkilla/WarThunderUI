@@ -3,7 +3,7 @@ Production hosted http://wolfpack.ws
 
 Wolf Pack is a War Thunder Assistant that is written with squads in mind.
 
-With Wolf Pack you can register your squad, and all be looking at the same information on another screen (tablet/monitor/phone), it will keep a list of known opponents, including there last known location and altitude. As well as showing your squad mates instruments.
+With Wolf Pack you can register your squad, and all be looking at the same information on another screen (tablet/monitor/phone), it will keep a list of known opponents, including their last known location and altitude. As well as showing your squad mates instruments.
 
 ## Backend
 
