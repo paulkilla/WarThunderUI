@@ -92,17 +92,6 @@
               <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-info card-header-icon">
-                    <div class="card-icon">BNG</div>
-                    <p class="card-category">BEARING</p>
-                    <h3 class="card-title">{{ formatNan(instruments.bearing) }}° <small>{{ instruments.bearingReading }}</small></h3>
-                    <br>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm-6 col-md-6 col-lg-3">
-                <div class="card card-stats">
-                  <div class="card-header card-header-primary card-header-icon">
                     <div class="card-icon">CLR</div>
                     <p class="card-category">CLIMB RATE</p>
                     <span class="trend-line" id="climb-rate-trend-line"></span>
@@ -115,6 +104,17 @@
               <div class="col-sm-6 col-md-6 col-lg-3">
                 <div class="card card-stats">
                   <div class="card-header card-header-primary card-header-icon">
+                    <div class="card-icon">BNG</div>
+                    <p class="card-category">BEARING</p>
+                    <h3 class="card-title">{{ formatNan(instruments.bearing) }}° <small>{{ instruments.bearingReading }}</small></h3>
+                    <br>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="card card-stats">
+                  <div class="card-header card-header-grey card-header-icon">
                     <div class="card-icon">THR</div>
                     <p class="card-category">THROTTLE</p>
                     <span class="trend-line" id="throttle-trend-line"></span>
