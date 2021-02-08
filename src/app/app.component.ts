@@ -22,7 +22,8 @@ export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 export class AppComponent implements OnInit, OnDestroy {
   totalAwards: number;
   awards: [];
-  inGame: true;
+  started: false;
+  inGame: false;
   publishResponse: string;
   subService: SubscriptionService;
   pubService: PublisherService;
@@ -280,7 +281,7 @@ export class AppComponent implements OnInit, OnDestroy {
             if (Object.prototype.hasOwnProperty.call(state, prop)) {
               this.instruments[prop] = state[prop];
               // Only update spark line when we are in a game, else reset them to 0
-              if (this.inGame) {
+              if (this.inGame && this.started) {
                 if (prop === 'ias') {
                   iasSLArray.push(state.ias);
                   $('#ias-trend-line').sparkline(iasSLArray);
@@ -317,6 +318,7 @@ export class AppComponent implements OnInit, OnDestroy {
           if (this.isSiteActive) {
             if (indicators == null || indicators.valid == null || !indicators.valid) {
               this.inGame = false;
+              this.started = false;
               // Append here if you want it to reset immediately when a game ends.
             } else {
               if (!this.inGame) {
@@ -335,6 +337,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.enemies = [];
                 this.instruments.killed = false;
               }
+              if (this.instruments.throttle > 0) {
+                this.started = true;
+              }
               this.inGame = true;
             }
             // Assign variables in indicators to this.instruments
@@ -342,9 +347,7 @@ export class AppComponent implements OnInit, OnDestroy {
               if (Object.prototype.hasOwnProperty.call(indicators, prop)) {
                 this.instruments[prop] = indicators[prop];
                 if (prop === 'engineTemp') {
-                  engineTempSLArray.push(indicators.engineTemp);
-                  $('#engine-temp-trend-line').sparkline(engineTempSLArray);
-                  if (indicators.engineTemp >= 0) {
+                  if (indicators.engineTemp >= 0 && this.started) {
                     engineTempSLArray.push(indicators.engineTemp);
                     $('#engine-temp-trend-line').sparkline(engineTempSLArray);
                   }
