@@ -99,7 +99,10 @@ export class AppComponent implements OnInit, OnDestroy {
               // When we get new message types, add handlers here
             }
            },
-          err => console.log( 'sub err'),
+          err => {
+            console.log( 'sub err');
+            $('#settingsModal').modal('show');
+          },
           () =>  console.log( 'The observable sub stream is complete')
         );
     this.pubSubscription =
