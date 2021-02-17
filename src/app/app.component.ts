@@ -7,10 +7,10 @@ import {environment} from '../environments/environment';
 import {Instruments} from './instruments';
 import {Message} from './message';
 import {Enemy} from './enemy';
-import {SubscriptionService} from './subscription.service';
-import {PublisherService} from './publisher.service';
+import {WolfpackserverService} from './wolfpackserver.service';
 export const WS_SUB_ENDPOINT = environment.wsSubEndpoint;
 export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
+export const WS_ENDPOINT = environment.wsWpEndpoint;
 
 @Component({
   selector: 'app-root',
@@ -24,19 +24,14 @@ export class AppComponent implements OnInit, OnDestroy {
   awards: [];
   started: false;
   inGame: false;
-  publishResponse: string;
-  subService: SubscriptionService;
-  pubService: PublisherService;
   wtService: WarthunderService;
-  subSubscription: Subscription;
-  pubSubscription: Subscription;
+  wpService: WolfpackserverService;
+  wpSubscription: Subscription;
   instruments: Instruments;
   gameChat: Message[];
   hudMessages: Message[];
   teamInstruments: Instruments[];
   enemies: Enemy[];
-  pubStatus;
-  subStatus;
   isSiteActive;
   speedSetting;
   speedSettingMulti;
@@ -49,13 +44,11 @@ export class AppComponent implements OnInit, OnDestroy {
   temperatureSetting;
   temperatureSettingMulti;
 
-  constructor(private subService: SubscriptionService, private pubService: PublisherService, private wtService: WarthunderService,
-              private ngZone: NgZone) {
+  constructor(private wpService: WolfpackserverService, private wtService: WarthunderService, private ngZone: NgZone) {
     window.restEndpoint = environment.restEndpoint;
     window.isSiteActive = false;
-    this.subService = subService;
-    this.pubService = pubService;
     this.wtService = wtService;
+    this.wpService = wpService;
     this.gameChat = [];
     this.hudMessages = [];
     this.instruments = new Instruments();
@@ -82,38 +75,30 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   init(): void {
-    this.subSubscription =
-      this.subService.createObservableSocket(WS_SUB_ENDPOINT)
-        .subscribe(
-        rawData => {
-            const data = JSON.parse(rawData);
-            const message_type = data.message_type;
-            if (message_type == null && data.message !== 'Squad joined') {
-              console.log('Data has no message type: ' + JSON.stringify(data));
-            } else {
-              if (message_type === 'squadmate') {
-                this.handleSquadMateMessage(data);
-              } else if (message_type === 'enemy') {
-                this.handleEnemyMessage(data);
-              }
-              // When we get new message types, add handlers here
-            }
-           },
-          err => {
-            console.log( 'sub err');
-            $('#settingsModal').modal('show');
-          },
-          () =>  console.log( 'The observable sub stream is complete')
-        );
-    this.pubSubscription =
-      this.pubService.createObservableSocket(WS_PUB_ENDPOINT)
-        .subscribe(
-          data => {
-            this.publishResponse = data;
-          },
-          err => console.log( 'pub err'),
-          () =>  console.log( 'The observable pub stream is complete')
-        );
+    this.wpSubscription = this.wpService.connectToSocket(WS_ENDPOINT).subscribe(
+      rawData => {
+        const data = JSON.parse(rawData);
+        const message_type = data.message_type;
+        if (message_type == null && data.message !== 'Squad joined') {
+          console.log('Data has no message type: ' + JSON.stringify(data));
+        } else {
+          if (message_type === 'squadmate') {
+            this.handleSquadMateMessage(data);
+          } else if (message_type === 'enemy') {
+            this.handleEnemyMessage(data);
+          }
+          // When we get new message types, add handlers here
+        }
+      },
+      err => {
+        console.log('Error connecting to Web Service');
+        $('#settingsModal').modal('show');
+      },
+      () =>  {
+        console.log( 'The observable sub stream is complete');
+        $('#settingsModal').modal('show');
+      }
+    );
     this.registerWithSquad();
     this.configureSettingOptions();
     this.preloadMessages();
@@ -129,21 +114,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   registerWithSquad(): void {
-    this.pubService.socket.onopen = (): void => {
-      this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+    this.wpService.socket.onopen = (): void => {
+      this.wpService.sendMessage(JSON.stringify({
         message_type: 'join',
         data: {
-          name: localStorage.getItem('squadName'),
-          secret: localStorage.getItem('squadSecret')
-        }
-      }));
-    };
-    this.subService.socket.onopen = (): void => {
-      this.subStatus = this.subService.sendMessage(JSON.stringify({
-        message_type: 'join',
-        data: {
-          name: localStorage.getItem('squadName'),
-          secret: localStorage.getItem('squadSecret')
+          squad: localStorage.getItem('squadName')
         }
       }));
     };
@@ -359,7 +334,8 @@ export class AppComponent implements OnInit, OnDestroy {
             }
             if (this.inGame) {
               this.instruments.playerName = localStorage.getItem('playerName');
-              this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+              this.wpService.sendMessage(JSON.stringify({
+                squad: localStorage.getItem('squadName'),
                 message_type: 'squadmate',
                 player: localStorage.getItem('playerName'),
                 data: this.instruments
@@ -408,7 +384,8 @@ export class AppComponent implements OnInit, OnDestroy {
               data = {altitude, lastSeen, name: playerName, plane: playerPlane, killed: false,
                 location: gridRef};
             }
-            this.pubStatus = this.pubService.sendMessage(JSON.stringify({
+            this.wpService.sendMessage(JSON.stringify({
+              squad: localStorage.getItem('squadName'),
               message_type: 'enemy',
               player: playerName,
               data
@@ -483,10 +460,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   closeSocket(): void {
-    this.subSubscription.unsubscribe();
-    this.subStatus = 'The socket is closed';
-    this.pubSubscription.unsubscribe();
-    this.pubStatus = 'The socket is closed';
+    this.wpSubscription.unsubscribe();
   }
 
   ngOnDestroy(): void {
