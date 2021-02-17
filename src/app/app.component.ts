@@ -8,8 +8,6 @@ import {Instruments} from './instruments';
 import {Message} from './message';
 import {Enemy} from './enemy';
 import {WolfpackserverService} from './wolfpackserver.service';
-export const WS_SUB_ENDPOINT = environment.wsSubEndpoint;
-export const WS_PUB_ENDPOINT = environment.wsPubEndpoint;
 export const WS_ENDPOINT = environment.wsWpEndpoint;
 
 @Component({
@@ -91,6 +89,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       },
       err => {
+        console.log(err);
         console.log('Error connecting to Web Service');
         $('#settingsModal').modal('show');
       },
