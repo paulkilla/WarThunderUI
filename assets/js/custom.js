@@ -11,13 +11,12 @@ $(document).ready(function() {
     playerName = $( "#playerName" ),
     endpoint = $( "#endpoint" ),
     squadName = $( "#squadName" ),
-    squadSecret = $( "#squadSecret" ),
     speedSettings = $("#speedSettings"),
     altitudeSettings = $("#altitudeSettings"),
     distanceSettings = $("#distanceSettings"),
     climbSpeedSettings = $("#climbSpeedSettings"),
     temperatureSettings = $("#temperatureSettings"),
-    allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName ).add( squadSecret );
+    allFields = $( [] ).add( playerName ).add( endpoint ).add( squadName );
   if (localStorage.getItem("playerName") !== null) {
     playerName.val(localStorage.getItem('playerName'));
   }
@@ -62,10 +61,6 @@ $(document).ready(function() {
     squadName.val(localStorage.getItem('squadName'));
   }
 
-  if (localStorage.getItem("squadSecret") !== null) {
-    squadSecret.val(localStorage.getItem('squadSecret'));
-  }
-
   function checkLength( o, n, min, max ) {
     if ( o.val().length > max || o.val().length < min ) {
       o.removeClass("is-valid");
@@ -84,7 +79,6 @@ $(document).ready(function() {
     valid = valid && checkLength( playerName, "playerName", 1, 100 );
     valid = valid && checkLength( endpoint, "endpoint", 6, 100 );
     valid = valid && checkLength( squadName, "squadName", 1, 100 );
-    valid = valid && checkLength( squadSecret, "squadSecret", 1, 100 );
     if(valid) {
       localStorage.setItem("playerName", playerName.val());
       localStorage.setItem("endpoint", endpoint.val());
@@ -100,36 +94,8 @@ $(document).ready(function() {
       localStorage.setItem("distanceSetting", distanceSettings.val());
       localStorage.setItem("climbSpeedSetting", climbSpeedSettings.val());
       localStorage.setItem("temperatureSetting", temperatureSettings.val());
-
-      // Need to do rest call to endpoint here
-      $.ajax({async: false, url: window.restEndpoint + '/squads', type: 'POST',
-        data: JSON.stringify({'name': squadName.val(), 'secret': squadSecret.val()}),
-        success: function(data, textStatus, jqXHR) {
-          switch(jqXHR.status) {
-            case 200:
-              showNotification('top','right', 'Joined an existing Squad, enjoy your game!', 'success', 2000, false);
-              break;
-            case 201:
-              showNotification('top','right', 'New Squad setup! Share your Squad Name and Key and get going!', 'success', 3000, false);
-          }
-
-          localStorage.setItem("squadName", $('#squadName').val());
-          localStorage.setItem("squadSecret", $('#squadSecret').val());
-          window.initComponentReference.zone.run(() => { window.initComponentReference.loadAngularFunction(); });
-        }, error: function(jqXHR, textStatus, errorThrown) {
-          switch(jqXHR.status) {
-            case 409:
-              // Squad exists but secret is wrong
-              squadSecret.addClass( "is-invalid" );
-              valid = false;
-              showNotification('top','right', 'Incorrect Secret', 'danger', 2500, false);
-              break;
-            default:
-              // Generally something wrong
-              showNotification('top','right', errorThrown, 'danger', 4000, false);
-              valid = false;
-          }
-        }});
+      localStorage.setItem("squadName", $('#squadName').val());
+      window.initComponentReference.zone.run(() => { window.initComponentReference.loadAngularFunction(); });
     }
     return valid;
   }
