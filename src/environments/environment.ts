@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   restEndpoint: 'http://squad.wolfpack.ws/v1',
-  wsWpEndpoint: 'ws://squad.wolfpack.ws',
+  wsWpEndpoint: 'ws://localhost:8001',
   wsSubEndpoint: 'ws://squad.wolfpack.ws/v1/sub',
   wsPubEndpoint: 'ws://squad.wolfpack.ws/v1/pub'
 };

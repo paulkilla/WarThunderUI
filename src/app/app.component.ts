@@ -334,7 +334,6 @@ export class AppComponent implements OnInit, OnDestroy {
             if (this.inGame) {
               this.instruments.playerName = localStorage.getItem('playerName');
               this.wpService.sendMessage(JSON.stringify({
-                squad: localStorage.getItem('squadName'),
                 message_type: 'squadmate',
                 player: localStorage.getItem('playerName'),
                 data: this.instruments
@@ -384,7 +383,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 location: gridRef};
             }
             this.wpService.sendMessage(JSON.stringify({
-              squad: localStorage.getItem('squadName'),
               message_type: 'enemy',
               player: playerName,
               data
