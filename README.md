@@ -7,7 +7,7 @@ With Wolf Pack you can register your squad, and all be looking at the same infor
 
 ## Backend
 
-Wolf Pack communicates with the WolfPackServer (https://github.com/sp4rks/WolfPackServer)
+Wolf Pack communicates with the WolfPackServer (https://github.com/paulkilla/wolfpack-server)
 
 ## Development server
 
