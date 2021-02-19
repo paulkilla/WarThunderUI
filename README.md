@@ -20,13 +20,13 @@ Wolf Pack will show you information on opposition as you target them (By default
 Wolf Pack will also show the last known Grid Square, and time since the enemy was 'targetted'.
 
 ### Screenshots
-![Configuration](https://github.com/paulkilla/WolfPack/blob/master/Configuration.PNG?raw=true)
+![Configuration](screenshots/Configuration.PNG)
 
-![Settings](https://github.com/paulkilla/WolfPack/blob/master/GameSettings.PNG?raw=true)
+![Settings](screenshots/GameSettings.PNG)
 
-![ScreenShot1](https://github.com/paulkilla/WolfPack/blob/master/Screen1.PNG?raw=true)
+![ScreenShot1](screenshots/Screen1.PNG)
 
-![ScreenShot2](https://github.com/paulkilla/WolfPack/blob/master/Screen2.PNG?raw=true)
+![ScreenShot2](screenshots/Screen2.PNG)
 
 ## Backend
 
